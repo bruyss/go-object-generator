@@ -1,0 +1,10 @@
+REGION {{.Tag}}: {{.Description}}
+
+        "IDB_{{.Tag}}"(Tagname := '{{.Tag}}',
+                       Unit := '{{.Unit}}',
+                       SecPulse := iSecPulse,
+                       Reset := TRUE,
+                       Local := FALSE,
+                       Simulation := iSimulation,
+                       AnalogInput := {{.Tag}}
+        );
