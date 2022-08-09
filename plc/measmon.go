@@ -12,15 +12,19 @@ type Measmon struct {
 	HighLimit   float64
 }
 
+func (m *Measmon) Stringer() string {
+	return m.Tag
+}
+
 func (m *Measmon) InputMap() map[string]string {
 	return map[string]string{
-		"tag":         m.Tag,
-		"description": m.Description,
-		"idb":         "IDB_" + m.Tag,
-		"unit":        m.Unit,
-		"input":       m.Tag,
-		"lowlim":      strconv.FormatFloat(m.LowLimit, 'f', 1, 64),
-		"highlim":     strconv.FormatFloat(m.HighLimit, 'f', 1, 64),
+		"Tag":         m.Tag,
+		"Description": m.Description,
+		"IDB":         "IDB_" + m.Tag,
+		"Unit":        m.Unit,
+		"Input":       m.Tag,
+		"LowLimit":    strconv.FormatFloat(m.LowLimit, 'f', 1, 64),
+		"HighLimit":   strconv.FormatFloat(m.HighLimit, 'f', 1, 64),
 	}
 }
 

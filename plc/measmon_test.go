@@ -5,44 +5,158 @@ import (
 	"testing"
 )
 
-func TestMeasmonInput(t *testing.T) {
-	m := Measmon{
-		Tag:         "WWG-TT001",
-		Description: "Test measmon 1",
-		Unit:        "°C",
-		Address:     "IW0",
-		Direct:      false,
-		LowLimit:    0.0,
-		HighLimit:   150.0,
+func TestMeasmon_Stringer(t *testing.T) {
+	tests := []struct {
+		name string
+		m    *Measmon
+		want string
+	}{
+		{
+			"Case 1",
+			&Measmon{
+				Tag:         "WWG-TT001",
+				Description: "Test measmon 1",
+				Unit:        "°C",
+				Address:     "IW16",
+				Direct:      false,
+				LowLimit:    0.0,
+				HighLimit:   100.0,
+			},
+			"WWG-TT001",
+		},
+		{
+			"Case 2",
+			&Measmon{
+				Tag:         "WWG-FT656",
+				Description: "Test measmon 2",
+				Unit:        "°C",
+				Address:     "IW18",
+				Direct:      false,
+				LowLimit:    0.0,
+				HighLimit:   150.0,
+			},
+			"WWG-FT656",
+		},
 	}
-	want := map[string]string{
-		"tag":         "WWG-TT001",
-		"description": "Test measmon 1",
-		"idb":         "IDB_WWG-TT001",
-		"unit":        "°C",
-		"input":       "WWG-TT001",
-		"lowlim":      "0.0",
-		"highlim":     "150.0",
-	}
-	if !reflect.DeepEqual(m.InputMap(), want) {
-		t.Fatalf("m.InputMap() = %s, expected %s", m.InputMap(), want)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.m.Stringer(); got != tt.want {
+				t.Errorf("Measmon.Stringer() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestMeasmonTag(t *testing.T) {
-	m := Measmon{
-		Tag:         "WWG-TT001",
-		Description: "Test measmon 1",
-		Unit:        "°C",
-		Address:     "IW0",
-		Direct:      false,
-		LowLimit:    0.0,
-		HighLimit:   150.0,
+func TestMeasmon_PlcTags(t *testing.T) {
+	tests := []struct {
+		name string
+		m    *Measmon
+		want []PlcTag
+	}{
+		{
+			"Case 1",
+			&Measmon{
+				Tag:         "WWG-TT001",
+				Description: "Test measmon 1",
+				Unit:        "°C",
+				Address:     "IW16",
+				Direct:      false,
+				LowLimit:    0.0,
+				HighLimit:   100.0,
+			},
+			[]PlcTag{
+				{
+					name:    "WWG-TT001",
+					dtype:   "Int",
+					address: "IW16",
+					comment: "Test measmon 1",
+				},
+			},
+		},
+		{
+			"Case 2",
+			&Measmon{
+				Tag:         "WWG-FT656",
+				Description: "Test measmon 2",
+				Unit:        "°C",
+				Address:     "IW18",
+				Direct:      false,
+				LowLimit:    0.0,
+				HighLimit:   150.0,
+			},
+			[]PlcTag{
+				{
+					name:    "WWG-FT656",
+					dtype:   "Int",
+					address: "IW18",
+					comment: "Test measmon 2",
+				},
+			},
+		},
 	}
-	want := []PlcTag{
-		{"WWG-TT001", "Int", "IW0", "Test measmon 1"},
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.m.PlcTags(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Measmon.PlcTags() = %v, want %v", got, tt.want)
+			}
+		})
 	}
-	if !reflect.DeepEqual(m.PlcTags(), want) {
-		t.Fatalf("m.PlcTags() = %s, expected %s", m.PlcTags(), want)
+}
+
+func TestMeasmon_InputMap(t *testing.T) {
+	tests := []struct {
+		name string
+		m    *Measmon
+		want map[string]string
+	}{
+		{
+			"Case 1",
+			&Measmon{
+				Tag:         "WWG-TT001",
+				Description: "Test measmon 1",
+				Unit:        "°C",
+				Address:     "IW16",
+				Direct:      false,
+				LowLimit:    0.0,
+				HighLimit:   100.0,
+			},
+			map[string]string{
+				"Tag":         "WWG-TT001",
+				"Description": "Test measmon 1",
+				"IDB":         "IDB_WWG-TT001",
+				"Unit":        "°C",
+				"Input":       "WWG-TT001",
+				"LowLimit":    "0.0",
+				"HighLimit":   "100.0",
+			},
+		},
+		{
+			"Case 2",
+			&Measmon{
+				Tag:         "WWG-FT656",
+				Description: "Test measmon 2",
+				Unit:        "m³/h",
+				Address:     "IW18",
+				Direct:      false,
+				LowLimit:    0.0,
+				HighLimit:   150.0,
+			},
+			map[string]string{
+				"Tag":         "WWG-FT656",
+				"Description": "Test measmon 2",
+				"IDB":         "IDB_WWG-FT656",
+				"Unit":        "m³/h",
+				"Input":       "WWG-FT656",
+				"LowLimit":    "0.0",
+				"HighLimit":   "150.0",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.m.InputMap(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Measmon.InputMap() = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
