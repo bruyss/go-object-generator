@@ -2,6 +2,7 @@
     "level": "debug",
     "encoding": "console",
     "outputPaths": [
+        "stdout",
         "./gen.log"
     ],
     "errorOutputPaths": [

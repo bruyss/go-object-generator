@@ -1,14 +1,19 @@
 package main
 
 import (
-	"log"
 	"os"
 	"text/template"
 
 	"github.com/bruyss/go-object-generator/plc"
+	"github.com/bruyss/go-object-generator/sheetreader"
+	"github.com/bruyss/go-object-generator/utils"
 )
 
 func main() {
+	utils.InitializeCustomLogger()
+
+	sheetreader.InitializeWorkbook("excelsource_go.xlsx")
+
 	m := &plc.Measmon{
 		Tag:         "WWG-TT001",
 		Description: "Test measmon",
@@ -33,7 +38,7 @@ func main() {
 	// t, err := template.ParseGlob("templates/*.tmpl")
 	t, err := template.New("measmon.tmpl").Funcs(funcMap).ParseFiles("templates/measmon.tmpl")
 	if err != nil {
-		log.Fatalln(err)
+		utils.Logger.Sugar().Fatal(err)
 	}
 	measmons := []plc.PLCObject{m, m2}
 	// measmons := []map[string]string{m.InputMap(), m2.InputMap()}
