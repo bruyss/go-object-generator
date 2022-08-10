@@ -160,3 +160,33 @@ func TestMeasmon_InputMap(t *testing.T) {
 		})
 	}
 }
+
+func TestNewMeasmon(t *testing.T) {
+	type args struct {
+		tag         string
+		description string
+		unit        string
+		address     string
+		direct      bool
+		lowLimit    float64
+		highLimit   float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want *Measmon
+	}{
+		{
+			"Measmon 1",
+			args{tag: "WWG-TT001", description: "Test measmon 1", unit: "bar", address: "IW64", direct: false, lowLimit: -1.0, highLimit: 10.0},
+			&Measmon{"WWG-TT001", "Test measmon 1", "bar", "IW64", false, -1.0, 10.0},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewMeasmon(tt.args.tag, tt.args.description, tt.args.unit, tt.args.address, tt.args.direct, tt.args.lowLimit, tt.args.highLimit); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewMeasmon() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

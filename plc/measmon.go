@@ -12,6 +12,18 @@ type Measmon struct {
 	HighLimit   float64
 }
 
+func NewMeasmon(tag, description, unit, address string, direct bool, lowLimit, highLimit float64) *Measmon {
+	return &Measmon{
+		Tag:         tag,
+		Description: description,
+		Unit:        unit,
+		Address:     address,
+		Direct:      direct,
+		LowLimit:    lowLimit,
+		HighLimit:   highLimit,
+	}
+}
+
 func (m *Measmon) Stringer() string {
 	return m.Tag
 }
