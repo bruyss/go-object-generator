@@ -1,51 +1,70 @@
 package plc
 
-import "strconv"
+import (
+	"strconv"
 
-type Measmon struct {
-	Tag         string
-	Description string
-	Unit        string
-	Address     string
-	Direct      bool
-	LowLimit    float64
-	HighLimit   float64
+	"github.com/bruyss/go-object-generator/utils"
+	"go.uber.org/zap"
+)
+
+func init() {
+	utils.InitializeDevLogger()
 }
 
-func NewMeasmon(tag, description, unit, address string, direct bool, lowLimit, highLimit float64) *Measmon {
-	return &Measmon{
-		Tag:         tag,
-		Description: description,
-		Unit:        unit,
-		Address:     address,
-		Direct:      direct,
-		LowLimit:    lowLimit,
-		HighLimit:   highLimit,
+type measmon struct {
+	tag         string
+	description string
+	unit        string
+	address     string
+	direct      bool
+	lowLimit    float64
+	highLimit   float64
+}
+
+func NewMeasmon(tag, description, unit, address string, direct bool, lowLimit, highLimit float64) *measmon {
+	if lowLimit >= highLimit {
+		utils.Sugar.Info(
+			"Low limit must be higher than high limit",
+			zap.String("tag", tag),
+			zap.Float64("lowLimit", lowLimit),
+			zap.Float64("highLimit", highLimit),
+		)
+		lowLimit = 0.0
+		highLimit = 100.0
+	}
+	return &measmon{
+		tag:         tag,
+		description: description,
+		unit:        unit,
+		address:     address,
+		direct:      direct,
+		lowLimit:    lowLimit,
+		highLimit:   highLimit,
 	}
 }
 
-func (m *Measmon) Stringer() string {
-	return m.Tag
+func (m *measmon) Stringer() string {
+	return m.tag
 }
 
-func (m *Measmon) InputMap() map[string]string {
+func (m *measmon) InputMap() map[string]string {
 	return map[string]string{
-		"Tag":         m.Tag,
-		"Description": m.Description,
-		"IDB":         "IDB_" + m.Tag,
-		"Unit":        m.Unit,
-		"Input":       m.Tag,
-		"LowLimit":    strconv.FormatFloat(m.LowLimit, 'f', 1, 64),
-		"HighLimit":   strconv.FormatFloat(m.HighLimit, 'f', 1, 64),
+		"Tag":         m.tag,
+		"Description": m.description,
+		"IDB":         "IDB_" + m.tag,
+		"Unit":        m.unit,
+		"Input":       m.tag,
+		"LowLimit":    strconv.FormatFloat(m.lowLimit, 'f', 1, 64),
+		"HighLimit":   strconv.FormatFloat(m.highLimit, 'f', 1, 64),
 	}
 }
 
-func (m *Measmon) PlcTags() []PlcTag {
+func (m *measmon) PlcTags() []PlcTag {
 	inputTag := PlcTag{
-		name:    m.Tag,
+		name:    m.tag,
 		dtype:   "Int",
-		address: m.Address,
-		comment: m.Description,
+		address: m.address,
+		comment: m.description,
 	}
 	return []PlcTag{inputTag}
 }

@@ -1,8 +1,12 @@
 package plc
 
-import "strconv"
+import (
+	"strconv"
 
-type Digmon struct {
+	"github.com/bruyss/go-object-generator/utils"
+)
+
+type digmon struct {
 	tag         string
 	description string
 	address     string
@@ -11,18 +15,38 @@ type Digmon struct {
 	invertAlarm bool
 }
 
-func (d *Digmon) InputMap() map[string]string {
-	return map[string]string{
-		"tag":         d.tag,
-		"description": d.description,
-		"idb":         "IDB_" + d.tag,
-		"input":       d.tag,
-		"invert":      strconv.FormatBool(d.invert),
-		"alarm":       strconv.FormatBool(d.alarm),
-		"invertalarm": strconv.FormatBool(d.invertAlarm),
+func NewDigmon(tag, description, address string, invert, alarm, invertAlarm bool) *digmon {
+	if len(address) <= 0 {
+		address = "M0.0"
+	}
+	return &digmon{
+		tag:         tag,
+		description: description,
+		address:     address,
+		invert:      invert,
+		alarm:       alarm,
+		invertAlarm: invertAlarm,
 	}
 }
 
-func (d *Digmon) PlcTags() []PlcTag {
-	return []PlcTag{}
+func (d *digmon) Stringer() string {
+	return d.tag
+}
+
+func (d *digmon) InputMap() map[string]string {
+	return map[string]string{
+		"Tag":         d.tag,
+		"Description": d.description,
+		"IDB":         "IDB_" + d.tag,
+		"Input":       utils.TagQuotes(d.tag),
+		"Invert":      strconv.FormatBool(d.invert),
+		"Alarm":       strconv.FormatBool(d.alarm),
+		"InvertAlarm": strconv.FormatBool(d.invertAlarm),
+	}
+}
+
+func (d *digmon) PlcTags() []PlcTag {
+	return []PlcTag{
+		{name: d.tag, dtype: "Bool", address: d.address, comment: d.description},
+	}
 }
