@@ -7,10 +7,6 @@ import (
 	"go.uber.org/zap"
 )
 
-func init() {
-	utils.InitializeDevLogger()
-}
-
 type measmon struct {
 	tag         string
 	description string
