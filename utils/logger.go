@@ -10,6 +10,7 @@ import (
 )
 
 var Logger *zap.Logger
+var Sugar *zap.SugaredLogger
 
 func InitializeProductionLogger() {
 	config := zap.NewProductionEncoderConfig()
@@ -22,10 +23,12 @@ func InitializeProductionLogger() {
 		zapcore.NewCore(fileEncoder, writer, defaultLogLevel),
 	)
 	Logger = zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
+	Sugar = Logger.Sugar()
 }
 
 func InitializeDevLogger() {
 	Logger, _ = zap.NewDevelopment()
+	Sugar = Logger.Sugar()
 	defer Logger.Sync()
 }
 
@@ -45,5 +48,8 @@ func InitializeCustomLogger() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	Sugar = Logger.Sugar()
+
 	defer Logger.Sync()
 }
