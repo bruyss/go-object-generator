@@ -17,25 +17,30 @@ type measmon struct {
 	highLimit   float64
 }
 
-func NewMeasmon(tag, description, unit, address string, direct bool, lowLimit, highLimit float64) *measmon {
+func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit string) *measmon {
+	directBool, _ := strconv.ParseBool(direct)
+	lowLimitFloat, _ := strconv.ParseFloat(lowLimit, 64)
+	highLimitFloat, _ := strconv.ParseFloat(highLimit, 64)
+
 	if lowLimit >= highLimit {
 		utils.Sugar.Info(
 			"Low limit must be higher than high limit",
 			zap.String("tag", tag),
-			zap.Float64("lowLimit", lowLimit),
-			zap.Float64("highLimit", highLimit),
+			zap.Float64("lowLimit", lowLimitFloat),
+			zap.Float64("highLimit", highLimitFloat),
 		)
-		lowLimit = 0.0
-		highLimit = 100.0
+		lowLimitFloat = 0.0
+		highLimitFloat = 100.0
 	}
+
 	return &measmon{
 		tag:         tag,
 		description: description,
 		unit:        unit,
 		address:     address,
-		direct:      direct,
-		lowLimit:    lowLimit,
-		highLimit:   highLimit,
+		direct:      directBool,
+		lowLimit:    lowLimitFloat,
+		highLimit:   highLimitFloat,
 	}
 }
 

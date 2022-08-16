@@ -11,9 +11,9 @@ func TestNewMeasmon(t *testing.T) {
 		description string
 		unit        string
 		address     string
-		direct      bool
-		lowLimit    float64
-		highLimit   float64
+		direct      string
+		lowLimit    string
+		highLimit   string
 	}
 	tests := []struct {
 		name string
@@ -22,12 +22,12 @@ func TestNewMeasmon(t *testing.T) {
 	}{
 		{
 			"Measmon 1",
-			args{tag: "WWG-TT001", description: "Test measmon 1", unit: "bar", address: "IW64", direct: false, lowLimit: -1.0, highLimit: 10.0},
+			args{tag: "WWG-TT001", description: "Test measmon 1", unit: "bar", address: "IW64", direct: "false", lowLimit: "-1.0", highLimit: "10.0"},
 			&measmon{"WWG-TT001", "Test measmon 1", "bar", "IW64", false, -1.0, 10.0},
 		},
 		{
 			"Measmon 2",
-			args{tag: "WWG-TT002", description: "Test measmon 2", unit: "°C", address: "IW68", direct: false, lowLimit: -50.0, highLimit: -100.0},
+			args{tag: "WWG-TT002", description: "Test measmon 2", unit: "°C", address: "IW68", direct: "false", lowLimit: "-50.0", highLimit: "-100.0"},
 			&measmon{"WWG-TT002", "Test measmon 2", "°C", "IW68", false, 0.0, 100.0},
 		},
 	}
