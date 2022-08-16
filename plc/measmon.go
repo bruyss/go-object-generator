@@ -39,7 +39,7 @@ func NewMeasmon(tag, description, unit, address string, direct bool, lowLimit, h
 	}
 }
 
-func (m *measmon) Stringer() string {
+func (m *measmon) String() string {
 	return m.tag
 }
 

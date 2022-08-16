@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestControlValve_Stringer(t *testing.T) {
+func TestControlValve_String(t *testing.T) {
 	tests := []struct {
 		name string
 		c    *ControlValve
@@ -69,8 +69,8 @@ func TestControlValve_Stringer(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.c.Stringer(); got != tt.want {
-				t.Errorf("ControlValve.Stringer() = %v, want %v", got, tt.want)
+			if got := tt.c.String(); got != tt.want {
+				t.Errorf("ControlValve.String() = %v, want %v", got, tt.want)
 			}
 		})
 	}

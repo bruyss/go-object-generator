@@ -29,7 +29,7 @@ func NewDigmon(tag, description, address string, invert, alarm, invertAlarm bool
 	}
 }
 
-func (d *digmon) Stringer() string {
+func (d *digmon) String() string {
 	return d.tag
 }
 

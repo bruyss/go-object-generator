@@ -14,7 +14,7 @@ type ControlValve struct {
 	MonitoringTime  int
 }
 
-func (c *ControlValve) Stringer() string {
+func (c *ControlValve) String() string {
 	return c.Tag
 }
 

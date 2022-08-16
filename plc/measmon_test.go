@@ -40,7 +40,7 @@ func TestNewMeasmon(t *testing.T) {
 	}
 }
 
-func TestMeasmon_Stringer(t *testing.T) {
+func TestMeasmon_String(t *testing.T) {
 	tests := []struct {
 		name string
 		m    *measmon
@@ -75,8 +75,8 @@ func TestMeasmon_Stringer(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.m.Stringer(); got != tt.want {
-				t.Errorf("Measmon.Stringer() = %v, want %v", got, tt.want)
+			if got := tt.m.String(); got != tt.want {
+				t.Errorf("Measmon.String() = %v, want %v", got, tt.want)
 			}
 		})
 	}

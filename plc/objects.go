@@ -1,7 +1,7 @@
 package plc
 
 type PLCObject interface {
-	Stringer() string
+	String() string
 	InputMap() map[string]string
 	PlcTags() []PlcTag
 }

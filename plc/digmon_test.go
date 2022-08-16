@@ -38,7 +38,7 @@ func TestNewDigmon(t *testing.T) {
 		})
 	}
 }
-func TestDigmon_Stringer(t *testing.T) {
+func TestDigmon_String(t *testing.T) {
 	tests := []struct {
 		name string
 		d    *digmon
@@ -107,8 +107,8 @@ func TestDigmon_Stringer(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.d.Stringer(); got != tt.want {
-				t.Errorf("Digmon.Stringer() = %v, want %v", got, tt.want)
+			if got := tt.d.String(); got != tt.want {
+				t.Errorf("Digmon.String() = %v, want %v", got, tt.want)
 			}
 		})
 	}
