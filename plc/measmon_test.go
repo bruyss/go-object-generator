@@ -75,7 +75,7 @@ func TestMeasmon_String(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.m.String(); got != tt.want {
+			if got := tt.m.Tag(); got != tt.want {
 				t.Errorf("Measmon.String() = %v, want %v", got, tt.want)
 			}
 		})
@@ -86,7 +86,7 @@ func TestMeasmon_PlcTags(t *testing.T) {
 	tests := []struct {
 		name string
 		m    *measmon
-		want []PlcTag
+		want []*PlcTag
 	}{
 		{
 			"Case 1",
@@ -99,13 +99,8 @@ func TestMeasmon_PlcTags(t *testing.T) {
 				lowLimit:    0.0,
 				highLimit:   100.0,
 			},
-			[]PlcTag{
-				{
-					name:    "WWG-TT001",
-					dtype:   "Int",
-					address: "IW16",
-					comment: "Test measmon 1",
-				},
+			[]*PlcTag{
+				{name: "WWG-TT001", dtype: "Int", address: "IW16", comment: "Test measmon 1"},
 			},
 		},
 		{
@@ -119,13 +114,8 @@ func TestMeasmon_PlcTags(t *testing.T) {
 				lowLimit:    0.0,
 				highLimit:   150.0,
 			},
-			[]PlcTag{
-				{
-					name:    "WWG-FT656",
-					dtype:   "Int",
-					address: "IW18",
-					comment: "Test measmon 2",
-				},
+			[]*PlcTag{
+				{name: "WWG-FT656", dtype: "Int", address: "IW18", comment: "Test measmon 2"},
 			},
 		},
 	}

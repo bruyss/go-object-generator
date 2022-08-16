@@ -29,7 +29,7 @@ func NewDigmon(tag, description, address string, invert, alarm, invertAlarm bool
 	}
 }
 
-func (d *digmon) String() string {
+func (d *digmon) Tag() string {
 	return d.tag
 }
 
@@ -45,8 +45,8 @@ func (d *digmon) InputMap() map[string]string {
 	}
 }
 
-func (d *digmon) PlcTags() []PlcTag {
-	return []PlcTag{
+func (d *digmon) PlcTags() []*PlcTag {
+	return []*PlcTag{
 		{name: d.tag, dtype: "Bool", address: d.address, comment: d.description},
 	}
 }

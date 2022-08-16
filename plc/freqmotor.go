@@ -1,14 +1,18 @@
 package plc
 
-type FreqMotor struct {
+type freqMotor struct {
 	tag         string
 	description string
 }
 
-func (f *FreqMotor) InputMap() map[string]string {
+func (f *freqMotor) Tag() string {
+	return f.tag
+}
+
+func (f *freqMotor) InputMap() map[string]string {
 	return make(map[string]string)
 }
 
-func (f *FreqMotor) PlcTags() []PlcTag {
-	return []PlcTag{}
+func (f *freqMotor) PlcTags() (t []*PlcTag) {
+	return
 }

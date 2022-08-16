@@ -39,7 +39,7 @@ func NewMeasmon(tag, description, unit, address string, direct bool, lowLimit, h
 	}
 }
 
-func (m *measmon) String() string {
+func (m *measmon) Tag() string {
 	return m.tag
 }
 
@@ -55,12 +55,12 @@ func (m *measmon) InputMap() map[string]string {
 	}
 }
 
-func (m *measmon) PlcTags() []PlcTag {
-	inputTag := PlcTag{
+func (m *measmon) PlcTags() (t []*PlcTag) {
+	t = append(t, &PlcTag{
 		name:    m.tag,
 		dtype:   "Int",
 		address: m.address,
 		comment: m.description,
-	}
-	return []PlcTag{inputTag}
+	})
+	return
 }

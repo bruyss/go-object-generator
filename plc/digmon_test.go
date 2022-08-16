@@ -107,7 +107,7 @@ func TestDigmon_String(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.d.String(); got != tt.want {
+			if got := tt.d.Tag(); got != tt.want {
 				t.Errorf("Digmon.String() = %v, want %v", got, tt.want)
 			}
 		})
@@ -234,7 +234,7 @@ func TestDigmon_PlcTags(t *testing.T) {
 	tests := []struct {
 		name string
 		d    *digmon
-		want []PlcTag
+		want []*PlcTag
 	}{
 		{
 			"Digmon 1",
@@ -246,7 +246,7 @@ func TestDigmon_PlcTags(t *testing.T) {
 				alarm:       true,
 				invertAlarm: false,
 			},
-			[]PlcTag{
+			[]*PlcTag{
 				{"CTP-LSL001", "Bool", "I3.0", "Test digmon 1"},
 			},
 		},
@@ -260,7 +260,7 @@ func TestDigmon_PlcTags(t *testing.T) {
 				alarm:       true,
 				invertAlarm: false,
 			},
-			[]PlcTag{
+			[]*PlcTag{
 				{"CTP-LSL002", "Bool", "I3.1", "Test digmon 2"},
 			},
 		},
@@ -274,7 +274,7 @@ func TestDigmon_PlcTags(t *testing.T) {
 				alarm:       false,
 				invertAlarm: false,
 			},
-			[]PlcTag{
+			[]*PlcTag{
 				{"CTP-LSL003", "Bool", "I3.1", "Test digmon 3"},
 			},
 		},
@@ -288,7 +288,7 @@ func TestDigmon_PlcTags(t *testing.T) {
 				alarm:       true,
 				invertAlarm: true,
 			},
-			[]PlcTag{
+			[]*PlcTag{
 				{"CTP-LSH004", "Bool", "I3.7", "Test digmon 4"},
 			},
 		},
@@ -302,7 +302,7 @@ func TestDigmon_PlcTags(t *testing.T) {
 				alarm:       false,
 				invertAlarm: false,
 			},
-			[]PlcTag{
+			[]*PlcTag{
 				{"CTP-LSL005", "Bool", "I3.2", "Test digmon 5"},
 			},
 		},
