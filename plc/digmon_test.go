@@ -38,7 +38,7 @@ func TestNewDigmon(t *testing.T) {
 		})
 	}
 }
-func TestDigmon_String(t *testing.T) {
+func Test_digmon_Tag(t *testing.T) {
 	tests := []struct {
 		name string
 		d    *digmon
@@ -114,7 +114,7 @@ func TestDigmon_String(t *testing.T) {
 	}
 }
 
-func TestDigmon_InputMap(t *testing.T) {
+func Test_digmon_InputMap(t *testing.T) {
 	tests := []struct {
 		name string
 		d    *digmon
@@ -230,7 +230,7 @@ func TestDigmon_InputMap(t *testing.T) {
 	}
 }
 
-func TestDigmon_PlcTags(t *testing.T) {
+func Test_digmon_PlcTags(t *testing.T) {
 	tests := []struct {
 		name string
 		d    *digmon

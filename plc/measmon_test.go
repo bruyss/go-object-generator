@@ -40,7 +40,7 @@ func TestNewMeasmon(t *testing.T) {
 	}
 }
 
-func TestMeasmon_String(t *testing.T) {
+func Test_measmon_Tag(t *testing.T) {
 	tests := []struct {
 		name string
 		m    *measmon
@@ -82,7 +82,7 @@ func TestMeasmon_String(t *testing.T) {
 	}
 }
 
-func TestMeasmon_PlcTags(t *testing.T) {
+func Test_measmon_PlcTags(t *testing.T) {
 	tests := []struct {
 		name string
 		m    *measmon
@@ -128,7 +128,7 @@ func TestMeasmon_PlcTags(t *testing.T) {
 	}
 }
 
-func TestMeasmon_InputMap(t *testing.T) {
+func Test_measmon_InputMap(t *testing.T) {
 	tests := []struct {
 		name string
 		m    *measmon

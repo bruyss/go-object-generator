@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestControlValve_String(t *testing.T) {
+func Test_controlValve_Tag(t *testing.T) {
 	tests := []struct {
 		name string
 		c    *controlValve
@@ -76,7 +76,7 @@ func TestControlValve_String(t *testing.T) {
 	}
 }
 
-func TestControlValve_PlcTags(t *testing.T) {
+func Test_controlValve_PlcTags(t *testing.T) {
 	tests := []struct {
 		name string
 		m    *controlValve
@@ -162,7 +162,7 @@ func TestControlValve_PlcTags(t *testing.T) {
 	}
 }
 
-func TestControlValve_InputMap(t *testing.T) {
+func Test_controlValve_InputMap(t *testing.T) {
 	tests := []struct {
 		name string
 		m    *controlValve
