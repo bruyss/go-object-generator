@@ -40,48 +40,6 @@ func TestNewMeasmon(t *testing.T) {
 	}
 }
 
-func Test_measmon_Tag(t *testing.T) {
-	tests := []struct {
-		name string
-		m    *measmon
-		want string
-	}{
-		{
-			"Case 1",
-			&measmon{
-				tag:         "WWG-TT001",
-				description: "Test measmon 1",
-				unit:        "°C",
-				address:     "IW16",
-				direct:      false,
-				lowLimit:    0.0,
-				highLimit:   100.0,
-			},
-			"WWG-TT001",
-		},
-		{
-			"Case 2",
-			&measmon{
-				tag:         "WWG-FT656",
-				description: "Test measmon 2",
-				unit:        "°C",
-				address:     "IW18",
-				direct:      false,
-				lowLimit:    0.0,
-				highLimit:   150.0,
-			},
-			"WWG-FT656",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.m.Tag(); got != tt.want {
-				t.Errorf("Measmon.String() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_measmon_PlcTags(t *testing.T) {
 	tests := []struct {
 		name string
@@ -91,13 +49,13 @@ func Test_measmon_PlcTags(t *testing.T) {
 		{
 			"Case 1",
 			&measmon{
-				tag:         "WWG-TT001",
-				description: "Test measmon 1",
-				unit:        "°C",
-				address:     "IW16",
-				direct:      false,
-				lowLimit:    0.0,
-				highLimit:   100.0,
+				Tag:         "WWG-TT001",
+				Description: "Test measmon 1",
+				Unit:        "°C",
+				Address:     "IW16",
+				Direct:      false,
+				LowLimit:    0.0,
+				HighLimit:   100.0,
 			},
 			[]*PlcTag{
 				{name: "WWG-TT001", dtype: "Int", address: "IW16", comment: "Test measmon 1"},
@@ -106,13 +64,13 @@ func Test_measmon_PlcTags(t *testing.T) {
 		{
 			"Case 2",
 			&measmon{
-				tag:         "WWG-FT656",
-				description: "Test measmon 2",
-				unit:        "°C",
-				address:     "IW18",
-				direct:      false,
-				lowLimit:    0.0,
-				highLimit:   150.0,
+				Tag:         "WWG-FT656",
+				Description: "Test measmon 2",
+				Unit:        "°C",
+				Address:     "IW18",
+				Direct:      false,
+				LowLimit:    0.0,
+				HighLimit:   150.0,
 			},
 			[]*PlcTag{
 				{name: "WWG-FT656", dtype: "Int", address: "IW18", comment: "Test measmon 2"},
@@ -137,13 +95,13 @@ func Test_measmon_InputMap(t *testing.T) {
 		{
 			"Case 1",
 			&measmon{
-				tag:         "WWG-TT001",
-				description: "Test measmon 1",
-				unit:        "°C",
-				address:     "IW16",
-				direct:      false,
-				lowLimit:    0.0,
-				highLimit:   100.0,
+				Tag:         "WWG-TT001",
+				Description: "Test measmon 1",
+				Unit:        "°C",
+				Address:     "IW16",
+				Direct:      false,
+				LowLimit:    0.0,
+				HighLimit:   100.0,
 			},
 			map[string]string{
 				"Tag":         "WWG-TT001",
@@ -158,13 +116,13 @@ func Test_measmon_InputMap(t *testing.T) {
 		{
 			"Case 2",
 			&measmon{
-				tag:         "WWG-FT656",
-				description: "Test measmon 2",
-				unit:        "m³/h",
-				address:     "IW18",
-				direct:      false,
-				lowLimit:    0.0,
-				highLimit:   150.0,
+				Tag:         "WWG-FT656",
+				Description: "Test measmon 2",
+				Unit:        "m³/h",
+				Address:     "IW18",
+				Direct:      false,
+				LowLimit:    0.0,
+				HighLimit:   150.0,
 			},
 			map[string]string{
 				"Tag":         "WWG-FT656",

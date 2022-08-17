@@ -1,7 +1,8 @@
 package plc
 
 type PlcObject interface {
-	Tag() string
+	// Tag() string
+	String() string
 	InputMap() map[string]string
 	PlcTags() []*PlcTag
 }

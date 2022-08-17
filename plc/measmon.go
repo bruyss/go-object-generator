@@ -1,6 +1,7 @@
 package plc
 
 import (
+	"encoding/json"
 	"strconv"
 
 	"github.com/bruyss/go-object-generator/utils"
@@ -8,13 +9,13 @@ import (
 )
 
 type measmon struct {
-	tag         string
-	description string
-	unit        string
-	address     string
-	direct      bool
-	lowLimit    float64
-	highLimit   float64
+	Tag         string
+	Description string
+	Unit        string
+	Address     string
+	Direct      bool
+	LowLimit    float64
+	HighLimit   float64
 }
 
 func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit string) *measmon {
@@ -34,38 +35,39 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 	}
 
 	return &measmon{
-		tag:         tag,
-		description: description,
-		unit:        unit,
-		address:     address,
-		direct:      directBool,
-		lowLimit:    lowLimitFloat,
-		highLimit:   highLimitFloat,
+		Tag:         tag,
+		Description: description,
+		Unit:        unit,
+		Address:     address,
+		Direct:      directBool,
+		LowLimit:    lowLimitFloat,
+		HighLimit:   highLimitFloat,
 	}
 }
 
-func (m *measmon) Tag() string {
-	return m.tag
+func (m *measmon) String() string {
+	b, _ := json.Marshal(m)
+	return string(b)
 }
 
 func (m *measmon) InputMap() map[string]string {
 	return map[string]string{
-		"Tag":         m.tag,
-		"Description": m.description,
-		"IDB":         "IDB_" + m.tag,
-		"Unit":        m.unit,
-		"Input":       m.tag,
-		"LowLimit":    strconv.FormatFloat(m.lowLimit, 'f', 1, 64),
-		"HighLimit":   strconv.FormatFloat(m.highLimit, 'f', 1, 64),
+		"Tag":         m.Tag,
+		"Description": m.Description,
+		"IDB":         "IDB_" + m.Tag,
+		"Unit":        m.Unit,
+		"Input":       utils.TagQuotes(m.Tag),
+		"LowLimit":    strconv.FormatFloat(m.LowLimit, 'f', 1, 64),
+		"HighLimit":   strconv.FormatFloat(m.HighLimit, 'f', 1, 64),
 	}
 }
 
 func (m *measmon) PlcTags() (t []*PlcTag) {
 	t = append(t, &PlcTag{
-		name:    m.tag,
+		name:    m.Tag,
 		dtype:   "Int",
-		address: m.address,
-		comment: m.description,
+		address: m.Address,
+		comment: m.Description,
 	})
 	return
 }
