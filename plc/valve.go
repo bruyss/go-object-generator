@@ -64,12 +64,12 @@ func (v *valve) InputMap() map[string]string {
 	if v.hasFbo {
 		fbo = v.fboTag
 	} else {
-		fbo = utils.TagQuotes("IDB_"+v.tag) + ".Q_On"
+		fbo = strconv.Quote("IDB_"+v.tag) + ".Q_On"
 	}
 	if v.hasFbc {
 		fbc = v.fbcTag
 	} else {
-		fbc = "NOT " + utils.TagQuotes("IDB_"+v.tag) + ".Q_On"
+		fbc = "NOT " + strconv.Quote("IDB_"+v.tag) + ".Q_On"
 	}
 
 	return map[string]string{

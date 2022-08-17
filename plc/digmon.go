@@ -2,8 +2,6 @@ package plc
 
 import (
 	"strconv"
-
-	"github.com/bruyss/go-object-generator/utils"
 )
 
 type digmon struct {
@@ -38,7 +36,7 @@ func (d *digmon) InputMap() map[string]string {
 		"Tag":         d.tag,
 		"Description": d.description,
 		"IDB":         "IDB_" + d.tag,
-		"Input":       utils.TagQuotes(d.tag),
+		"Input":       strconv.Quote(d.tag),
 		"Invert":      strconv.FormatBool(d.invert),
 		"Alarm":       strconv.FormatBool(d.alarm),
 		"InvertAlarm": strconv.FormatBool(d.invertAlarm),

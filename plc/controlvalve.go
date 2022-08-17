@@ -2,8 +2,6 @@ package plc
 
 import (
 	"strconv"
-
-	"github.com/bruyss/go-object-generator/utils"
 )
 
 type controlValve struct {
@@ -28,7 +26,7 @@ func (c *controlValve) InputMap() map[string]string {
 		"NoFeedback":     strconv.FormatBool(len(c.feedbackAddress) <= 0),
 		"Feedback":       c.tag + "_FB",
 		"MonitoringTime": strconv.Itoa(c.monitoringTime),
-		"Output":         utils.TagQuotes(c.tag),
+		"Output":         strconv.Quote(c.tag),
 	}
 }
 

@@ -56,7 +56,7 @@ func (m *measmon) InputMap() map[string]string {
 		"Description": m.Description,
 		"IDB":         "IDB_" + m.Tag,
 		"Unit":        m.Unit,
-		"Input":       utils.TagQuotes(m.Tag),
+		"Input":       strconv.Quote(m.Tag),
 		"LowLimit":    strconv.FormatFloat(m.LowLimit, 'f', 1, 64),
 		"HighLimit":   strconv.FormatFloat(m.HighLimit, 'f', 1, 64),
 	}
