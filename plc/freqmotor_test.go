@@ -5,7 +5,236 @@ import (
 	"testing"
 )
 
-func TestFreqMotor_Stringer(t *testing.T) {
+func TestNewFreqMotor(t *testing.T) {
+	type args struct {
+		tag              string
+		description      string
+		contactorAddress string
+		pqwAddress       string
+		feedbackTag      string
+		feedbackAddress  string
+		breakerTag       string
+		breakerAddress   string
+		switchTag        string
+		switchAddress    string
+		danfossDrive     string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    *freqMotor
+		wantErr bool
+	}{
+		{
+			"Frequency motor",
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "false"},
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			false,
+		},
+		{
+			"Frequency motor no contactor address",
+			args{"WWG-P001", "Frequency motor 1", "", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "false"},
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "M0.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			false,
+		},
+		{
+			"Frequency motor no PQW address",
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "false"},
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "MW0",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			false,
+		},
+		{
+			"Frequency motor no feedback address",
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "false"},
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "M0.1",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			false,
+		},
+		{
+			"Frequency motor no breaker address",
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "", "WWG-P001_WS", "I1.2", "false"},
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "M0.2",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			false,
+		},
+		{
+			"Frequency motor no switch address",
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "", "false"},
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "M0.3",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			false,
+		},
+		{
+			"Frequency motor no feedback",
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "", "", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "false"},
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "",
+				FeedbackAddress:  "",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      false,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			false,
+		},
+		{
+			"Frequency motor no breaker",
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "", "", "WWG-P001_WS", "I1.2", "false"},
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "",
+				BreakerAddress:   "",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       false,
+				hasSwitch:        true,
+			},
+			false,
+		},
+		{
+			"Frequency motor no switch",
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "", "", "false"},
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "",
+				SwitchAddress:    "",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        false,
+			},
+			false,
+		},
+		{
+			"Frequency motor bad danfoss",
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "allo"},
+			nil,
+			true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := NewFreqMotor(tt.args.tag, tt.args.description, tt.args.contactorAddress, tt.args.pqwAddress, tt.args.feedbackTag, tt.args.feedbackAddress, tt.args.breakerTag, tt.args.breakerAddress, tt.args.switchTag, tt.args.switchAddress, tt.args.danfossDrive)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("NewFreqMotor() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewFreqMotor() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+func Test_freqMotor_String(t *testing.T) {
 	tests := []struct {
 		name string
 		f    *freqMotor
@@ -26,131 +255,19 @@ func TestFreqMotor_Stringer(t *testing.T) {
 				SwitchAddress:    "I4.2",
 				DanfossDrive:     false,
 			},
-			"WWG-P001",
-		},
-		{
-			"No feedback",
-			&freqMotor{
-				Tag:              "WWG-P002",
-				Description:      "Frequency motor 2",
-				ContactorAddress: "Q4.1",
-				PqwAddress:       "QW22",
-				FeedbackAddress:  "",
-				BreakerAddress:   "I4.3",
-				SwitchAddress:    "I4.4",
-				DanfossDrive:     false,
-			},
-			"WWG-P002",
-		},
-		{
-			"No breaker",
-			&freqMotor{
-				Tag:              "WWG-P003",
-				Description:      "Frequency motor 3",
-				ContactorAddress: "Q4.2",
-				PqwAddress:       "QW24",
-				FeedbackAddress:  "I4.5",
-				BreakerAddress:   "",
-				SwitchAddress:    "I4.6",
-				DanfossDrive:     false,
-			},
-			"WWG-P003",
-		},
-		{
-			"No switch",
-			&freqMotor{
-				Tag:              "WWG-P004",
-				Description:      "Frequency motor 4",
-				ContactorAddress: "Q4.3",
-				PqwAddress:       "QW26",
-				FeedbackAddress:  "I4.1",
-				BreakerAddress:   "I5.0",
-				SwitchAddress:    "",
-				DanfossDrive:     false,
-			},
-			"WWG-P004",
-		},
-		{
-			"No feedback & breaker",
-			&freqMotor{
-				Tag:              "WWG-P005",
-				Description:      "Frequency motor 5",
-				ContactorAddress: "Q4.4",
-				PqwAddress:       "QW28",
-				FeedbackAddress:  "",
-				BreakerAddress:   "",
-				SwitchAddress:    "I5.1",
-				DanfossDrive:     false,
-			},
-			"WWG-P005",
-		},
-		{
-			"Danfoss",
-			&freqMotor{
-				Tag:              "WWG-P006",
-				Description:      "Frequency motor 6",
-				ContactorAddress: "Q4.0",
-				PqwAddress:       "QW20",
-				FeedbackAddress:  "I4.0",
-				BreakerAddress:   "I4.1",
-				SwitchAddress:    "I4.2",
-				DanfossDrive:     true,
-			},
-			"WWG-P006",
-		},
-		{
-			"No feedback danfoss",
-			&freqMotor{
-				Tag:              "WWG-P002",
-				Description:      "Frequency motor 2",
-				ContactorAddress: "Q4.1",
-				PqwAddress:       "QW22",
-				FeedbackAddress:  "",
-				BreakerAddress:   "I4.3",
-				SwitchAddress:    "I4.4",
-				DanfossDrive:     true,
-			},
-			"WWG-P002",
-		},
-		{
-			"No breaker danfoss",
-			&freqMotor{
-				Tag:              "WWG-P003",
-				Description:      "Frequency motor 3",
-				ContactorAddress: "Q4.2",
-				PqwAddress:       "QW24",
-				FeedbackAddress:  "I4.5",
-				BreakerAddress:   "",
-				SwitchAddress:    "I4.6",
-				DanfossDrive:     true,
-			},
-			"WWG-P003",
-		},
-		{
-			"No switch danfoss",
-			&freqMotor{
-				Tag:              "WWG-P004",
-				Description:      "Frequency motor 4",
-				ContactorAddress: "Q4.3",
-				PqwAddress:       "QW26",
-				FeedbackAddress:  "I4.1",
-				BreakerAddress:   "I5.0",
-				SwitchAddress:    "",
-				DanfossDrive:     true,
-			},
-			"WWG-P004",
+			`{"Tag":"WWG-P001","Description":"Frequency motor 1","ContactorAddress":"Q4.0","PqwAddress":"QW20","FeedbackTag":"WWG-P001_FB","FeedbackAddress":"I4.0","BreakerTag":"WWG-P001_TH","BreakerAddress":"I4.1","SwitchTag":"WWG-P001_WS","SwitchAddress":"I4.2","DanfossDrive":false}`,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.f.Stringer(); got != tt.want {
+			if got := tt.f.String(); got != tt.want {
 				t.Errorf("FreqMotor.Stringer() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestFreqMotor_InputMap(t *testing.T) {
+func Test_freqMotor_InputMap(t *testing.T) {
 	tests := []struct {
 		name string
 		f    *freqMotor
@@ -170,10 +287,14 @@ func TestFreqMotor_InputMap(t *testing.T) {
 				SwitchTag:        "WWG-P001_WS",
 				SwitchAddress:    "I4.2",
 				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
 			},
 			map[string]string{
 				"Tag":              "WWG-P001",
 				"Description":      "Frequency motor 1",
+				"IDB":              "IDB_WWG-P001",
 				"ContactorAddress": "Q4.0",
 				"PQWAddress":       "QW20",
 				"FeedbackTag":      "WWG-P001_FB",
@@ -192,22 +313,29 @@ func TestFreqMotor_InputMap(t *testing.T) {
 				Description:      "Frequency motor 2",
 				ContactorAddress: "Q4.1",
 				PqwAddress:       "QW22",
+				FeedbackTag:      "",
 				FeedbackAddress:  "",
+				BreakerTag:       "WWG-P002_TH",
 				BreakerAddress:   "I4.3",
+				SwitchTag:        "WWG-P002_WS",
 				SwitchAddress:    "I4.4",
 				DanfossDrive:     false,
+				hasFeedback:      false,
+				hasBreaker:       true,
+				hasSwitch:        true,
 			},
 			map[string]string{
-				"Tag":              "WWG-P001",
-				"Description":      "Frequency motor 1",
-				"ContactorAddress": "Q4.0",
-				"PQWAddress":       "QW20",
-				"FeedbackTag":      "WWG-P001_FB",
-				"FeedbackAddress":  "I4.0",
-				"BreakerTag":       "WWG-P001_TH",
-				"BreakerAddress":   "I4.1",
-				"SwitchTag":        "WWG-P001_WS",
-				"SwitchAddress":    "I4.2",
+				"Tag":              "WWG-P002",
+				"Description":      "Frequency motor 2",
+				"IDB":              "IDB_WWG-P002",
+				"ContactorAddress": "Q4.1",
+				"PQWAddress":       "QW22",
+				"FeedbackTag":      "",
+				"FeedbackAddress":  "",
+				"BreakerTag":       "WWG-P002_TH",
+				"BreakerAddress":   "I4.3",
+				"SwitchTag":        "WWG-P002_WS",
+				"SwitchAddress":    "I4.4",
 				"Danfoss":          "false",
 			},
 		},
@@ -218,22 +346,29 @@ func TestFreqMotor_InputMap(t *testing.T) {
 				Description:      "Frequency motor 3",
 				ContactorAddress: "Q4.2",
 				PqwAddress:       "QW24",
+				FeedbackTag:      "WWG-P003_FB",
 				FeedbackAddress:  "I4.5",
+				BreakerTag:       "",
 				BreakerAddress:   "",
+				SwitchTag:        "WWG-P003_WS",
 				SwitchAddress:    "I4.6",
 				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       false,
+				hasSwitch:        true,
 			},
 			map[string]string{
-				"Tag":              "WWG-P001",
-				"Description":      "Frequency motor 1",
-				"ContactorAddress": "Q4.0",
-				"PQWAddress":       "QW20",
-				"FeedbackTag":      "WWG-P001_FB",
-				"FeedbackAddress":  "I4.0",
-				"BreakerTag":       "WWG-P001_TH",
-				"BreakerAddress":   "I4.1",
-				"SwitchTag":        "WWG-P001_WS",
-				"SwitchAddress":    "I4.2",
+				"Tag":              "WWG-P003",
+				"Description":      "Frequency motor 3",
+				"IDB":              "IDB_WWG-P003",
+				"ContactorAddress": "Q4.2",
+				"PQWAddress":       "QW24",
+				"FeedbackTag":      "WWG-P003_FB",
+				"FeedbackAddress":  "I4.5",
+				"BreakerTag":       "",
+				"BreakerAddress":   "",
+				"SwitchTag":        "WWG-P003_WS",
+				"SwitchAddress":    "I4.6",
 				"Danfoss":          "false",
 			},
 		},
@@ -244,22 +379,29 @@ func TestFreqMotor_InputMap(t *testing.T) {
 				Description:      "Frequency motor 4",
 				ContactorAddress: "Q4.3",
 				PqwAddress:       "QW26",
+				FeedbackTag:      "WWG-P004_FB",
 				FeedbackAddress:  "I4.1",
+				BreakerTag:       "WWG-P004_TH",
 				BreakerAddress:   "I5.0",
+				SwitchTag:        "",
 				SwitchAddress:    "",
 				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        false,
 			},
 			map[string]string{
-				"Tag":              "WWG-P001",
-				"Description":      "Frequency motor 1",
-				"ContactorAddress": "Q4.0",
-				"PQWAddress":       "QW20",
-				"FeedbackTag":      "WWG-P001_FB",
-				"FeedbackAddress":  "I4.0",
-				"BreakerTag":       "WWG-P001_TH",
-				"BreakerAddress":   "I4.1",
-				"SwitchTag":        "WWG-P001_WS",
-				"SwitchAddress":    "I4.2",
+				"Tag":              "WWG-P004",
+				"Description":      "Frequency motor 4",
+				"IDB":              "IDB_WWG-P004",
+				"ContactorAddress": "Q4.3",
+				"PQWAddress":       "QW26",
+				"FeedbackTag":      "WWG-P004_FB",
+				"FeedbackAddress":  "I4.1",
+				"BreakerTag":       "WWG-P004_TH",
+				"BreakerAddress":   "I5.0",
+				"SwitchTag":        "",
+				"SwitchAddress":    "",
 				"Danfoss":          "false",
 			},
 		},
@@ -270,22 +412,29 @@ func TestFreqMotor_InputMap(t *testing.T) {
 				Description:      "Frequency motor 5",
 				ContactorAddress: "Q4.4",
 				PqwAddress:       "QW28",
+				FeedbackTag:      "",
 				FeedbackAddress:  "",
+				BreakerTag:       "",
 				BreakerAddress:   "",
+				SwitchTag:        "WWG-P005_WS",
 				SwitchAddress:    "I5.1",
 				DanfossDrive:     false,
+				hasFeedback:      false,
+				hasBreaker:       false,
+				hasSwitch:        true,
 			},
 			map[string]string{
-				"Tag":              "WWG-P001",
-				"Description":      "Frequency motor 1",
-				"ContactorAddress": "Q4.0",
-				"PQWAddress":       "QW20",
-				"FeedbackTag":      "WWG-P001_FB",
-				"FeedbackAddress":  "I4.0",
-				"BreakerTag":       "WWG-P001_TH",
-				"BreakerAddress":   "I4.1",
-				"SwitchTag":        "WWG-P001_WS",
-				"SwitchAddress":    "I4.2",
+				"Tag":              "WWG-P005",
+				"Description":      "Frequency motor 5",
+				"IDB":              "IDB_WWG-P005",
+				"ContactorAddress": "Q4.4",
+				"PQWAddress":       "QW28",
+				"FeedbackTag":      "",
+				"FeedbackAddress":  "",
+				"BreakerTag":       "",
+				"BreakerAddress":   "",
+				"SwitchTag":        "WWG-P005_WS",
+				"SwitchAddress":    "I5.1",
 				"Danfoss":          "false",
 			},
 		},
@@ -296,101 +445,30 @@ func TestFreqMotor_InputMap(t *testing.T) {
 				Description:      "Frequency motor 6",
 				ContactorAddress: "Q4.0",
 				PqwAddress:       "QW20",
+				FeedbackTag:      "WWG-P006_FB",
 				FeedbackAddress:  "I4.0",
+				BreakerTag:       "WWG-P006_TH",
 				BreakerAddress:   "I4.1",
+				SwitchTag:        "WWG-P006_WS",
 				SwitchAddress:    "I4.2",
 				DanfossDrive:     true,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
 			},
 			map[string]string{
-				"Tag":              "WWG-P001",
-				"Description":      "Frequency motor 1",
+				"Tag":              "WWG-P006",
+				"Description":      "Frequency motor 6",
+				"IDB":              "IDB_WWG-P006",
 				"ContactorAddress": "Q4.0",
 				"PQWAddress":       "QW20",
-				"FeedbackTag":      "WWG-P001_FB",
+				"FeedbackTag":      "WWG-P006_FB",
 				"FeedbackAddress":  "I4.0",
-				"BreakerTag":       "WWG-P001_TH",
+				"BreakerTag":       "WWG-P006_TH",
 				"BreakerAddress":   "I4.1",
-				"SwitchTag":        "WWG-P001_WS",
+				"SwitchTag":        "WWG-P006_WS",
 				"SwitchAddress":    "I4.2",
-				"Danfoss":          "false",
-			},
-		},
-		{
-			"No feedback danfoss",
-			&freqMotor{
-				Tag:              "WWG-P002",
-				Description:      "Frequency motor 2",
-				ContactorAddress: "Q4.1",
-				PqwAddress:       "QW22",
-				FeedbackAddress:  "",
-				BreakerAddress:   "I4.3",
-				SwitchAddress:    "I4.4",
-				DanfossDrive:     true,
-			},
-			map[string]string{
-				"Tag":              "WWG-P001",
-				"Description":      "Frequency motor 1",
-				"ContactorAddress": "Q4.0",
-				"PQWAddress":       "QW20",
-				"FeedbackTag":      "WWG-P001_FB",
-				"FeedbackAddress":  "I4.0",
-				"BreakerTag":       "WWG-P001_TH",
-				"BreakerAddress":   "I4.1",
-				"SwitchTag":        "WWG-P001_WS",
-				"SwitchAddress":    "I4.2",
-				"Danfoss":          "false",
-			},
-		},
-		{
-			"No breaker danfoss",
-			&freqMotor{
-				Tag:              "WWG-P003",
-				Description:      "Frequency motor 3",
-				ContactorAddress: "Q4.2",
-				PqwAddress:       "QW24",
-				FeedbackAddress:  "I4.5",
-				BreakerAddress:   "",
-				SwitchAddress:    "I4.6",
-				DanfossDrive:     true,
-			},
-			map[string]string{
-				"Tag":              "WWG-P001",
-				"Description":      "Frequency motor 1",
-				"ContactorAddress": "Q4.0",
-				"PQWAddress":       "QW20",
-				"FeedbackTag":      "WWG-P001_FB",
-				"FeedbackAddress":  "I4.0",
-				"BreakerTag":       "WWG-P001_TH",
-				"BreakerAddress":   "I4.1",
-				"SwitchTag":        "WWG-P001_WS",
-				"SwitchAddress":    "I4.2",
-				"Danfoss":          "false",
-			},
-		},
-		{
-			"No switch danfoss",
-			&freqMotor{
-				Tag:              "WWG-P004",
-				Description:      "Frequency motor 4",
-				ContactorAddress: "Q4.3",
-				PqwAddress:       "QW26",
-				FeedbackAddress:  "I4.1",
-				BreakerAddress:   "I5.0",
-				SwitchAddress:    "",
-				DanfossDrive:     true,
-			},
-			map[string]string{
-				"Tag":              "WWG-P001",
-				"Description":      "Frequency motor 1",
-				"ContactorAddress": "Q4.0",
-				"PQWAddress":       "QW20",
-				"FeedbackTag":      "WWG-P001_FB",
-				"FeedbackAddress":  "I4.0",
-				"BreakerTag":       "WWG-P001_TH",
-				"BreakerAddress":   "I4.1",
-				"SwitchTag":        "WWG-P001_WS",
-				"SwitchAddress":    "I4.2",
-				"Danfoss":          "false",
+				"Danfoss":          "true",
 			},
 		},
 	}
@@ -403,18 +481,469 @@ func TestFreqMotor_InputMap(t *testing.T) {
 	}
 }
 
-func TestFreqMotor_PlcTags(t *testing.T) {
+func Test_freqMotor_PlcTags(t *testing.T) {
 	tests := []struct {
 		name string
 		f    *freqMotor
-		want []PlcTag
+		want []*PlcTag
 	}{
-		// TODO: Add test cases.
+		{
+			"Frequency motor",
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q4.0",
+				PqwAddress:       "QW20",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I4.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I4.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I4.2",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			[]*PlcTag{
+				{"WWG-P001", "Bool", "Q4.0", "Frequency motor 1"},
+				{"WWG-P001_PQW", "Int", "QW20", "Frequency motor 1 output"},
+				{"WWG-P001_FB", "Bool", "I4.0", "Frequency motor 1 feedback"},
+				{"WWG-P001_TH", "Bool", "I4.1", "Frequency motor 1 breaker"},
+				{"WWG-P001_WS", "Bool", "I4.2", "Frequency motor 1 protection switch"},
+			},
+		},
+		{
+			"No feedback",
+			&freqMotor{
+				Tag:              "WWG-P002",
+				Description:      "Frequency motor 2",
+				ContactorAddress: "Q4.1",
+				PqwAddress:       "QW22",
+				FeedbackTag:      "",
+				FeedbackAddress:  "",
+				BreakerTag:       "WWG-P002_TH",
+				BreakerAddress:   "I4.3",
+				SwitchTag:        "WWG-P002_WS",
+				SwitchAddress:    "I4.4",
+				DanfossDrive:     false,
+				hasFeedback:      false,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			[]*PlcTag{
+				{"WWG-P002", "Bool", "Q4.1", "Frequency motor 2"},
+				{"WWG-P002_PQW", "Int", "QW22", "Frequency motor 2 output"},
+				{"WWG-P002_TH", "Bool", "I4.3", "Frequency motor 2 breaker"},
+				{"WWG-P002_WS", "Bool", "I4.4", "Frequency motor 2 protection switch"},
+			},
+		},
+		{
+			"No breaker",
+			&freqMotor{
+				Tag:              "WWG-P003",
+				Description:      "Frequency motor 3",
+				ContactorAddress: "Q4.2",
+				PqwAddress:       "QW24",
+				FeedbackTag:      "WWG-P003_FB",
+				FeedbackAddress:  "I4.5",
+				BreakerTag:       "",
+				BreakerAddress:   "",
+				SwitchTag:        "WWG-P003_WS",
+				SwitchAddress:    "I4.6",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       false,
+				hasSwitch:        true,
+			},
+			[]*PlcTag{
+				{"WWG-P003", "Bool", "Q4.2", "Frequency motor 3"},
+				{"WWG-P003_PQW", "Int", "QW24", "Frequency motor 3 output"},
+				{"WWG-P003_FB", "Bool", "I4.5", "Frequency motor 3 feedback"},
+				{"WWG-P003_WS", "Bool", "I4.6", "Frequency motor 3 protection switch"},
+			},
+		},
+		{
+			"No switch",
+			&freqMotor{
+				Tag:              "WWG-P004",
+				Description:      "Frequency motor 4",
+				ContactorAddress: "Q4.3",
+				PqwAddress:       "QW26",
+				FeedbackTag:      "WWG-P004_FB",
+				FeedbackAddress:  "I4.1",
+				BreakerTag:       "WWG-P004_TH",
+				BreakerAddress:   "I5.0",
+				SwitchTag:        "",
+				SwitchAddress:    "",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        false,
+			},
+			[]*PlcTag{
+				{"WWG-P004", "Bool", "Q4.3", "Frequency motor 4"},
+				{"WWG-P004_PQW", "Int", "QW26", "Frequency motor 4 output"},
+				{"WWG-P004_FB", "Bool", "I4.1", "Frequency motor 4 feedback"},
+				{"WWG-P004_TH", "Bool", "I5.0", "Frequency motor 4 breaker"},
+			},
+		},
+		{
+			"No feedback & breaker",
+			&freqMotor{
+				Tag:              "WWG-P005",
+				Description:      "Frequency motor 5",
+				ContactorAddress: "Q4.4",
+				PqwAddress:       "QW28",
+				FeedbackTag:      "",
+				FeedbackAddress:  "",
+				BreakerTag:       "",
+				BreakerAddress:   "",
+				SwitchTag:        "WWG-P005_WS",
+				SwitchAddress:    "I5.1",
+				DanfossDrive:     false,
+				hasFeedback:      false,
+				hasBreaker:       false,
+				hasSwitch:        true,
+			},
+			[]*PlcTag{
+				{"WWG-P005", "Bool", "Q4.4", "Frequency motor 5"},
+				{"WWG-P005_PQW", "Int", "QW28", "Frequency motor 5 output"},
+				{"WWG-P005_WS", "Bool", "I5.1", "Frequency motor 5 protection switch"},
+			},
+		},
+		{
+			"Danfoss",
+			&freqMotor{
+				Tag:              "WWG-P006",
+				Description:      "Frequency motor 6",
+				ContactorAddress: "Q4.0",
+				PqwAddress:       "QW20",
+				FeedbackTag:      "WWG-P006_FB",
+				FeedbackAddress:  "I4.0",
+				BreakerTag:       "WWG-P006_TH",
+				BreakerAddress:   "I4.1",
+				SwitchTag:        "WWG-P006_WS",
+				SwitchAddress:    "I4.2",
+				DanfossDrive:     true,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			[]*PlcTag{
+				{"WWG-P006_TH", "Bool", "I4.1", "Frequency motor 6 breaker"},
+				{"WWG-P006_WS", "Bool", "I4.2", "Frequency motor 6 protection switch"},
+			},
+		},
+		{
+			"No breaker danfoss",
+			&freqMotor{
+				Tag:              "WWG-P003",
+				Description:      "Frequency motor 3",
+				ContactorAddress: "Q4.2",
+				PqwAddress:       "QW24",
+				FeedbackTag:      "WWG-P003_FB",
+				FeedbackAddress:  "I4.5",
+				BreakerTag:       "",
+				BreakerAddress:   "",
+				SwitchTag:        "WWG-P003_WS",
+				SwitchAddress:    "I4.6",
+				DanfossDrive:     true,
+				hasFeedback:      true,
+				hasBreaker:       false,
+				hasSwitch:        true,
+			},
+			[]*PlcTag{
+				{"WWG-P003_WS", "Bool", "I4.6", "Frequency motor 3 protection switch"},
+			},
+		},
+		{
+			"No switch danfoss",
+			&freqMotor{
+				Tag:              "WWG-P004",
+				Description:      "Frequency motor 4",
+				ContactorAddress: "Q4.3",
+				PqwAddress:       "QW26",
+				FeedbackTag:      "",
+				FeedbackAddress:  "I4.1",
+				BreakerTag:       "WWG-P004_TH",
+				BreakerAddress:   "I5.0",
+				SwitchTag:        "",
+				SwitchAddress:    "",
+				DanfossDrive:     true,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        false,
+			},
+			[]*PlcTag{
+				{"WWG-P004_TH", "Bool", "I5.0", "Frequency motor 4 breaker"},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.f.PlcTags(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("FreqMotor.PlcTags() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_freqMotor_contactorPlcTag(t *testing.T) {
+	tests := []struct {
+		name  string
+		f     *freqMotor
+		wantT *PlcTag
+	}{
+		{
+			"Frequency motor",
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			&PlcTag{name: "WWG-P001", dtype: "Bool", address: "Q1.0", comment: "Frequency motor 1"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotT := tt.f.contactorPlcTag(); !reflect.DeepEqual(gotT, tt.wantT) {
+				t.Errorf("freqMotor.contactorPlcTag() = %v, want %v", gotT, tt.wantT)
+			}
+		})
+	}
+}
+
+func Test_freqMotor_pqwPlcTag(t *testing.T) {
+	tests := []struct {
+		name  string
+		f     *freqMotor
+		wantT *PlcTag
+	}{
+		{
+			"Frequency motor",
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			&PlcTag{name: "WWG-P001_PQW", dtype: "Int", address: "QW2", comment: "Frequency motor 1 output"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotT := tt.f.pqwPlcTag(); !reflect.DeepEqual(gotT, tt.wantT) {
+				t.Errorf("freqMotor.pqwPlcTag() = %v, want %v", gotT, tt.wantT)
+			}
+		})
+	}
+}
+
+func Test_freqMotor_feedbackPlcTag(t *testing.T) {
+	tests := []struct {
+		name  string
+		f     *freqMotor
+		wantT *PlcTag
+	}{
+		{
+			"Frequency motor",
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			&PlcTag{name: "WWG-P001_FB", dtype: "Bool", address: "I1.0", comment: "Frequency motor 1 feedback"},
+		},
+		{
+			"Frequency motor no feedback",
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      false,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			nil,
+		},
+		{
+			"Frequency motor danfoss",
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     true,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotT := tt.f.feedbackPlcTag(); !reflect.DeepEqual(gotT, tt.wantT) {
+				t.Errorf("freqMotor.feedbackPlcTag() = %v, want %v", gotT, tt.wantT)
+			}
+		})
+	}
+}
+
+func Test_freqMotor_breakerPlcTag(t *testing.T) {
+	tests := []struct {
+		name  string
+		f     *freqMotor
+		wantT *PlcTag
+	}{
+		{
+			"Frequency motor",
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			&PlcTag{name: "WWG-P001_TH", dtype: "Bool", address: "I1.1", comment: "Frequency motor 1 breaker"},
+		},
+		{
+			"Frequency motor no feedback",
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       false,
+				hasSwitch:        true,
+			},
+			nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotT := tt.f.breakerPlcTag(); !reflect.DeepEqual(gotT, tt.wantT) {
+				t.Errorf("freqMotor.breakerPlcTag() = %v, want %v", gotT, tt.wantT)
+			}
+		})
+	}
+}
+
+func Test_freqMotor_switchPlcTag(t *testing.T) {
+	tests := []struct {
+		name  string
+		f     *freqMotor
+		wantT *PlcTag
+	}{
+		{
+			"Frequency motor",
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+			},
+			&PlcTag{name: "WWG-P001_WS", dtype: "Bool", address: "I1.2", comment: "Frequency motor 1 protection switch"},
+		},
+		{
+			"Frequency motor no feedback",
+			&freqMotor{
+				Tag:              "WWG-P001",
+				Description:      "Frequency motor 1",
+				ContactorAddress: "Q1.0",
+				PqwAddress:       "QW2",
+				FeedbackTag:      "WWG-P001_FB",
+				FeedbackAddress:  "I1.0",
+				BreakerTag:       "WWG-P001_TH",
+				BreakerAddress:   "I1.1",
+				SwitchTag:        "WWG-P001_WS",
+				SwitchAddress:    "I1.2",
+				DanfossDrive:     false,
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        false,
+			},
+			nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotT := tt.f.switchPlcTag(); !reflect.DeepEqual(gotT, tt.wantT) {
+				t.Errorf("freqMotor.switchPlcTag() = %v, want %v", gotT, tt.wantT)
 			}
 		})
 	}
