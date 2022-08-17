@@ -6,3 +6,7 @@ type PlcTag struct {
 	address string
 	comment string
 }
+
+func (t *PlcTag) String() string {
+	return t.name + "(" + t.dtype + ";" + t.address + ";" + t.comment + ")"
+}

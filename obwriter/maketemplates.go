@@ -1,14 +1,15 @@
 package obwriter
 
 import (
-	"log"
 	"os"
+
+	"github.com/bruyss/go-object-generator/utils"
 )
 
-const folderName = "templates"
+const templateFolderName = "templates"
 
 func writeTemplate(name, template string) error {
-	f, err := os.Create(folderName + "/" + name + ".tmpl")
+	f, err := os.Create(templateFolderName + "/" + name + ".tmpl")
 	if err != nil {
 		return err
 	}
@@ -21,14 +22,14 @@ func writeTemplate(name, template string) error {
 }
 
 func WriteTemplates(templates map[string]string) error {
-	err := os.Mkdir(folderName, 0750)
+	err := os.Mkdir(templateFolderName, 0750)
 	if err != nil && !os.IsExist(err) {
 		return err
 	}
 	for k, v := range templates {
 		err := writeTemplate(k, v)
 		if err != nil {
-			log.Println(err)
+			utils.Sugar.Error(err)
 		}
 	}
 	return nil

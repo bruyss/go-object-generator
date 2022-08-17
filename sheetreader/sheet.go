@@ -9,55 +9,11 @@ import (
 	"github.com/bruyss/go-object-generator/utils"
 )
 
-var measmonCols = []string{
-	"Tag",
-	"Address",
-	"Description",
-	"Unit",
-	"Direct",
-	"Min",
-	"Max",
-}
-
-var motorCols = []string{
-	"Tag",
-	"Address",
-	"Description",
-	"FB tag",
-	"FB address",
-	"TH tag",
-	"TH address",
-	"WS tag",
-	"WS address",
-}
-
-var freqMotorCols = []string{
-	"Tag",
-	"Address",
-	"Description",
-	"Danfoss",
-	"FB tag",
-	"FB address",
-	"TH tag",
-	"TH address",
-	"WS tag",
-	"WS address",
-}
-
-var digmonCols = []string{
-	"Tag",
-	"Address",
-	"Description",
-	"Invert",
-	"Alarm",
-	"Invert alarm",
-}
-
 func AddSheet(f *excelize.File, sheetName string, columns []string) int {
 	index := f.NewSheet(sheetName)
 
 	f.SetSheetRow(sheetName, "A1", &columns)
-	bottomRight := excelize.ToAlphaString(len(columns)) + "2"
+	bottomRight := excelize.ToAlphaString(len(columns)-1) + "2"
 	formatString := fmt.Sprintf(`{
 		"table_name": "%s",
 		"table_style": "TableStyleMedium2",
@@ -78,10 +34,12 @@ func AddSheet(f *excelize.File, sheetName string, columns []string) int {
 func InitializeWorkbook(name string) {
 
 	f := excelize.NewFile()
-	_ = AddSheet(f, "Measmons", measmonCols)
-	_ = AddSheet(f, "Motors", motorCols)
-	_ = AddSheet(f, "FreqMotors", freqMotorCols)
-	_ = AddSheet(f, "Digmons", digmonCols)
+	_ = AddSheet(f, sheetMeasmons, measmonCols)
+	_ = AddSheet(f, sheetDigmons, digmonCols)
+	_ = AddSheet(f, sheetValves, valveCols)
+	_ = AddSheet(f, sheetControlValves, controlValveCols)
+	_ = AddSheet(f, sheetMotors, motorCols)
+	_ = AddSheet(f, sheetFreqMotors, freqMotorCols)
 
 	f.DeleteSheet(f.GetSheetName(1))
 

@@ -5,149 +5,149 @@ import (
 	"testing"
 )
 
-func TestControlValve_Stringer(t *testing.T) {
+func Test_controlValve_Tag(t *testing.T) {
 	tests := []struct {
 		name string
-		c    *ControlValve
+		c    *controlValve
 		want string
 	}{
 		{
 			"Case 1",
-			&ControlValve{
-				Tag:             "WWG-CV001",
-				Description:     "Test control valve 1",
-				Address:         "QW16",
-				FeedbackAddress: "IW32",
-				MonitoringTime:  10,
+			&controlValve{
+				tag:             "WWG-CV001",
+				description:     "Test control valve 1",
+				address:         "QW16",
+				feedbackAddress: "IW32",
+				monitoringTime:  10,
 			},
 			"WWG-CV001",
 		},
 		{
 			"Case 2",
-			&ControlValve{
-				Tag:             "WWG-CV002",
-				Description:     "Test control valve 2",
-				Address:         "QW18",
-				FeedbackAddress: "IW34",
-				MonitoringTime:  20,
+			&controlValve{
+				tag:             "WWG-CV002",
+				description:     "Test control valve 2",
+				address:         "QW18",
+				feedbackAddress: "IW34",
+				monitoringTime:  20,
 			},
 			"WWG-CV002",
 		},
 		{
 			"Case no feedback",
-			&ControlValve{
-				Tag:             "WWG-CV003",
-				Description:     "Test control valve 3",
-				Address:         "QW20",
-				FeedbackAddress: "",
-				MonitoringTime:  10,
+			&controlValve{
+				tag:             "WWG-CV003",
+				description:     "Test control valve 3",
+				address:         "QW20",
+				feedbackAddress: "",
+				monitoringTime:  10,
 			},
 			"WWG-CV003",
 		},
 		{
 			"Case no address",
-			&ControlValve{
-				Tag:             "WWG-CV004",
-				Description:     "Test control valve 4",
-				Address:         "",
-				FeedbackAddress: "IW36",
-				MonitoringTime:  10,
+			&controlValve{
+				tag:             "WWG-CV004",
+				description:     "Test control valve 4",
+				address:         "",
+				feedbackAddress: "IW36",
+				monitoringTime:  10,
 			},
 			"WWG-CV004",
 		},
 		{
 			"Case no address, no feedback",
-			&ControlValve{
-				Tag:             "WWG-CV005",
-				Description:     "Test control valve 5",
-				Address:         "",
-				FeedbackAddress: "",
-				MonitoringTime:  10,
+			&controlValve{
+				tag:             "WWG-CV005",
+				description:     "Test control valve 5",
+				address:         "",
+				feedbackAddress: "",
+				monitoringTime:  10,
 			},
 			"WWG-CV005",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.c.Stringer(); got != tt.want {
-				t.Errorf("ControlValve.Stringer() = %v, want %v", got, tt.want)
+			if got := tt.c.Tag(); got != tt.want {
+				t.Errorf("ControlValve.String() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestControlValve_PlcTags(t *testing.T) {
+func Test_controlValve_PlcTags(t *testing.T) {
 	tests := []struct {
 		name string
-		m    *ControlValve
-		want []PlcTag
+		m    *controlValve
+		want []*PlcTag
 	}{
 		{
 			"Case 1",
-			&ControlValve{
-				Tag:             "WWG-CV001",
-				Description:     "Test control valve 1",
-				Address:         "QW16",
-				FeedbackAddress: "IW32",
-				MonitoringTime:  10,
+			&controlValve{
+				tag:             "WWG-CV001",
+				description:     "Test control valve 1",
+				address:         "QW16",
+				feedbackAddress: "IW32",
+				monitoringTime:  10,
 			},
-			[]PlcTag{
+			[]*PlcTag{
 				{name: "WWG-CV001", dtype: "Int", address: "QW16", comment: "Test control valve 1 output"},
 				{name: "WWG-CV001_FB", dtype: "Int", address: "IW32", comment: "Test control valve 1 feedback"},
 			},
 		},
 		{
 			"Case 2",
-			&ControlValve{
-				Tag:             "WWG-CV002",
-				Description:     "Test control valve 2",
-				Address:         "QW18",
-				FeedbackAddress: "IW34",
-				MonitoringTime:  20,
+			&controlValve{
+				tag:             "WWG-CV002",
+				description:     "Test control valve 2",
+				address:         "QW18",
+				feedbackAddress: "IW34",
+				monitoringTime:  20,
 			},
-			[]PlcTag{
+			[]*PlcTag{
 				{name: "WWG-CV002", dtype: "Int", address: "QW18", comment: "Test control valve 2 output"},
 				{name: "WWG-CV002_FB", dtype: "Int", address: "IW34", comment: "Test control valve 2 feedback"},
 			},
 		},
 		{
 			"Case no feedback",
-			&ControlValve{
-				Tag:             "WWG-CV003",
-				Description:     "Test control valve 3",
-				Address:         "QW20",
-				FeedbackAddress: "",
-				MonitoringTime:  10,
+			&controlValve{
+				tag:             "WWG-CV003",
+				description:     "Test control valve 3",
+				address:         "QW20",
+				feedbackAddress: "",
+				monitoringTime:  10,
 			},
-			[]PlcTag{
+			[]*PlcTag{
 				{name: "WWG-CV003", dtype: "Int", address: "QW20", comment: "Test control valve 3 output"},
 				{name: "WWG-CV003_FB", dtype: "Int", address: "MW2", comment: "Test control valve 3 feedback"},
 			},
 		},
 		{
 			"Case no address",
-			&ControlValve{
-				Tag:             "WWG-CV004",
-				Description:     "Test control valve 4",
-				Address:         "",
-				FeedbackAddress: "IW36",
-				MonitoringTime:  10,
+			&controlValve{
+				tag:             "WWG-CV004",
+				description:     "Test control valve 4",
+				address:         "",
+				feedbackAddress: "IW36",
+				monitoringTime:  10,
 			},
-			[]PlcTag{
+			[]*PlcTag{
 				{name: "WWG-CV004", dtype: "Int", address: "MW0", comment: "Test control valve 4 output"},
 				{name: "WWG-CV004_FB", dtype: "Int", address: "IW36", comment: "Test control valve 4 feedback"},
 			},
 		},
 		{
 			"Case no address, no feedback",
-			&ControlValve{
-				Tag:             "WWG-CV005",
-				Description:     "Test control valve 5",
-				Address:         "",
-				FeedbackAddress: "",
-				MonitoringTime:  10,
+			&controlValve{
+				tag:             "WWG-CV005",
+				description:     "Test control valve 5",
+				address:         "",
+				feedbackAddress: "",
+				monitoringTime:  10,
 			},
-			[]PlcTag{
+			[]*PlcTag{
 				{name: "WWG-CV005", dtype: "Int", address: "MW0", comment: "Test control valve 5 output"},
 				{name: "WWG-CV005_FB", dtype: "Int", address: "MW2", comment: "Test control valve 5 feedback"},
 			},
@@ -162,20 +162,20 @@ func TestControlValve_PlcTags(t *testing.T) {
 	}
 }
 
-func TestControlValve_InputMap(t *testing.T) {
+func Test_controlValve_InputMap(t *testing.T) {
 	tests := []struct {
 		name string
-		m    *ControlValve
+		m    *controlValve
 		want map[string]string
 	}{
 		{
 			"Case 1",
-			&ControlValve{
-				Tag:             "WWG-CV001",
-				Description:     "Test control valve 1",
-				Address:         "QW16",
-				FeedbackAddress: "IW32",
-				MonitoringTime:  10,
+			&controlValve{
+				tag:             "WWG-CV001",
+				description:     "Test control valve 1",
+				address:         "QW16",
+				feedbackAddress: "IW32",
+				monitoringTime:  10,
 			},
 			map[string]string{
 				"Tag":            "WWG-CV001",
@@ -189,12 +189,12 @@ func TestControlValve_InputMap(t *testing.T) {
 		},
 		{
 			"Case 2",
-			&ControlValve{
-				Tag:             "WWG-CV002",
-				Description:     "Test control valve 2",
-				Address:         "QW18",
-				FeedbackAddress: "IW34",
-				MonitoringTime:  20,
+			&controlValve{
+				tag:             "WWG-CV002",
+				description:     "Test control valve 2",
+				address:         "QW18",
+				feedbackAddress: "IW34",
+				monitoringTime:  20,
 			},
 			map[string]string{
 				"Tag":            "WWG-CV002",
@@ -208,12 +208,12 @@ func TestControlValve_InputMap(t *testing.T) {
 		},
 		{
 			"Case no feedback",
-			&ControlValve{
-				Tag:             "WWG-CV003",
-				Description:     "Test control valve 3",
-				Address:         "QW20",
-				FeedbackAddress: "",
-				MonitoringTime:  10,
+			&controlValve{
+				tag:             "WWG-CV003",
+				description:     "Test control valve 3",
+				address:         "QW20",
+				feedbackAddress: "",
+				monitoringTime:  10,
 			},
 			map[string]string{
 				"Tag":            "WWG-CV003",
@@ -227,12 +227,12 @@ func TestControlValve_InputMap(t *testing.T) {
 		},
 		{
 			"Case no address",
-			&ControlValve{
-				Tag:             "WWG-CV004",
-				Description:     "Test control valve 4",
-				Address:         "",
-				FeedbackAddress: "IW36",
-				MonitoringTime:  10,
+			&controlValve{
+				tag:             "WWG-CV004",
+				description:     "Test control valve 4",
+				address:         "",
+				feedbackAddress: "IW36",
+				monitoringTime:  10,
 			},
 			map[string]string{
 				"Tag":            "WWG-CV004",
@@ -246,12 +246,12 @@ func TestControlValve_InputMap(t *testing.T) {
 		},
 		{
 			"Case no address, no feedback",
-			&ControlValve{
-				Tag:             "WWG-CV005",
-				Description:     "Test control valve 5",
-				Address:         "",
-				FeedbackAddress: "",
-				MonitoringTime:  10,
+			&controlValve{
+				tag:             "WWG-CV005",
+				description:     "Test control valve 5",
+				address:         "",
+				feedbackAddress: "",
+				monitoringTime:  10,
 			},
 			map[string]string{
 				"Tag":            "WWG-CV005",

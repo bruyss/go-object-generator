@@ -20,7 +20,7 @@ func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, f
 	return &freqMotor{}
 }
 
-func (f *freqMotor) Stringer() string {
+func (f *freqMotor) String() string {
 	return f.Tag
 }
 

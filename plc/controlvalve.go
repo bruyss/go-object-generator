@@ -6,59 +6,60 @@ import (
 	"github.com/bruyss/go-object-generator/utils"
 )
 
-type ControlValve struct {
-	Tag             string
-	Description     string
-	Address         string
-	FeedbackAddress string
-	MonitoringTime  int
+type controlValve struct {
+	tag             string
+	description     string
+	address         string
+	feedbackAddress string
+	monitoringTime  int
 }
 
-func (c *ControlValve) Stringer() string {
-	return c.Tag
+// TODO: write NewControlValve function with input checking, move out of PlcTags
+
+func (c *controlValve) Tag() string {
+	return c.tag
 }
 
-func (c *ControlValve) InputMap() map[string]string {
+func (c *controlValve) InputMap() map[string]string {
 	return map[string]string{
-		"Tag":            c.Tag,
-		"Description":    c.Description,
-		"IDB":            "IDB_" + c.Tag,
-		"NoFeedback":     strconv.FormatBool(len(c.FeedbackAddress) <= 0),
-		"Feedback":       c.Tag + "_FB",
-		"MonitoringTime": strconv.Itoa(c.MonitoringTime),
-		"Output":         utils.TagQuotes(c.Tag),
+		"Tag":            c.tag,
+		"Description":    c.description,
+		"IDB":            "IDB_" + c.tag,
+		"NoFeedback":     strconv.FormatBool(len(c.feedbackAddress) <= 0),
+		"Feedback":       c.tag + "_FB",
+		"MonitoringTime": strconv.Itoa(c.monitoringTime),
+		"Output":         utils.TagQuotes(c.tag),
 	}
 }
 
-func (c *ControlValve) PlcTags() []PlcTag {
-	tags := make([]PlcTag, 0)
+func (c *controlValve) PlcTags() (t []*PlcTag) {
 	var address, feedbackAddress string
 
-	if len(c.Address) > 0 {
-		address = c.Address
+	if len(c.address) > 0 {
+		address = c.address
 	} else {
 		address = "MW0"
 	}
 
-	if len(c.FeedbackAddress) > 0 {
-		feedbackAddress = c.FeedbackAddress
+	if len(c.feedbackAddress) > 0 {
+		feedbackAddress = c.feedbackAddress
 	} else {
 		feedbackAddress = "MW2"
 	}
 
-	tags = append(tags, PlcTag{
-		name:    c.Tag,
+	t = append(t, &PlcTag{
+		name:    c.tag,
 		dtype:   "Int",
 		address: address,
-		comment: c.Description + " output",
+		comment: c.description + " output",
 	})
 
-	tags = append(tags, PlcTag{
-		name:    c.Tag + "_FB",
+	t = append(t, &PlcTag{
+		name:    c.tag + "_FB",
 		dtype:   "Int",
 		address: feedbackAddress,
-		comment: c.Description + " feedback",
+		comment: c.description + " feedback",
 	})
 
-	return tags
+	return t
 }
