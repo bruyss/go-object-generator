@@ -16,7 +16,6 @@ func init() {
 func main() {
 	// sheetreader.InitializeWorkbook("excelsource_go.xlsx")
 	f, _ := excelize.OpenFile("excelsource_go.xlsx")
-	measmons := sheetreader.ReadMeasmons(f)
 
 	obwriter.WriteDefaultSettings("settings.json")
 	obwriter.WriteTemplates(obwriter.Templates)
@@ -25,7 +24,33 @@ func main() {
 	measGen := obwriter.Generator{
 		GeneralSettings: *settings.General,
 		ObjectSettings:  *settings.Measmon,
-		Objects:         measmons,
+		Objects:         sheetreader.ReadMeasmons(f),
+	}
+
+	digmonGen := obwriter.Generator{
+		GeneralSettings: *settings.General,
+		ObjectSettings:  *settings.Digmon,
+		Objects:         sheetreader.ReadDigmons(f),
+	}
+	valveGen := obwriter.Generator{
+		GeneralSettings: *settings.General,
+		ObjectSettings:  *settings.Valve,
+		Objects:         sheetreader.ReadValves(f),
+	}
+	controlValveGen := obwriter.Generator{
+		GeneralSettings: *settings.General,
+		ObjectSettings:  *settings.ControlValve,
+		Objects:         sheetreader.ReadControlValves(f),
+	}
+	motorGen := obwriter.Generator{
+		GeneralSettings: *settings.General,
+		ObjectSettings:  *settings.Motor,
+		Objects:         sheetreader.ReadMotors(f),
+	}
+	freMotorGen := obwriter.Generator{
+		GeneralSettings: *settings.General,
+		ObjectSettings:  *settings.FreqMotor,
+		Objects:         sheetreader.ReadFreqMotors(f),
 	}
 
 	tmp, err := template.ParseFiles("templates/idbs.tmpl")
@@ -41,5 +66,10 @@ func main() {
 	// }
 
 	measGen.GenerateIDBs("Measmon_IDBs", tmp)
+	digmonGen.GenerateIDBs("Digmon_IDBs", tmp)
+	valveGen.GenerateIDBs("Valve_IDBs", tmp)
+	controlValveGen.GenerateIDBs("ControlValve_IDBs", tmp)
+	motorGen.GenerateIDBs("Motor_IDBs", tmp)
+	freMotorGen.GenerateIDBs("FreqMotor_IDBs", tmp)
 
 }
