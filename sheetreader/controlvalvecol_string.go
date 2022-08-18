@@ -13,11 +13,12 @@ func _() {
 	_ = x[controlValveAddress-2]
 	_ = x[controlValveFeedbackTag-3]
 	_ = x[controlValveFeedbackAddress-4]
+	_ = x[controlValveMonitoringTime-5]
 }
 
-const _controlValveCol_name = "TagDescriptionAddressFeedbackTagFeedbackAddress"
+const _controlValveCol_name = "TagDescriptionAddressFeedbackTagFeedbackAddressMonitoringTime"
 
-var _controlValveCol_index = [...]uint8{0, 3, 14, 21, 32, 47}
+var _controlValveCol_index = [...]uint8{0, 3, 14, 21, 32, 47, 61}
 
 func (i controlValveCol) String() string {
 	if i < 0 || i >= controlValveCol(len(_controlValveCol_index)-1) {

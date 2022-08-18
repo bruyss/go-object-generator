@@ -148,6 +148,7 @@ const (
 	controlValveAddress
 	controlValveFeedbackTag
 	controlValveFeedbackAddress
+	controlValveMonitoringTime
 )
 
 //go:generate stringer -type=controlValveCol -trimprefix=controlValve
@@ -158,4 +159,5 @@ var controlValveCols = []string{
 	controlValveAddress.String(),
 	controlValveFeedbackTag.String(),
 	controlValveFeedbackAddress.String(),
+	controlValveMonitoringTime.String(),
 }
