@@ -1,6 +1,7 @@
 {
     "level": "debug",
     "encoding": "console",
+    "development": true,
     "outputPaths": [
         "stdout",
         "./gen.log"
@@ -14,6 +15,7 @@
         "timeEncoder": "iso8601",
         "messageKey": "message",
         "levelKey": "level",
-        "levelEncoder": "capital"
+        "levelEncoder": "capital",
+        "stacktraceKey": "stacktrace"
     }
 }

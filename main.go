@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	utils.InitializeDevLogger()
+	utils.InitializeCustomLogger()
 }
 
 func main() {
