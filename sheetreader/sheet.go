@@ -18,14 +18,15 @@ func AddSheet(f *excelize.File, sheetName string, columns []string) int {
 		"table_name": "%s",
 		"table_style": "TableStyleMedium2",
     	"show_first_column": true,
-    	"show_last_column": true,
-    	"show_row_stripes": false,
-    	"show_column_stripes": true
+    	"show_last_column": false,
+    	"show_row_stripes": true,
+    	"show_column_stripes": false
 	}`, sheetName)
 	err := f.AddTable(sheetName, "A1", bottomRight, formatString)
 
 	if err != nil {
-		utils.Logger.Error("Couldn't add table to worksheet", zap.String("sheet", sheetName), zap.Error(err))
+		utils.Sugar.Error(err.Error(),
+			"sheet", sheetName)
 	}
 
 	return index

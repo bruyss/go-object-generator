@@ -65,6 +65,7 @@ type freqMotorCol int
 const (
 	freqMotorTag freqMotorCol = iota
 	freqMotorAddress
+	freqMotorPqwAddress
 	freqMotorDescription
 	freqMotorDanfoss
 	freqMotorFeedbackTag
@@ -80,6 +81,7 @@ const (
 var freqMotorCols = []string{
 	freqMotorTag.String(),
 	freqMotorAddress.String(),
+	freqMotorPqwAddress.String(),
 	freqMotorDescription.String(),
 	freqMotorDanfoss.String(),
 	freqMotorFeedbackTag.String(),
