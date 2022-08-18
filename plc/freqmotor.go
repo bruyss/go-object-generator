@@ -63,7 +63,9 @@ func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, f
 		f.SwitchAddress = "M0.3"
 	}
 
-	utils.Sugar.Debug("Frequency motor created", f.String())
+	utils.Sugar.Debug("Object created",
+		"freqMotor", f.String(),
+	)
 
 	return f, nil
 }
