@@ -18,10 +18,19 @@ type measmon struct {
 	HighLimit   float64
 }
 
-func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit string) *measmon {
-	directBool, _ := strconv.ParseBool(direct)
-	lowLimitFloat, _ := strconv.ParseFloat(lowLimit, 64)
-	highLimitFloat, _ := strconv.ParseFloat(highLimit, 64)
+func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit string) (*measmon, error) {
+	directBool, err := strconv.ParseBool(direct)
+	if err != nil {
+		return nil, err
+	}
+	lowLimitFloat, err := strconv.ParseFloat(lowLimit, 64)
+	if err != nil {
+		return nil, err
+	}
+	highLimitFloat, err := strconv.ParseFloat(highLimit, 64)
+	if err != nil {
+		return nil, err
+	}
 
 	if lowLimit >= highLimit {
 		utils.Sugar.Info(
@@ -42,7 +51,7 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 		Direct:      directBool,
 		LowLimit:    lowLimitFloat,
 		HighLimit:   highLimitFloat,
-	}
+	}, nil
 }
 
 func (m *measmon) String() string {

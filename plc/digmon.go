@@ -13,7 +13,7 @@ type digmon struct {
 	invertAlarm bool
 }
 
-func NewDigmon(tag, description, address string, invert, alarm, invertAlarm bool) *digmon {
+func NewDigmon(tag, description, address string, invert, alarm, invertAlarm bool) (*digmon, error) {
 	if len(address) <= 0 {
 		address = "M0.0"
 	}
@@ -24,7 +24,7 @@ func NewDigmon(tag, description, address string, invert, alarm, invertAlarm bool
 		invert:      invert,
 		alarm:       alarm,
 		invertAlarm: invertAlarm,
-	}
+	}, nil
 }
 
 func (d *digmon) Tag() string {

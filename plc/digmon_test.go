@@ -15,29 +15,38 @@ func TestNewDigmon(t *testing.T) {
 		invertAlarm bool
 	}
 	tests := []struct {
-		name string
-		args args
-		want *digmon
+		name    string
+		args    args
+		want    *digmon
+		wantErr bool
 	}{
 		{
 			"Digmon",
 			args{"WWG-FS001", "Test flow switch", "I0.1", false, true, true},
 			&digmon{"WWG-FS001", "Test flow switch", "I0.1", false, true, true},
+			false,
 		},
 		{
 			"Digmon no address",
 			args{"WWG-FS001", "Test flow switch", "", false, true, true},
 			&digmon{"WWG-FS001", "Test flow switch", "M0.0", false, true, true},
+			false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewDigmon(tt.args.tag, tt.args.description, tt.args.address, tt.args.invert, tt.args.alarm, tt.args.invertAlarm); !reflect.DeepEqual(got, tt.want) {
+			got, err := NewDigmon(tt.args.tag, tt.args.description, tt.args.address, tt.args.invert, tt.args.alarm, tt.args.invertAlarm)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("NewDigmon() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewDigmon() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
+
 func Test_digmon_Tag(t *testing.T) {
 	tests := []struct {
 		name string
