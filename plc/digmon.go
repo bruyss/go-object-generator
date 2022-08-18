@@ -5,46 +5,63 @@ import (
 )
 
 type digmon struct {
-	tag         string
-	description string
-	address     string
-	invert      bool
-	alarm       bool
-	invertAlarm bool
+	Tag         string
+	Description string
+	Address     string
+	Invert      bool
+	Alarm       bool
+	InvertAlarm bool
 }
 
-func NewDigmon(tag, description, address string, invert, alarm, invertAlarm bool) (*digmon, error) {
-	if len(address) <= 0 {
-		address = "M0.0"
+func NewDigmon(tag, description, address, invert, alarm, invertAlarm string) (*digmon, error) {
+
+	invertBool, err := strconv.ParseBool(invert)
+	if err != nil {
+		return nil, err
 	}
-	return &digmon{
-		tag:         tag,
-		description: description,
-		address:     address,
-		invert:      invert,
-		alarm:       alarm,
-		invertAlarm: invertAlarm,
-	}, nil
+	alarmBool, err := strconv.ParseBool(alarm)
+	if err != nil {
+		return nil, err
+	}
+	invertAlarmBool, err := strconv.ParseBool(invertAlarm)
+	if err != nil {
+		return nil, err
+	}
+
+	d := &digmon{
+		Tag:         tag,
+		Description: description,
+		Address:     address,
+		Invert:      invertBool,
+		Alarm:       alarmBool,
+		InvertAlarm: invertAlarmBool,
+	}
+
+	if len(d.Address) == 0 {
+		d.Address = "M0.0"
+	}
+
+	return d, nil
 }
 
-func (d *digmon) Tag() string {
-	return d.tag
+func (d *digmon) String() string {
+	return d.Tag
 }
 
 func (d *digmon) InputMap() map[string]string {
 	return map[string]string{
-		"Tag":         d.tag,
-		"Description": d.description,
-		"IDB":         "IDB_" + d.tag,
-		"Input":       strconv.Quote(d.tag),
-		"Invert":      strconv.FormatBool(d.invert),
-		"Alarm":       strconv.FormatBool(d.alarm),
-		"InvertAlarm": strconv.FormatBool(d.invertAlarm),
+		"Tag":         d.Tag,
+		"Description": d.Description,
+		"IDB":         "IDB_" + d.Tag,
+		"Input":       strconv.Quote(d.Tag),
+		"Invert":      strconv.FormatBool(d.Invert),
+		"Alarm":       strconv.FormatBool(d.Alarm),
+		"InvertAlarm": strconv.FormatBool(d.InvertAlarm),
 	}
 }
 
 func (d *digmon) PlcTags() []*PlcTag {
 	return []*PlcTag{
-		{name: d.tag, dtype: "Bool", address: d.address, comment: d.description},
+		{name: d.Tag, dtype: "Bool", address: d.Address, comment: d.Description},
 	}
 }

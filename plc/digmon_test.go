@@ -10,9 +10,9 @@ func TestNewDigmon(t *testing.T) {
 		tag         string
 		description string
 		address     string
-		invert      bool
-		alarm       bool
-		invertAlarm bool
+		invert      string
+		alarm       string
+		invertAlarm string
 	}
 	tests := []struct {
 		name    string
@@ -22,15 +22,33 @@ func TestNewDigmon(t *testing.T) {
 	}{
 		{
 			"Digmon",
-			args{"WWG-FS001", "Test flow switch", "I0.1", false, true, true},
+			args{"WWG-FS001", "Test flow switch", "I0.1", "false", "true", "true"},
 			&digmon{"WWG-FS001", "Test flow switch", "I0.1", false, true, true},
 			false,
 		},
 		{
 			"Digmon no address",
-			args{"WWG-FS001", "Test flow switch", "", false, true, true},
+			args{"WWG-FS001", "Test flow switch", "", "false", "true", "true"},
 			&digmon{"WWG-FS001", "Test flow switch", "M0.0", false, true, true},
 			false,
+		},
+		{
+			"Digmon bad invert",
+			args{"WWG-FS001", "Test flow switch", "", "allo", "true", "true"},
+			nil,
+			true,
+		},
+		{
+			"Digmon bad alarm",
+			args{"WWG-FS001", "Test flow switch", "", "false", "allo", "true"},
+			nil,
+			true,
+		},
+		{
+			"Digmon bad invert alarm",
+			args{"WWG-FS001", "Test flow switch", "", "false", "true", "allo"},
+			nil,
+			true,
 		},
 	}
 	for _, tt := range tests {
@@ -46,7 +64,6 @@ func TestNewDigmon(t *testing.T) {
 		})
 	}
 }
-
 func Test_digmon_Tag(t *testing.T) {
 	tests := []struct {
 		name string
@@ -56,67 +73,67 @@ func Test_digmon_Tag(t *testing.T) {
 		{
 			"Digmon 1",
 			&digmon{
-				tag:         "CTP-LSL001",
-				description: "Test digmon 1",
-				address:     "I3.0",
-				invert:      false,
-				alarm:       true,
-				invertAlarm: false,
+				Tag:         "CTP-LSL001",
+				Description: "Test digmon 1",
+				Address:     "I3.0",
+				Invert:      false,
+				Alarm:       true,
+				InvertAlarm: false,
 			},
 			"CTP-LSL001",
 		},
 		{
 			"Digmon 2",
 			&digmon{
-				tag:         "CTP-LSL002",
-				description: "Test digmon 2",
-				address:     "",
-				invert:      true,
-				alarm:       true,
-				invertAlarm: false,
+				Tag:         "CTP-LSL002",
+				Description: "Test digmon 2",
+				Address:     "",
+				Invert:      true,
+				Alarm:       true,
+				InvertAlarm: false,
 			},
 			"CTP-LSL002",
 		},
 		{
 			"Digmon 3",
 			&digmon{
-				tag:         "CTP-LSL003",
-				description: "Test digmon 3",
-				address:     "I3.1",
-				invert:      false,
-				alarm:       false,
-				invertAlarm: false,
+				Tag:         "CTP-LSL003",
+				Description: "Test digmon 3",
+				Address:     "I3.1",
+				Invert:      false,
+				Alarm:       false,
+				InvertAlarm: false,
 			},
 			"CTP-LSL003",
 		},
 		{
 			"Digmon 4",
 			&digmon{
-				tag:         "CTP-LSH004",
-				description: "Test digmon 4",
-				address:     "",
-				invert:      false,
-				alarm:       true,
-				invertAlarm: true,
+				Tag:         "CTP-LSH004",
+				Description: "Test digmon 4",
+				Address:     "",
+				Invert:      false,
+				Alarm:       true,
+				InvertAlarm: true,
 			},
 			"CTP-LSH004",
 		},
 		{
 			"Digmon 5",
 			&digmon{
-				tag:         "CTP-LSL005",
-				description: "Test digmon 5",
-				address:     "I3.2",
-				invert:      true,
-				alarm:       false,
-				invertAlarm: false,
+				Tag:         "CTP-LSL005",
+				Description: "Test digmon 5",
+				Address:     "I3.2",
+				Invert:      true,
+				Alarm:       false,
+				InvertAlarm: false,
 			},
 			"CTP-LSL005",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.d.Tag(); got != tt.want {
+			if got := tt.d.String(); got != tt.want {
 				t.Errorf("Digmon.String() = %v, want %v", got, tt.want)
 			}
 		})
@@ -132,12 +149,12 @@ func Test_digmon_InputMap(t *testing.T) {
 		{
 			"Digmon 1",
 			&digmon{
-				tag:         "CTP-LSL001",
-				description: "Test digmon 1",
-				address:     "I3.0",
-				invert:      false,
-				alarm:       true,
-				invertAlarm: false,
+				Tag:         "CTP-LSL001",
+				Description: "Test digmon 1",
+				Address:     "I3.0",
+				Invert:      false,
+				Alarm:       true,
+				InvertAlarm: false,
 			},
 			map[string]string{
 				"Tag":         "CTP-LSL001",
@@ -152,12 +169,12 @@ func Test_digmon_InputMap(t *testing.T) {
 		{
 			"Digmon 2",
 			&digmon{
-				tag:         "CTP-LSL002",
-				description: "Test digmon 2",
-				address:     "",
-				invert:      true,
-				alarm:       true,
-				invertAlarm: false,
+				Tag:         "CTP-LSL002",
+				Description: "Test digmon 2",
+				Address:     "",
+				Invert:      true,
+				Alarm:       true,
+				InvertAlarm: false,
 			},
 			map[string]string{
 				"Tag":         "CTP-LSL002",
@@ -172,12 +189,12 @@ func Test_digmon_InputMap(t *testing.T) {
 		{
 			"Digmon 3",
 			&digmon{
-				tag:         "CTP-LSL003",
-				description: "Test digmon 3",
-				address:     "I3.1",
-				invert:      false,
-				alarm:       false,
-				invertAlarm: false,
+				Tag:         "CTP-LSL003",
+				Description: "Test digmon 3",
+				Address:     "I3.1",
+				Invert:      false,
+				Alarm:       false,
+				InvertAlarm: false,
 			},
 			map[string]string{
 				"Tag":         "CTP-LSL003",
@@ -192,12 +209,12 @@ func Test_digmon_InputMap(t *testing.T) {
 		{
 			"Digmon 4",
 			&digmon{
-				tag:         "CTP-LSH004",
-				description: "Test digmon 4",
-				address:     "",
-				invert:      false,
-				alarm:       true,
-				invertAlarm: true,
+				Tag:         "CTP-LSH004",
+				Description: "Test digmon 4",
+				Address:     "",
+				Invert:      false,
+				Alarm:       true,
+				InvertAlarm: true,
 			},
 			map[string]string{
 				"Tag":         "CTP-LSH004",
@@ -212,12 +229,12 @@ func Test_digmon_InputMap(t *testing.T) {
 		{
 			"Digmon 5",
 			&digmon{
-				tag:         "CTP-LSL005",
-				description: "Test digmon 5",
-				address:     "I3.2",
-				invert:      true,
-				alarm:       false,
-				invertAlarm: false,
+				Tag:         "CTP-LSL005",
+				Description: "Test digmon 5",
+				Address:     "I3.2",
+				Invert:      true,
+				Alarm:       false,
+				InvertAlarm: false,
 			},
 			map[string]string{
 				"Tag":         "CTP-LSL005",
@@ -248,12 +265,12 @@ func Test_digmon_PlcTags(t *testing.T) {
 		{
 			"Digmon 1",
 			&digmon{
-				tag:         "CTP-LSL001",
-				description: "Test digmon 1",
-				address:     "I3.0",
-				invert:      false,
-				alarm:       true,
-				invertAlarm: false,
+				Tag:         "CTP-LSL001",
+				Description: "Test digmon 1",
+				Address:     "I3.0",
+				Invert:      false,
+				Alarm:       true,
+				InvertAlarm: false,
 			},
 			[]*PlcTag{
 				{"CTP-LSL001", "Bool", "I3.0", "Test digmon 1"},
@@ -262,12 +279,12 @@ func Test_digmon_PlcTags(t *testing.T) {
 		{
 			"Digmon 2",
 			&digmon{
-				tag:         "CTP-LSL002",
-				description: "Test digmon 2",
-				address:     "I3.1",
-				invert:      true,
-				alarm:       true,
-				invertAlarm: false,
+				Tag:         "CTP-LSL002",
+				Description: "Test digmon 2",
+				Address:     "I3.1",
+				Invert:      true,
+				Alarm:       true,
+				InvertAlarm: false,
 			},
 			[]*PlcTag{
 				{"CTP-LSL002", "Bool", "I3.1", "Test digmon 2"},
@@ -276,12 +293,12 @@ func Test_digmon_PlcTags(t *testing.T) {
 		{
 			"Digmon 3",
 			&digmon{
-				tag:         "CTP-LSL003",
-				description: "Test digmon 3",
-				address:     "I3.1",
-				invert:      false,
-				alarm:       false,
-				invertAlarm: false,
+				Tag:         "CTP-LSL003",
+				Description: "Test digmon 3",
+				Address:     "I3.1",
+				Invert:      false,
+				Alarm:       false,
+				InvertAlarm: false,
 			},
 			[]*PlcTag{
 				{"CTP-LSL003", "Bool", "I3.1", "Test digmon 3"},
@@ -290,12 +307,12 @@ func Test_digmon_PlcTags(t *testing.T) {
 		{
 			"Digmon 4",
 			&digmon{
-				tag:         "CTP-LSH004",
-				description: "Test digmon 4",
-				address:     "I3.7",
-				invert:      false,
-				alarm:       true,
-				invertAlarm: true,
+				Tag:         "CTP-LSH004",
+				Description: "Test digmon 4",
+				Address:     "I3.7",
+				Invert:      false,
+				Alarm:       true,
+				InvertAlarm: true,
 			},
 			[]*PlcTag{
 				{"CTP-LSH004", "Bool", "I3.7", "Test digmon 4"},
@@ -304,12 +321,12 @@ func Test_digmon_PlcTags(t *testing.T) {
 		{
 			"Digmon 5",
 			&digmon{
-				tag:         "CTP-LSL005",
-				description: "Test digmon 5",
-				address:     "I3.2",
-				invert:      true,
-				alarm:       false,
-				invertAlarm: false,
+				Tag:         "CTP-LSL005",
+				Description: "Test digmon 5",
+				Address:     "I3.2",
+				Invert:      true,
+				Alarm:       false,
+				InvertAlarm: false,
 			},
 			[]*PlcTag{
 				{"CTP-LSL005", "Bool", "I3.2", "Test digmon 5"},
