@@ -33,7 +33,7 @@ type GeneratorSettings struct {
 	FreqMotor    *objectSettings
 }
 
-var defaultSettings = &GeneratorSettings{
+var DefaultSettings = &GeneratorSettings{
 	General: &generalSettings{
 		SecondPulse: "iSecPulse",
 		Simulation:  "iSimulation",
@@ -98,7 +98,7 @@ func (s *GeneratorSettings) writeSettings(name string) {
 }
 
 func WriteDefaultSettings(name string) {
-	defaultSettings.writeSettings(name)
+	DefaultSettings.writeSettings(name)
 }
 
 func ReadSettings(name string) (*GeneratorSettings, error) {

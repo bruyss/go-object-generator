@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"os"
 	"text/template"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
@@ -43,7 +44,10 @@ var generateCmd = &cobra.Command{
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		var err error
 		genSettings, err = obwriter.ReadSettings("settings.json")
-		if err != nil {
+		if err == os.ErrNotExist {
+			obwriter.WriteDefaultSettings("settings.json")
+			genSettings = obwriter.DefaultSettings
+		} else if err != nil {
 			return err
 		}
 		fileName, err := cmd.Flags().GetString("file")
