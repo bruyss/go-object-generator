@@ -23,7 +23,7 @@ type objectSettings struct {
 	TagTable   string
 }
 
-type generatorSettings struct {
+type GeneratorSettings struct {
 	General      *generalSettings
 	Measmon      *objectSettings
 	Digmon       *objectSettings
@@ -33,7 +33,7 @@ type generatorSettings struct {
 	FreqMotor    *objectSettings
 }
 
-var defaultSettings = &generatorSettings{
+var defaultSettings = &GeneratorSettings{
 	General: &generalSettings{
 		SecondPulse: "iSecPulse",
 		Simulation:  "iSimulation",
@@ -85,7 +85,7 @@ var defaultSettings = &generatorSettings{
 	},
 }
 
-func (s *generatorSettings) writeSettings(name string) {
+func (s *GeneratorSettings) writeSettings(name string) {
 	b, err := json.MarshalIndent(s, "", "  ")
 	if err != nil {
 		utils.Sugar.Error(err)
@@ -101,15 +101,15 @@ func WriteDefaultSettings(name string) {
 	defaultSettings.writeSettings(name)
 }
 
-func ReadSettings(name string) *generatorSettings {
+func ReadSettings(name string) (*GeneratorSettings, error) {
 	b, err := os.ReadFile(name)
 	if err != nil {
-		utils.Sugar.Error(err)
+		return nil, err
 	}
-	var s *generatorSettings
+	var s *GeneratorSettings
 	err = json.Unmarshal(b, &s)
 	if err != nil {
-		utils.Sugar.Error(err)
+		return nil, err
 	}
-	return s
+	return s, nil
 }

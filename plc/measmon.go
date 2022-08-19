@@ -32,18 +32,7 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 		return nil, err
 	}
 
-	if lowLimit >= highLimit {
-		utils.Sugar.Info(
-			"Low limit must be higher than high limit",
-			zap.String("tag", tag),
-			zap.Float64("lowLimit", lowLimitFloat),
-			zap.Float64("highLimit", highLimitFloat),
-		)
-		lowLimitFloat = 0.0
-		highLimitFloat = 100.0
-	}
-
-	return &measmon{
+	m := &measmon{
 		Tag:         tag,
 		Description: description,
 		Unit:        unit,
@@ -51,7 +40,23 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 		Direct:      directBool,
 		LowLimit:    lowLimitFloat,
 		HighLimit:   highLimitFloat,
-	}, nil
+	}
+
+	if m.LowLimit >= m.HighLimit {
+		utils.Sugar.Info(
+			"Low limit must be higher than high limit",
+			zap.String("tag", tag),
+			zap.Float64("lowLimit", lowLimitFloat),
+			zap.Float64("highLimit", highLimitFloat),
+		)
+		m.LowLimit = 0.0
+		m.HighLimit = 100.0
+	}
+
+	utils.Sugar.Debugw("Object created",
+		"measmon", m.String())
+
+	return m, nil
 }
 
 func (m *measmon) String() string {
