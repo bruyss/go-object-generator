@@ -16,18 +16,18 @@ type Generator struct {
 	Objects         []plc.PlcObject
 }
 
-// func init() {
-// 	_ = os.Mkdir(genFolderName, 0750)
-// }
-
-func (g *Generator) GenerateIDBs(fileName string, tmp *template.Template) error {
-	f, err := os.Create(genFolderName + "/" + fileName + ".db")
+func (g *Generator) Generate(fileName, templateName string, tmp *template.Template) error {
+	err := os.Mkdir(genFolderName, 0666)
+	if err != nil && !os.IsExist(err) {
+		return err
+	}
+	f, err := os.Create(genFolderName + "/" + fileName)
 	if err != nil {
 		return err
 	}
 
 	w := io.Writer(f)
-	err = tmp.Execute(w, g)
+	err = tmp.ExecuteTemplate(w, templateName, g)
 	if err != nil {
 		return err
 	}
