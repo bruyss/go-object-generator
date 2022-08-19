@@ -91,9 +91,9 @@ func init() {
 	// is called directly, e.g.:
 	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	initCmd.Flags().BoolP("excel", "e", false, "Initialize spreadsheet")
-	initCmd.Flags().BoolP("settings", "s", false, "Initialize settings")
-	initCmd.Flags().BoolP("templates", "t", false, "Initialize templates")
+	initCmd.Flags().Bool("excel", false, "Initialize spreadsheet")
+	initCmd.Flags().Bool("settings", false, "Initialize settings")
+	initCmd.Flags().Bool("templates", false, "Initialize templates")
 
 	initCmd.Flag("excel").NoOptDefVal = "true"
 	initCmd.Flag("settings").NoOptDefVal = "true"
