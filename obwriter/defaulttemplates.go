@@ -16,28 +16,28 @@ END_DATA_BLOCK
 
 {{end}}`
 
-	measmonTemplate string = `FUNCTION {{.FcName}} : Void
-{ S7_Optimized_Access := 'TRUE'}
-VERSION : 0.1
-    VAR_INPUT
-        iSecPulse   : Bool;
-        iSimulation : Bool;
-    END_VAR
-
-BEGIN
-{{range .Objects}}
-    REGION {{.InputMap.Tag}}: {{.InputMap.Description}}
-        "{{.InputMap.IDB}}" := '{{.InputMap.Tag}}',
-                    Unit := '{{.InputMap.Unit}}',
-                    SecPulse := iSecPulse,
-                    Reset := TRUE,
-                    Local := FALSE,
-                    Simulation := iSimulation,
-                    AnalogInput := {{.InputMap.Input}},
-                    LowLimit := {{.InputMap.LowLimit}},
-                    HighLimit := {{.InputMap.HighLimit}},
-                    HMI := "HMI_Measmon"."{{.InputMap.Tag}}");
-    END_REGION
-{{end}}
-END_FUNCTION`
+	measmonTemplate string = `FUNCTION {{.ObjectSettings.CallFc}} : Void
+    { S7_Optimized_Access := 'TRUE'}
+    VERSION : 0.1
+        VAR_INPUT
+            {{.GeneralSettings.SecondPulse}}   : Bool;
+            {{.GeneralSettings.Simulation}} : Bool;
+        END_VAR
+    {{$generalsettings := .GeneralSettings}}{{$objectsettings := .ObjectSettings}}
+    BEGIN
+    {{range $index, $object := .Objects}}
+        REGION {{.InputMap.Tag}}: {{.InputMap.Description}}
+            "{{.InputMap.IDB}}" := '{{.InputMap.Tag}}',
+                        Unit := '{{.InputMap.Unit}}',
+                        SecPulse := {{$generalsettings.SecondPulse}},
+                        Reset := TRUE,
+                        Local := FALSE,
+                        Simulation := {{$generalsettings.Simulation}},
+                        AnalogInput := {{.InputMap.Input}},
+                        LowLimit := {{.InputMap.LowLimit}},
+                        HighLimit := {{.InputMap.HighLimit}},
+                        HMI := "{{$objectsettings.HmiDb}}"."{{.InputMap.Tag}}");
+        END_REGION
+    {{end}}
+    END_FUNCTION`
 )

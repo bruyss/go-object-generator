@@ -1,76 +1,28 @@
+/*
+Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 package main
 
 import (
-	"text/template"
-
-	"github.com/360EntSecGroup-Skylar/excelize"
-	"github.com/bruyss/go-object-generator/obwriter"
-	"github.com/bruyss/go-object-generator/sheetreader"
+	"github.com/bruyss/go-object-generator/cmd"
 	"github.com/bruyss/go-object-generator/utils"
 )
 
-func init() {
-	utils.InitializeCustomLogger()
-}
-
 func main() {
-	// sheetreader.InitializeWorkbook("excelsource_go.xlsx")
-	f, _ := excelize.OpenFile("excelsource_go.xlsx")
 
-	// obwriter.WriteDefaultSettings("settings.json")
-	// obwriter.WriteTemplates(obwriter.Templates)
-	settings := obwriter.ReadSettings("settings.json")
+	utils.InitializeCustomLogger()
 
-	measmonGen := obwriter.Generator{
-		GeneralSettings: *settings.General,
-		ObjectSettings:  *settings.Measmon,
-		Objects:         sheetreader.ReadMeasmons(f),
-	}
-
-	digmonGen := obwriter.Generator{
-		GeneralSettings: *settings.General,
-		ObjectSettings:  *settings.Digmon,
-		Objects:         sheetreader.ReadDigmons(f),
-	}
-	valveGen := obwriter.Generator{
-		GeneralSettings: *settings.General,
-		ObjectSettings:  *settings.Valve,
-		Objects:         sheetreader.ReadValves(f),
-	}
-	controlValveGen := obwriter.Generator{
-		GeneralSettings: *settings.General,
-		ObjectSettings:  *settings.ControlValve,
-		Objects:         sheetreader.ReadControlValves(f),
-	}
-	motorGen := obwriter.Generator{
-		GeneralSettings: *settings.General,
-		ObjectSettings:  *settings.Motor,
-		Objects:         sheetreader.ReadMotors(f),
-	}
-	freMotorGen := obwriter.Generator{
-		GeneralSettings: *settings.General,
-		ObjectSettings:  *settings.FreqMotor,
-		Objects:         sheetreader.ReadFreqMotors(f),
-	}
-
-	tmp, err := template.ParseGlob("templates/*")
-
-	if err != nil {
-		utils.Sugar.Error(err)
-	}
-
-	// err = tmp.Execute(os.Stdout, measGen)
-
-	// if err != nil {
-	// 	utils.Sugar.Error(err)
-	// }
-
-	measmonGen.Generate("Measmon_IDBs.db", "idbs.tmpl", tmp)
-	measmonGen.Generate("Measmon_source.scl", "measmon.tmpl", tmp)
-	digmonGen.Generate("Digmon_IDBs.db", "idbs.tmpl", tmp)
-	valveGen.Generate("Valve_IDBs.db", "idbs.tmpl", tmp)
-	controlValveGen.Generate("ControlValve_IDBs.db", "idbs.tmpl", tmp)
-	motorGen.Generate("Motor_IDBs.db", "idbs.tmpl", tmp)
-	freMotorGen.Generate("FreqMotor_IDBs.db", "idbs.tmpl", tmp)
-
+	cmd.Execute()
 }
