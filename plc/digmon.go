@@ -2,6 +2,9 @@ package plc
 
 import (
 	"strconv"
+	"strings"
+
+	"github.com/bruyss/go-object-generator/utils"
 )
 
 type digmon struct {
@@ -38,8 +41,15 @@ func NewDigmon(tag, description, address, invert, alarm, invertAlarm string) (*d
 	}
 
 	if len(d.Address) == 0 {
+		utils.Sugar.Debugw("No input address given",
+			"Digmon", d.Tag,
+		)
 		d.Address = "M0.0"
 	}
+
+	utils.Sugar.Debugw("Object created",
+		"Digmon", d.String(),
+	)
 
 	return d, nil
 }
@@ -54,9 +64,9 @@ func (d *digmon) InputMap() map[string]string {
 		"Description": d.Description,
 		"IDB":         "IDB_" + d.Tag,
 		"Input":       strconv.Quote(d.Tag),
-		"Invert":      strconv.FormatBool(d.Invert),
-		"Alarm":       strconv.FormatBool(d.Alarm),
-		"InvertAlarm": strconv.FormatBool(d.InvertAlarm),
+		"Invert":      strings.ToUpper(strconv.FormatBool(d.Invert)),
+		"Alarm":       strings.ToUpper(strconv.FormatBool(d.Alarm)),
+		"InvertAlarm": strings.ToUpper(strconv.FormatBool(d.InvertAlarm)),
 	}
 }
 
