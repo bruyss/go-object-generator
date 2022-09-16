@@ -50,6 +50,7 @@ const (
 //go:generate stringer -type=motorCol -trimprefix=motor
 
 var motorCols = []string{
+	motorTag.String(),
 	motorAddress.String(),
 	motorDescription.String(),
 	motorFeedbackTag.String(),

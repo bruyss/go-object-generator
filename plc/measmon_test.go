@@ -103,7 +103,7 @@ func Test_measmon_PlcTags(t *testing.T) {
 				HighLimit:   100.0,
 			},
 			[]*PlcTag{
-				{name: "WWG-TT001", dtype: "Int", address: "IW16", comment: "Test measmon 1"},
+				{Name: "WWG-TT001", Dtype: "Int", Address: "IW16", Comment: "Test measmon 1"},
 			},
 		},
 		{
@@ -118,7 +118,7 @@ func Test_measmon_PlcTags(t *testing.T) {
 				HighLimit:   150.0,
 			},
 			[]*PlcTag{
-				{name: "WWG-FT656", dtype: "Int", address: "IW18", comment: "Test measmon 2"},
+				{Name: "WWG-FT656", Dtype: "Int", Address: "IW18", Comment: "Test measmon 2"},
 			},
 		},
 	}

@@ -72,6 +72,6 @@ func (d *digmon) InputMap() map[string]string {
 
 func (d *digmon) PlcTags() []*PlcTag {
 	return []*PlcTag{
-		{name: d.Tag, dtype: "Bool", address: d.Address, comment: d.Description},
+		{Name: d.Tag, Dtype: "Bool", Address: d.Address, Comment: d.Description},
 	}
 }

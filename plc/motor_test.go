@@ -447,10 +447,10 @@ func Test_motor_PlcTags(t *testing.T) {
 				hasSwitch:        true,
 			},
 			wantT: []*PlcTag{
-				{name: "WWG-M001", dtype: "Bool", address: "Q10.0", comment: "Test motor 1"},
-				{name: "WWG-M001_FB", dtype: "Bool", address: "I10.0", comment: "Test motor 1 feedback"},
-				{name: "WWG-M001_TH", dtype: "Bool", address: "I10.1", comment: "Test motor 1 breaker"},
-				{name: "WWG-M001_WS", dtype: "Bool", address: "I10.2", comment: "Test motor 1 protection switch"},
+				{Name: "WWG-M001", Dtype: "Bool", Address: "Q10.0", Comment: "Test motor 1"},
+				{Name: "WWG-M001_FB", Dtype: "Bool", Address: "I10.0", Comment: "Test motor 1 feedback"},
+				{Name: "WWG-M001_TH", Dtype: "Bool", Address: "I10.1", Comment: "Test motor 1 breaker"},
+				{Name: "WWG-M001_WS", Dtype: "Bool", Address: "I10.2", Comment: "Test motor 1 protection switch"},
 			},
 		},
 		{
@@ -470,9 +470,9 @@ func Test_motor_PlcTags(t *testing.T) {
 				hasSwitch:        true,
 			},
 			wantT: []*PlcTag{
-				{name: "WWG-M001", dtype: "Bool", address: "Q10.0", comment: "Test motor 1"},
-				{name: "WWG-M001_TH", dtype: "Bool", address: "I10.1", comment: "Test motor 1 breaker"},
-				{name: "WWG-M001_WS", dtype: "Bool", address: "I10.2", comment: "Test motor 1 protection switch"},
+				{Name: "WWG-M001", Dtype: "Bool", Address: "Q10.0", Comment: "Test motor 1"},
+				{Name: "WWG-M001_TH", Dtype: "Bool", Address: "I10.1", Comment: "Test motor 1 breaker"},
+				{Name: "WWG-M001_WS", Dtype: "Bool", Address: "I10.2", Comment: "Test motor 1 protection switch"},
 			},
 		},
 		{
@@ -492,9 +492,9 @@ func Test_motor_PlcTags(t *testing.T) {
 				hasSwitch:        true,
 			},
 			wantT: []*PlcTag{
-				{name: "WWG-M001", dtype: "Bool", address: "Q10.0", comment: "Test motor 1"},
-				{name: "WWG-M001_FB", dtype: "Bool", address: "I10.0", comment: "Test motor 1 feedback"},
-				{name: "WWG-M001_WS", dtype: "Bool", address: "I10.2", comment: "Test motor 1 protection switch"},
+				{Name: "WWG-M001", Dtype: "Bool", Address: "Q10.0", Comment: "Test motor 1"},
+				{Name: "WWG-M001_FB", Dtype: "Bool", Address: "I10.0", Comment: "Test motor 1 feedback"},
+				{Name: "WWG-M001_WS", Dtype: "Bool", Address: "I10.2", Comment: "Test motor 1 protection switch"},
 			},
 		},
 		{
@@ -514,9 +514,9 @@ func Test_motor_PlcTags(t *testing.T) {
 				hasSwitch:        false,
 			},
 			wantT: []*PlcTag{
-				{name: "WWG-M001", dtype: "Bool", address: "Q10.0", comment: "Test motor 1"},
-				{name: "WWG-M001_FB", dtype: "Bool", address: "I10.0", comment: "Test motor 1 feedback"},
-				{name: "WWG-M001_TH", dtype: "Bool", address: "I10.1", comment: "Test motor 1 breaker"},
+				{Name: "WWG-M001", Dtype: "Bool", Address: "Q10.0", Comment: "Test motor 1"},
+				{Name: "WWG-M001_FB", Dtype: "Bool", Address: "I10.0", Comment: "Test motor 1 feedback"},
+				{Name: "WWG-M001_TH", Dtype: "Bool", Address: "I10.1", Comment: "Test motor 1 breaker"},
 			},
 		},
 	}
@@ -552,10 +552,10 @@ func Test_motor_contactorPlcTag(t *testing.T) {
 				hasSwitch:        true,
 			},
 			want: &PlcTag{
-				name:    "WWG-M001",
-				dtype:   "Bool",
-				address: "Q10.0",
-				comment: "Test motor 1",
+				Name:    "WWG-M001",
+				Dtype:   "Bool",
+				Address: "Q10.0",
+				Comment: "Test motor 1",
 			},
 		},
 	}
@@ -591,10 +591,10 @@ func Test_motor_feedbackPlcTag(t *testing.T) {
 				hasSwitch:        true,
 			},
 			want: &PlcTag{
-				name:    "WWG-M001_FB",
-				dtype:   "Bool",
-				address: "I10.0",
-				comment: "Test motor 1 feedback",
+				Name:    "WWG-M001_FB",
+				Dtype:   "Bool",
+				Address: "I10.0",
+				Comment: "Test motor 1 feedback",
 			},
 		},
 		{
@@ -648,10 +648,10 @@ func Test_motor_breakerPlcTag(t *testing.T) {
 				hasSwitch:        true,
 			},
 			want: &PlcTag{
-				name:    "WWG-M001_TH",
-				dtype:   "Bool",
-				address: "I10.1",
-				comment: "Test motor 1 breaker",
+				Name:    "WWG-M001_TH",
+				Dtype:   "Bool",
+				Address: "I10.1",
+				Comment: "Test motor 1 breaker",
 			},
 		},
 		{
@@ -705,10 +705,10 @@ func Test_motor_switchPlcTag(t *testing.T) {
 				hasSwitch:        true,
 			},
 			want: &PlcTag{
-				name:    "WWG-M001_WS",
-				dtype:   "Bool",
-				address: "I10.2",
-				comment: "Test motor 1 protection switch",
+				Name:    "WWG-M001_WS",
+				Dtype:   "Bool",
+				Address: "I10.2",
+				Comment: "Test motor 1 protection switch",
 			},
 		},
 		{

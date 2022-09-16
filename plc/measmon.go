@@ -78,10 +78,10 @@ func (m *measmon) InputMap() map[string]string {
 
 func (m *measmon) PlcTags() (t []*PlcTag) {
 	t = append(t, &PlcTag{
-		name:    m.Tag,
-		dtype:   "Int",
-		address: m.Address,
-		comment: m.Description,
+		Name:    m.Tag,
+		Dtype:   "Int",
+		Address: m.Address,
+		Comment: m.Description,
 	})
 	return
 }

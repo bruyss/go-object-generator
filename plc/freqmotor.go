@@ -76,19 +76,34 @@ func (f *freqMotor) String() string {
 }
 
 func (f *freqMotor) InputMap() map[string]string {
+	var feedbackTag, breakerTag, switchTag string
+	if f.hasFeedback {
+		feedbackTag = strconv.Quote(f.FeedbackTag)
+	} else {
+		feedbackTag = strconv.Quote("IDB_"+f.Tag) + ".Q_On"
+	}
+	if f.hasBreaker {
+		breakerTag = strconv.Quote(f.BreakerTag)
+	} else {
+		breakerTag = "FALSE"
+	}
+	if f.hasSwitch {
+		switchTag = strconv.Quote(f.SwitchTag)
+	} else {
+		switchTag = "TRUE"
+	}
+
 	return map[string]string{
-		"Tag":              f.Tag,
-		"Description":      f.Description,
-		"IDB":              "IDB_" + f.Tag,
-		"ContactorAddress": f.ContactorAddress,
-		"PQWAddress":       f.PqwAddress,
-		"FeedbackTag":      f.FeedbackTag,
-		"FeedbackAddress":  f.FeedbackAddress,
-		"BreakerTag":       f.BreakerTag,
-		"BreakerAddress":   f.BreakerAddress,
-		"SwitchTag":        f.SwitchTag,
-		"SwitchAddress":    f.SwitchAddress,
-		"Danfoss":          strconv.FormatBool(f.DanfossDrive),
+		"Tag":          f.Tag,
+		"Description":  f.Description,
+		"IDB":          "IDB_" + f.Tag,
+		"ContactorTag": strconv.Quote(f.Tag),
+		"PQW":          strconv.Quote(f.Tag + "_PQW"),
+		"FeedbackTag":  feedbackTag,
+		"BreakerTag":   breakerTag,
+		"SwitchTag":    switchTag,
+		"AlarmTag":     strconv.Quote(f.Tag + "_AL"),
+		"Danfoss":      strconv.FormatBool(f.DanfossDrive),
 	}
 }
 
@@ -109,6 +124,11 @@ func (f *freqMotor) PlcTags() (t []*PlcTag) {
 	if p := f.switchPlcTag(); p != nil {
 		t = append(t, p)
 	}
+	// TODO: Alarm tag
+	// if p := f.alarmPlcTag(); p != nil {
+	// 	t = append(t, p)
+	// }
+	_ = f.alarmPlcTag()
 
 	return
 }
@@ -118,10 +138,10 @@ func (f *freqMotor) contactorPlcTag() *PlcTag {
 		return nil
 	}
 	return &PlcTag{
-		name:    f.Tag,
-		dtype:   "Bool",
-		address: f.ContactorAddress,
-		comment: f.Description,
+		Name:    f.Tag,
+		Dtype:   "Bool",
+		Address: f.ContactorAddress,
+		Comment: f.Description,
 	}
 }
 
@@ -130,10 +150,10 @@ func (f *freqMotor) pqwPlcTag() *PlcTag {
 		return nil
 	}
 	return &PlcTag{
-		name:    f.Tag + "_PQW",
-		dtype:   "Int",
-		address: f.PqwAddress,
-		comment: f.Description + " output",
+		Name:    f.Tag + "_PQW",
+		Dtype:   "Int",
+		Address: f.PqwAddress,
+		Comment: f.Description + " output",
 	}
 }
 
@@ -142,10 +162,10 @@ func (f *freqMotor) feedbackPlcTag() *PlcTag {
 		return nil
 	}
 	return &PlcTag{
-		name:    f.FeedbackTag,
-		dtype:   "Bool",
-		address: f.FeedbackAddress,
-		comment: f.Description + " feedback",
+		Name:    f.FeedbackTag,
+		Dtype:   "Bool",
+		Address: f.FeedbackAddress,
+		Comment: f.Description + " feedback",
 	}
 }
 
@@ -154,10 +174,10 @@ func (f *freqMotor) breakerPlcTag() *PlcTag {
 		return nil
 	}
 	return &PlcTag{
-		name:    f.BreakerTag,
-		dtype:   "Bool",
-		address: f.BreakerAddress,
-		comment: f.Description + " breaker",
+		Name:    f.BreakerTag,
+		Dtype:   "Bool",
+		Address: f.BreakerAddress,
+		Comment: f.Description + " breaker",
 	}
 }
 
@@ -166,9 +186,21 @@ func (f *freqMotor) switchPlcTag() *PlcTag {
 		return nil
 	}
 	return &PlcTag{
-		name:    f.SwitchTag,
-		dtype:   "Bool",
-		address: f.SwitchAddress,
-		comment: f.Description + " protection switch",
+		Name:    f.SwitchTag,
+		Dtype:   "Bool",
+		Address: f.SwitchAddress,
+		Comment: f.Description + " protection switch",
+	}
+}
+
+func (f *freqMotor) alarmPlcTag() *PlcTag {
+	if f.DanfossDrive {
+		return nil
+	}
+	return &PlcTag{
+		Name:    f.Tag + "_AL",
+		Dtype:   "Bool",
+		Address: "M0.0", // TODO: Add alarm address
+		Comment: f.Description + " drive alarm",
 	}
 }

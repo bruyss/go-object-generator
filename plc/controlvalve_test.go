@@ -114,8 +114,8 @@ func Test_controlValve_PlcTags(t *testing.T) {
 				hasFeedback:     true,
 			},
 			[]*PlcTag{
-				{name: "WWG-CV001", dtype: "Int", address: "QW16", comment: "Test control valve 1 output"},
-				{name: "WWG-CV001_FB", dtype: "Int", address: "IW32", comment: "Test control valve 1 feedback"},
+				{Name: "WWG-CV001", Dtype: "Int", Address: "QW16", Comment: "Test control valve 1 output"},
+				{Name: "WWG-CV001_FB", Dtype: "Int", Address: "IW32", Comment: "Test control valve 1 feedback"},
 			},
 		},
 		{
@@ -130,8 +130,8 @@ func Test_controlValve_PlcTags(t *testing.T) {
 				hasFeedback:     true,
 			},
 			[]*PlcTag{
-				{name: "WWG-CV002", dtype: "Int", address: "QW18", comment: "Test control valve 2 output"},
-				{name: "WWG-CV002_FB", dtype: "Int", address: "IW34", comment: "Test control valve 2 feedback"},
+				{Name: "WWG-CV002", Dtype: "Int", Address: "QW18", Comment: "Test control valve 2 output"},
+				{Name: "WWG-CV002_FB", Dtype: "Int", Address: "IW34", Comment: "Test control valve 2 feedback"},
 			},
 		},
 		{
@@ -146,7 +146,7 @@ func Test_controlValve_PlcTags(t *testing.T) {
 				hasFeedback:     false,
 			},
 			[]*PlcTag{
-				{name: "WWG-CV003", dtype: "Int", address: "QW20", comment: "Test control valve 3 output"},
+				{Name: "WWG-CV003", Dtype: "Int", Address: "QW20", Comment: "Test control valve 3 output"},
 			},
 		},
 	}

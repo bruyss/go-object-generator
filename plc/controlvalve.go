@@ -55,7 +55,7 @@ func (c *controlValve) InputMap() map[string]string {
 		"NoFeedback":     strconv.FormatBool(!c.hasFeedback),
 		"Feedback":       c.FeedbackTag,
 		"MonitoringTime": strconv.Itoa(c.MonitoringTime),
-		"Output":         strconv.Quote(c.outputPlcTag().name),
+		"Output":         strconv.Quote(c.outputPlcTag().Name),
 	}
 }
 
@@ -71,10 +71,10 @@ func (c *controlValve) PlcTags() (t []*PlcTag) {
 
 func (c *controlValve) outputPlcTag() *PlcTag {
 	return &PlcTag{
-		name:    c.Tag,
-		dtype:   "Int",
-		address: c.Address,
-		comment: c.Description + " output",
+		Name:    c.Tag,
+		Dtype:   "Int",
+		Address: c.Address,
+		Comment: c.Description + " output",
 	}
 }
 
@@ -83,9 +83,9 @@ func (c *controlValve) feedbackPlcTag() *PlcTag {
 		return nil
 	}
 	return &PlcTag{
-		name:    c.Tag + "_FB",
-		dtype:   "Int",
-		address: c.FeedbackAddress,
-		comment: c.Description + " feedback",
+		Name:    c.Tag + "_FB",
+		Dtype:   "Int",
+		Address: c.FeedbackAddress,
+		Comment: c.Description + " feedback",
 	}
 }

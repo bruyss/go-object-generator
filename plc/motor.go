@@ -67,26 +67,28 @@ func (m *motor) InputMap() map[string]string {
 	var feedbackTag, breakerTag, switchTag string
 
 	if m.hasFeedback {
-		feedbackTag = strconv.Quote(m.feedbackPlcTag().name)
+		feedbackTag = strconv.Quote(m.feedbackPlcTag().Name)
 	} else {
 		feedbackTag = strconv.Quote("IDB_"+m.Tag) + ".Q_On"
 	}
 	if m.hasBreaker {
-		breakerTag = strconv.Quote(m.breakerPlcTag().name)
+		breakerTag = strconv.Quote(m.breakerPlcTag().Name)
 	} else {
 		breakerTag = "true"
 	}
 	if m.hasSwitch {
-		switchTag = strconv.Quote(m.switchPlcTag().name)
+		switchTag = strconv.Quote(m.switchPlcTag().Name)
 	} else {
 		switchTag = "false"
 	}
 
+	// TODO: Add monitoring time
+	// TODO: Add contactor tag
 	return map[string]string{
 		"Tag":          m.Tag,
 		"Description":  m.Description,
 		"IDB":          strconv.Quote("IDB_" + m.Tag),
-		"ContactorTag": strconv.Quote(m.contactorPlcTag().name),
+		"ContactorTag": strconv.Quote(m.contactorPlcTag().Name),
 		"FeedbackTag":  feedbackTag,
 		"BreakerTag":   breakerTag,
 		"SwitchTag":    switchTag,
@@ -112,10 +114,10 @@ func (m *motor) PlcTags() (t []*PlcTag) {
 
 func (m *motor) contactorPlcTag() *PlcTag {
 	return &PlcTag{
-		name:    m.Tag,
-		dtype:   "Bool",
-		address: m.ContactorAddress,
-		comment: m.Description,
+		Name:    m.Tag,
+		Dtype:   "Bool",
+		Address: m.ContactorAddress,
+		Comment: m.Description,
 	}
 }
 
@@ -124,10 +126,10 @@ func (m *motor) feedbackPlcTag() *PlcTag {
 		return nil
 	}
 	return &PlcTag{
-		name:    m.FeedbackTag,
-		dtype:   "Bool",
-		address: m.FeedbackAddress,
-		comment: m.Description + " feedback",
+		Name:    m.FeedbackTag,
+		Dtype:   "Bool",
+		Address: m.FeedbackAddress,
+		Comment: m.Description + " feedback",
 	}
 }
 
@@ -136,10 +138,10 @@ func (m *motor) breakerPlcTag() *PlcTag {
 		return nil
 	}
 	return &PlcTag{
-		name:    m.BreakerTag,
-		dtype:   "Bool",
-		address: m.BreakerAddress,
-		comment: m.Description + " breaker",
+		Name:    m.BreakerTag,
+		Dtype:   "Bool",
+		Address: m.BreakerAddress,
+		Comment: m.Description + " breaker",
 	}
 }
 
@@ -148,9 +150,9 @@ func (m *motor) switchPlcTag() *PlcTag {
 		return nil
 	}
 	return &PlcTag{
-		name:    m.SwitchTag,
-		dtype:   "Bool",
-		address: m.SwitchAddress,
-		comment: m.Description + " protection switch",
+		Name:    m.SwitchTag,
+		Dtype:   "Bool",
+		Address: m.SwitchAddress,
+		Comment: m.Description + " protection switch",
 	}
 }

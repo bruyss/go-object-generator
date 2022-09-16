@@ -36,6 +36,31 @@ var generateAllCmd = &cobra.Command{
 			ObjectSettings:  *genSettings.Measmon,
 			Objects:         sheetreader.ReadMeasmons(excelSource),
 		}
+		digmonGen := obwriter.Generator{
+			GeneralSettings: *genSettings.General,
+			ObjectSettings:  *genSettings.Digmon,
+			Objects:         sheetreader.ReadDigmons(excelSource),
+		}
+		valveGen := obwriter.Generator{
+			GeneralSettings: *genSettings.General,
+			ObjectSettings:  *genSettings.Valve,
+			Objects:         sheetreader.ReadValves(excelSource),
+		}
+		controlValveGen := obwriter.Generator{
+			GeneralSettings: *genSettings.General,
+			ObjectSettings:  *genSettings.ControlValve,
+			Objects:         sheetreader.ReadControlValves(excelSource),
+		}
+		motorGen := obwriter.Generator{
+			GeneralSettings: *genSettings.General,
+			ObjectSettings:  *genSettings.Motor,
+			Objects:         sheetreader.ReadMotors(excelSource),
+		}
+		freqMotorGen := obwriter.Generator{
+			GeneralSettings: *genSettings.General,
+			ObjectSettings:  *genSettings.FreqMotor,
+			Objects:         sheetreader.ReadFreqMotors(excelSource),
+		}
 
 		// Generate IDBs
 		if genAll || genIdbs {
@@ -50,6 +75,26 @@ var generateAllCmd = &cobra.Command{
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
+			err = digmonGen.Generate("Digmon_IDBs.db", idbTemplate, tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = valveGen.Generate("Valve_IDBs.db", idbTemplate, tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = controlValveGen.Generate("ControlValve_IDBs.db", idbTemplate, tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = motorGen.Generate("Motor_IDBs.db", idbTemplate, tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = freqMotorGen.Generate("FreqMotor_IDBs.db", idbTemplate, tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
 		}
 
 		// Generate source files
@@ -58,6 +103,26 @@ var generateAllCmd = &cobra.Command{
 				"genAll", genAll,
 				"genSource", genSource)
 			err := measmonGen.Generate("Measmon_source.scl", "measmon.tmpl", tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = digmonGen.Generate("Digmon_source.scl", "digmon.tmpl", tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = valveGen.Generate("Valve_source.scl", "valve.tmpl", tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = controlValveGen.Generate("ControlValve_source.scl", "controlValve.tmpl", tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = motorGen.Generate("Motor_source.scl", "motor.tmpl", tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = freqMotorGen.Generate("FreqMotor_source.scl", "freqMotor.tmpl", tmp)
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
@@ -73,6 +138,12 @@ var generateAllCmd = &cobra.Command{
 				utils.Sugar.Error(err)
 			}
 			fmt.Println("Gotta do those tag tables...")
+			measmonGen.GeneratePlcTagTable("Measmon_tags.xml", "Measmons")
+			digmonGen.GeneratePlcTagTable("Digmon_tags.xml", "Digmons")
+			valveGen.GeneratePlcTagTable("Valve_tags.xml", "Valves")
+			controlValveGen.GeneratePlcTagTable("ControlValve_tags.xml", "ControlValves")
+			motorGen.GeneratePlcTagTable("Motor_tags.xml", "Motors")
+			freqMotorGen.GeneratePlcTagTable("FreqMotor_tags.xml", "FreqMotors")
 		}
 
 	},

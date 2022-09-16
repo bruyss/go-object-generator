@@ -56,7 +56,7 @@ func NewValve(tag, description, actAddress, fboTag, fbcTag, fboAddress, fbcAddre
 		v.FbcAddress = "M0.2"
 	}
 
-	utils.Sugar.Debug("Object created",
+	utils.Sugar.Debugw("Object created",
 		"Valve", v.String(),
 	)
 	return v, nil
@@ -70,12 +70,12 @@ func (v *valve) String() string {
 func (v *valve) InputMap() map[string]string {
 	var fbo, fbc string
 	if v.hasFbo {
-		fbo = v.FboTag
+		fbo = strconv.Quote(v.FboTag)
 	} else {
 		fbo = strconv.Quote("IDB_"+v.Tag) + ".Q_On"
 	}
 	if v.hasFbc {
-		fbc = v.FbcTag
+		fbc = strconv.Quote(v.FbcTag)
 	} else {
 		fbc = "NOT " + strconv.Quote("IDB_"+v.Tag) + ".Q_On"
 	}
@@ -84,7 +84,7 @@ func (v *valve) InputMap() map[string]string {
 		"Tag":          v.Tag,
 		"Description":  v.Description,
 		"IDB":          "IDB_" + v.Tag,
-		"Output":       v.Tag,
+		"Output":       strconv.Quote(v.Tag),
 		"FBO":          fbo,
 		"FBC":          fbc,
 		"MonTimeOpen":  strconv.Itoa(v.MonTimeOpen),
@@ -108,10 +108,10 @@ func (v *valve) PlcTags() (t []*PlcTag) {
 
 func (v *valve) outputPlcTag() *PlcTag {
 	return &PlcTag{
-		name:    v.Tag,
-		dtype:   "Bool",
-		address: v.ActAddress,
-		comment: v.Description,
+		Name:    v.Tag,
+		Dtype:   "Bool",
+		Address: v.ActAddress,
+		Comment: v.Description,
 	}
 }
 
@@ -120,10 +120,10 @@ func (v *valve) fboPlcTag() *PlcTag {
 		return nil
 	}
 	return &PlcTag{
-		name:    v.FboTag,
-		dtype:   "Bool",
-		address: v.FboAddress,
-		comment: v.Description + " feedback open",
+		Name:    v.FboTag,
+		Dtype:   "Bool",
+		Address: v.FboAddress,
+		Comment: v.Description + " feedback open",
 	}
 }
 
@@ -132,9 +132,9 @@ func (v *valve) fbcPlcTag() *PlcTag {
 		return nil
 	}
 	return &PlcTag{
-		name:    v.FbcTag,
-		dtype:   "Bool",
-		address: v.FbcAddress,
-		comment: v.Description + " feedback closed",
+		Name:    v.FbcTag,
+		Dtype:   "Bool",
+		Address: v.FbcAddress,
+		Comment: v.Description + " feedback closed",
 	}
 }

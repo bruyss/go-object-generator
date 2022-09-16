@@ -1,12 +1,12 @@
 package plc
 
 type PlcTag struct {
-	name    string
-	dtype   string
-	address string
-	comment string
+	Name    string
+	Dtype   string
+	Address string
+	Comment string
 }
 
 func (t *PlcTag) String() string {
-	return t.name + "(" + t.dtype + ";" + t.address + ";" + t.comment + ")"
+	return t.Name + "(" + t.Dtype + ";" + t.Address + ";" + t.Comment + ")"
 }
