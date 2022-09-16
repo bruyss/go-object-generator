@@ -2,10 +2,12 @@ package obwriter
 
 var Templates = map[string]string{
 	"idbs":         idbTemplate,
-	"measmon":      measmonTemplate,
-	"digmon":       digmonTemplate,
-	"valve":        valveTemplate,
 	"controlValve": controlValveTemplate,
+	"digmon":       digmonTemplate,
+	"freqMotor":    freqMotorTemplate,
+	"motor":        motorTemplate,
+	"measmon":      measmonTemplate,
+	"valve":        valveTemplate,
 }
 
 const (
@@ -26,20 +28,25 @@ VAR_INPUT
     {{.GeneralSettings.SecondPulse}}   : Bool;
     {{.GeneralSettings.Simulation}} : Bool;
 END_VAR
-{{$generalsettings := .GeneralSettings}}{{$objectsettings := .ObjectSettings}}
+{{$gs := .GeneralSettings}}{{$os := .ObjectSettings}}
 BEGIN
 {{range $index, $object := .Objects}}
-    REGION {{.InputMap.Tag}}: {{.InputMap.Description}}
-        "{{.InputMap.IDB}}"(Tagname := '{{.InputMap.Tag}}',
-                    Unit := '{{.InputMap.Unit}}',
-                    SecPulse := {{$generalsettings.SecondPulse}},
-                    Reset := TRUE,
-                    Local := FALSE,
-                    Simulation := {{$generalsettings.Simulation}},
-                    AnalogInput := {{.InputMap.Input}},
-                    LowLimit := {{.InputMap.LowLimit}},
-                    HighLimit := {{.InputMap.HighLimit}},
-                    {{if $generalsettings.Wincc}}HMI := "{{$objectsettings.HmiDb}}"."{{.InputMap.Tag}}"{{else}}HMI := "{{$objectsettings.HmiDb}}".o[{{$index}}]{{end}});
+    {{- $d := $object.InputMap}}
+    REGION {{$d.Tag}}: {{$d.Description}}
+        "{{$d.IDB}}"(Tagname := '{{$d.Tag}}',
+                        Unit := '{{$d.Unit}}',
+                        SecPulse := {{$gs.SecondPulse}},
+                        Reset := TRUE,
+                        Local := FALSE,
+                        Simulation := {{$gs.Simulation}},
+                        AnalogInput := {{$d.Input}},
+                        LowLimit := {{$d.LowLimit}},
+                        HighLimit := {{$d.HighLimit}},
+                        {{if $gs.Wincc -}}
+                            HMI := "{{$os.HmiDb}}"."{{$d.Tag}}"
+                        {{- else -}}
+                            HMI := "{{$os.HmiDb}}".o[{{$index}}]
+                        {{- end}});
     END_REGION
 {{end}}
 END_FUNCTION`
@@ -51,18 +58,23 @@ VAR_INPUT
     {{.GeneralSettings.SecondPulse}}   : Bool;
     {{.GeneralSettings.Simulation}} : Bool;
 END_VAR
-{{$generalsettings := .GeneralSettings}}{{$objectsettings := .ObjectSettings}}
+{{$gs := .GeneralSettings}}{{$os := .ObjectSettings}}
 BEGIN
 {{range $index, $object := .Objects}}
-    REGION {{.InputMap.Tag}}: {{.InputMap.Description}}
-        "{{.InputMap.IDB}}"(Tagname := '{{.InputMap.Tag}}',
-                    SecPulse := {{$generalsettings.SecondPulse}},
-                    Reset := FALSE,
-                    EnableAlarm := {{.InputMap.Alarm}},
-                    InvertAlarm := {{.InputMap.InvertAlarm}},
-                    Input := {{.InputMap.Input}},
-                    Invert := {{.InputMap.Invert}},
-                    HMI := "{{$objectsettings.HmiDb}}"."{{.InputMap.Tag}}");
+    {{- $d := $object.InputMap }}
+    REGION {{$d.Tag}}: {{$d.Description}}
+        "{{$d.IDB}}"(Tagname := '{{$d.Tag}}',
+                        SecPulse := {{$gs.SecondPulse}},
+                        Reset := FALSE,
+                        EnableAlarm := {{$d.Alarm}},
+                        InvertAlarm := {{$d.InvertAlarm}},
+                        Input := {{$d.Input}},
+                        Invert := {{$d.Invert}},
+                        {{if $gs.Wincc -}}
+                            HMI := "{{$os.HmiDb}}"."{{$d.Tag}}"
+                        {{- else -}}
+                            HMI := "{{$os.HmiDb}}".o[{{$index}}]
+                        {{- end}});
     END_REGION
 {{end}}
 END_FUNCTION`
@@ -74,24 +86,29 @@ VAR_INPUT
     {{.GeneralSettings.SecondPulse}}   : Bool;
     {{.GeneralSettings.Simulation}} : Bool;
 END_VAR
-{{$generalsettings := .GeneralSettings}}{{$objectsettings := .ObjectSettings}}
+{{$gs := .GeneralSettings}}{{$os := .ObjectSettings}}
 BEGIN
 {{range $index, $object := .Objects}}
-    REGION {{.InputMap.Tag}}: {{.InputMap.Description}}
-        "{{.InputMap.IDB}}"(Tagname := '{{.InputMap.Tag}}',
-                    SecPulse := {{$generalsettings.SecondPulse}},
-                    Reset := FALSE,
-                    Local := FALSE,
-                    Simulation := {{$generalsettings.Simulation}},
-                    Permit := TRUE,
-                    NO := FALSE,
-                    Activate := {{$generalsettings.TodoBit}},
-                    FeedbackActivated := {{.InputMap.FBO}},
-                    FeedbackDeactivated := {{.InputMap.FBC}},
-                    MonitoringTimeAct := {{.InputMap.MonTimeOpen}},
-                    MonitoringTimeDeact := {{.InputMap.MonTimeClose}}
-                    Q_Activate := {{.InputMap.Output}},
-                    {{if $generalsettings.Wincc}}HMI := "{{$objectsettings.HmiDb}}"."{{.InputMap.Tag}}"{{else}}HMI := "{{$objectsettings.HmiDb}}".o[{{$index}}]{{end}});
+    {{- $d := $object.InputMap}}
+    REGION {{$d.Tag}}: {{$d.Description}}
+        "{{$d.IDB}}"(Tagname := '{{$d.Tag}}',
+                        SecPulse := {{$gs.SecondPulse}},
+                        Reset := FALSE,
+                        Local := FALSE,
+                        Simulation := {{$gs.Simulation}},
+                        Permit := TRUE,
+                        NO := FALSE,
+                        Activate := {{$gs.TodoBit}},
+                        FeedbackActivated := {{$d.FBO}},
+                        FeedbackDeactivated := {{$d.FBC}},
+                        MonitoringTimeAct := {{$d.MonTimeOpen}},
+                        MonitoringTimeDeact := {{$d.MonTimeClose}}
+                        Q_Activate := {{$d.Output}},
+                        {{if $gs.Wincc -}}
+                            HMI := "{{$os.HmiDb}}"."{{$d.Tag}}"
+                        {{- else -}}
+                            HMI := "{{$os.HmiDb}}".o[{{$index}}]
+                        {{- end}});
     END_REGION
 {{end}}
 END_FUNCTION`
@@ -103,22 +120,119 @@ VAR_INPUT
     {{.GeneralSettings.SecondPulse}}   : Bool;
     {{.GeneralSettings.Simulation}} : Bool;
 END_VAR
-{{$generalsettings := .GeneralSettings}}{{$objectsettings := .ObjectSettings}}
+{{$gs := .GeneralSettings}}{{$os := .ObjectSettings}}
 BEGIN
 {{range $index, $object := .Objects}}
-    REGION {{.InputMap.Tag}}: {{.InputMap.Description}}
-        "{{.InputMap.IDB}}"(Tagname := '{{.InputMap.Tag}}',
-                    SecPulse := {{$generalsettings.SecondPulse}},
-                    Reset := FALSE,
-                    Local := FALSE,
-                    Simulation := {{$generalsettings.Simulation}},
-                    Permit := TRUE,
-                    NoFeedback := {{.InputMap.NoFeedback}},
-                    Feedback := {{.InputMap.Feedback}},
-                    SP := {{$generalsettings.TodoReal}},
-                    TimeMon := {{.InputMap.MonitoringTime}},
-                    PQW := {{.InputMap.Output}},
-                    {{if $generalsettings.Wincc}}HMI := "{{$objectsettings.HmiDb}}"."{{.InputMap.Tag}}"{{else}}HMI := "{{$objectsettings.HmiDb}}".o[{{$index}}]{{end}});
+    {{- $d := $object.InputMap}}
+    REGION {{$d.Tag}}: {{$d.Description}}
+        "{{$d.IDB}}"(Tagname := '{{$d.Tag}}',
+                        SecPulse := {{$gs.SecondPulse}},
+                        Reset := FALSE,
+                        Local := FALSE,
+                        Simulation := {{$gs.Simulation}},
+                        Permit := TRUE,
+                        NoFeedback := {{$d.NoFeedback}},
+                        Feedback := {{$d.Feedback}},
+                        SP := {{$gs.TodoReal}},
+                        TimeMon := {{$d.MonitoringTime}},
+                        PQW := {{$d.Output}},
+                        {{if $gs.Wincc -}}
+                            HMI := "{{$os.HmiDb}}"."{{$d.Tag}}"
+                        {{- else -}}
+                            HMI := "{{$os.HmiDb}}".o[{{$index}}]
+                        {{- end}});
+    END_REGION
+{{end}}
+END_FUNCTION`
+
+	freqMotorTemplate string = `FUNCTION {{.ObjectSettings.CallFc}} : Void
+{ S7_Optimized_Access := 'TRUE'}
+VERSION : 0.1
+VAR_INPUT
+    {{.GeneralSettings.SecondPulse}}   : Bool;
+    {{.GeneralSettings.Simulation}} : Bool;
+END_VAR
+{{$gs := .GeneralSettings}}{{$os := .ObjectSettings}}
+BEGIN
+{{range $index, $object := .Objects}}
+    {{- $d := $object.InputMap}}
+    REGION {{$d.Tag}}: {{$d.Description}} {{$d.Danfoss}}
+    {{- if eq $d.Danfoss "true"}}
+        "FC_Danfoss"(iHW_ID := "{{$d.Tag}}~PPO_4_-_6_6_Words__Danfoss_Telegra,,,~PPO_4_-_6_6_Words__Danfoss_,,,",
+                        iTagname := {{$d.Tag}},
+                        iSecPulse := {{$gs.SecondPulse}},
+                        iReset := iReset,
+                        iSimulation := {{$gs.Simulation}},
+                        iPermit := TRUE,
+                        iActivate := {{$gs.TodoBit}},
+                        iThermalProt := {{$d.BreakerTag}},
+                        iProtectionSwitch := {{$d.SwitchTag}},
+                        iSetpoint := {{$gs.TodoBit}},
+                        iMinimumFreq := 15.0,
+                        iMaximumFreq := 50.0,
+                        iMonitoringTime := 10,
+                        {{if $gs.Wincc -}}
+                            {{- "HMI"}} := "{{$os.HmiDb}}"."{{$d.Tag}}",
+                        {{- else -}}
+                            {{- "HMI"}} := "{{$os.HmiDb}}".o[{{$index}}],
+                        {{- end}}
+                        ioDrive := "DRIVE_COMM".{{$d.Tag}},
+                        Motor_Freq_Instance := {{$d.IDB}});
+    {{- else}}
+        "{{$d.IDB}}"(Tagname := '{{$d.Tag}}',
+                        SecPulse := {{$gs.SecondPulse}},
+                        Reset := TRUE,
+                        Local := FALSE,
+                        Simulation := {{$gs.Simulation}},
+                        Permit := TRUE,
+                        Activate := {{$gs.TodoBit}},
+                        Feedback := {{$d.FeedbackTag}},
+                        ThermalProt := {{$d.BreakerTag}},
+                        Protectionswitch := {{$d.SwitchTag}},
+                        DriveError := {{$d.AlarmTag}},
+                        MonitoringTime := 10,
+                        Setpoint := {{$gs.TodoReal}},
+                        Q_On := {{$d.ContactorTag}},
+                        PQW := {{$d.PQW}},
+                        {{if $gs.Wincc -}}
+                            {{- "HMI"}} := "{{$os.HmiDb}}"."{{$d.Tag}}");
+                        {{- else -}}
+                            {{- "HMI"}} := "{{$os.HmiDb}}".o[{{$index}}]);
+                        {{- end}}
+    {{- end}}
+    END_REGION
+{{end}}
+END_FUNCTION`
+
+	motorTemplate string = `FUNCTION {{.ObjectSettings.CallFc}} : Void
+{ S7_Optimized_Access := 'TRUE'}
+VERSION : 0.1
+VAR_INPUT
+    {{.GeneralSettings.SecondPulse}}   : Bool;
+    {{.GeneralSettings.Simulation}} : Bool;
+END_VAR
+{{$gs := .GeneralSettings}}{{$os := .ObjectSettings}}
+BEGIN
+{{range $index, $object := .Objects}}
+    {{- $d := $object.InputMap}}
+    REGION {{$d.Tag}}: {{$d.Description}}
+        "{{$d.IDB}}"(Tagname := '{{$d.Tag}}',
+                            SecPulse := {{$gs.SecondPulse}},
+                            Reset := TRUE,
+                            Local := FALSE,
+                            Simulation := {{$gs.Simulation}},
+                            Permit := TRUE,
+                            Activate := {{$gs.TodoBit}},
+                            Feedback := {{$d.FeedbackTag}},
+                            ThermalProt := {{$d.BreakerTag}},
+                            Protectionswitch := {{$d.SwitchTag}},
+                            MonitoringTime := 10,
+                            Q_On := %M0.0,
+                            {{if $gs.Wincc -}}
+                                HMI := "{{$os.HmiDb}}"."{{$d.Tag}}"
+                            {{- else -}}
+                                HMI := "{{$os.HmiDb}}".o[{{$index}}]
+                            {{- end}});
     END_REGION
 {{end}}
 END_FUNCTION`
