@@ -19,6 +19,7 @@ type objectSettings struct {
 	ObjectFb   string
 	CallFc     string
 	HmiDb      string
+	HmiType    string
 	StartIndex int
 	TagTable   string
 }
@@ -45,6 +46,7 @@ var DefaultSettings = &GeneratorSettings{
 		ObjectFb:   "FB_Measmon",
 		CallFc:     "Measmons_Call",
 		HmiDb:      "HMI_Measmons",
+		HmiType:    "HMI_Measmon",
 		StartIndex: 0,
 		TagTable:   "Measmons",
 	},
@@ -52,6 +54,7 @@ var DefaultSettings = &GeneratorSettings{
 		ObjectFb:   "FB_Digmon",
 		CallFc:     "Digmons_Call",
 		HmiDb:      "HMI_Digmons",
+		HmiType:    "HMI_Digmon",
 		StartIndex: 0,
 		TagTable:   "Digmons",
 	},
@@ -59,6 +62,7 @@ var DefaultSettings = &GeneratorSettings{
 		ObjectFb:   "FB_Valve",
 		CallFc:     "Valves_Call",
 		HmiDb:      "HMI_Valves",
+		HmiType:    "HMI_Valve",
 		StartIndex: 0,
 		TagTable:   "Valves",
 	},
@@ -66,6 +70,7 @@ var DefaultSettings = &GeneratorSettings{
 		ObjectFb:   "FB_ControlValve",
 		CallFc:     "ControlValves_Call",
 		HmiDb:      "HMI_ControlValves",
+		HmiType:    "HMI_ControlValve",
 		StartIndex: 0,
 		TagTable:   "ControlValves",
 	},
@@ -73,6 +78,7 @@ var DefaultSettings = &GeneratorSettings{
 		ObjectFb:   "FB_Motor",
 		CallFc:     "Motors_Call",
 		HmiDb:      "HMI_Motors",
+		HmiType:    "HMI_Motor",
 		StartIndex: 0,
 		TagTable:   "Motors",
 	},
@@ -80,6 +86,7 @@ var DefaultSettings = &GeneratorSettings{
 		ObjectFb:   "FB_Motor_Freq",
 		CallFc:     "FreqMotors_Call",
 		HmiDb:      "HMI_FreqMotors",
+		HmiType:    "HMI_Motor_Freq",
 		StartIndex: 0,
 		TagTable:   "FreqMotors",
 	},

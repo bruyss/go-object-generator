@@ -96,6 +96,38 @@ var generateAllCmd = &cobra.Command{
 			}
 		}
 
+		// Generate HMI DBs
+		if genAll || genIdbs {
+			hmiDbTemplate, err := cmd.Flags().GetString("hmidb-template")
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = measmonGen.Generate("Measmon_HMIDB.db", hmiDbTemplate, tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = digmonGen.Generate("Digmon_HMIDB.db", hmiDbTemplate, tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = valveGen.Generate("Valve_HMIDB.db", hmiDbTemplate, tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = controlValveGen.Generate("ControlValve_HMIDB.db", hmiDbTemplate, tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = motorGen.Generate("Motor_HMIDB.db", hmiDbTemplate, tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+			err = freqMotorGen.Generate("FreqMotor_HMIDB.db", hmiDbTemplate, tmp)
+			if err != nil {
+				utils.Sugar.Error(err)
+			}
+		}
+
 		// Generate source files
 		if genAll || genSource {
 			utils.Sugar.Debugw("Generating source files",

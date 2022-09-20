@@ -41,7 +41,7 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 	}
 
 	if len(m.Address) == 0 {
-		m.Address = "MWO"
+		m.Address = "MW0"
 		utils.Sugar.Warnw("No input address given",
 			"measmon", m.Tag,
 			"default", m.Address)
