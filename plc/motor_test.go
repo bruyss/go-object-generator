@@ -270,40 +270,6 @@ func TestNewMotor(t *testing.T) {
 	}
 }
 
-func Test_motor_String(t *testing.T) {
-	tests := []struct {
-		name string
-		m    *motor
-		want string
-	}{
-		{
-			name: "Motor",
-			m: &motor{
-				Tag:              "WWG-M001",
-				Description:      "Test motor 1",
-				ContactorAddress: "Q10.0",
-				FeedbackTag:      "WWG-M001_FB",
-				FeedbackAddress:  "I10.0",
-				BreakerTag:       "WWG-M001_TH",
-				BreakerAddress:   "I10.1",
-				SwitchTag:        "WWG-M001_WS",
-				SwitchAddress:    "I10.2",
-				hasFeedback:      true,
-				hasBreaker:       true,
-				hasSwitch:        true,
-			},
-			want: `{"Tag":"WWG-M001","Description":"Test motor 1","ContactorAddress":"Q10.0","FeedbackTag":"WWG-M001_FB","FeedbackAddress":"I10.0","BreakerTag":"WWG-M001_TH","BreakerAddress":"I10.1","SwitchTag":"WWG-M001_WS","SwitchAddress":"I10.2"}`,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.m.String(); got != tt.want {
-				t.Errorf("motor.String() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_motor_InputMap(t *testing.T) {
 	tests := []struct {
 		name string

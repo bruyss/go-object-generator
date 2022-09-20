@@ -1,11 +1,9 @@
 package plc
 
 import (
-	"encoding/json"
 	"strconv"
 
 	"github.com/bruyss/go-object-generator/utils"
-	"go.uber.org/zap"
 )
 
 type measmon struct {
@@ -42,26 +40,29 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 		HighLimit:   highLimitFloat,
 	}
 
-	if m.LowLimit >= m.HighLimit {
-		utils.Sugar.Info(
-			"Low limit must be higher than high limit",
-			zap.String("tag", tag),
-			zap.Float64("lowLimit", lowLimitFloat),
-			zap.Float64("highLimit", highLimitFloat),
-		)
-		m.LowLimit = 0.0
-		m.HighLimit = 100.0
+	if len(m.Address) == 0 {
+		m.Address = "MWO"
+		utils.Sugar.Warnw("No input address given",
+			"measmon", m.Tag,
+			"default", m.Address)
 	}
 
-	utils.Sugar.Debugw("Object created",
-		"measmon", m.String())
+	if m.LowLimit >= m.HighLimit {
+		m.LowLimit = 0.0
+		m.HighLimit = 100.0
+		utils.Sugar.Warnw(
+			"Low limit must be higher than high limit",
+			"measmon", m.Tag,
+			"low limit", lowLimitFloat,
+			"high limit", highLimitFloat,
+			"defaults", []float64{m.LowLimit, m.HighLimit},
+		)
+	}
+
+	utils.Sugar.Infow("Object created",
+		"measmon", m)
 
 	return m, nil
-}
-
-func (m *measmon) String() string {
-	b, _ := json.Marshal(m)
-	return string(b)
 }
 
 func (m *measmon) InputMap() map[string]string {

@@ -1,8 +1,9 @@
 package plc
 
 import (
-	"encoding/json"
 	"strconv"
+
+	"github.com/bruyss/go-object-generator/utils"
 )
 
 type controlValve struct {
@@ -33,18 +34,22 @@ func NewControlValve(tag, description, address, feedbackTag, feedbackAddress, mo
 
 	if len(c.Address) == 0 {
 		c.Address = "MW0"
+		utils.Sugar.Warnw("No output address provided",
+			"control valve", c.Tag,
+			"default", c.Address)
 	}
 
 	if len(c.FeedbackAddress) == 0 && c.hasFeedback {
 		c.FeedbackAddress = "MW2"
+		utils.Sugar.Warnw("No feedback address provided",
+			"control valve", c.Tag,
+			"default", c.FeedbackAddress)
 	}
 
-	return c, nil
-}
+	utils.Sugar.Infow("Object created",
+		"control valve", c)
 
-func (c *controlValve) String() string {
-	b, _ := json.Marshal(c)
-	return string(b)
+	return c, nil
 }
 
 func (c *controlValve) InputMap() map[string]string {

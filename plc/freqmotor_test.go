@@ -234,38 +234,6 @@ func TestNewFreqMotor(t *testing.T) {
 		})
 	}
 }
-func Test_freqMotor_String(t *testing.T) {
-	tests := []struct {
-		name string
-		f    *freqMotor
-		want string
-	}{
-		{
-			"Frequency motor",
-			&freqMotor{
-				Tag:              "WWG-P001",
-				Description:      "Frequency motor 1",
-				ContactorAddress: "Q4.0",
-				PqwAddress:       "QW20",
-				FeedbackTag:      "WWG-P001_FB",
-				FeedbackAddress:  "I4.0",
-				BreakerTag:       "WWG-P001_TH",
-				BreakerAddress:   "I4.1",
-				SwitchTag:        "WWG-P001_WS",
-				SwitchAddress:    "I4.2",
-				DanfossDrive:     false,
-			},
-			`{"Tag":"WWG-P001","Description":"Frequency motor 1","ContactorAddress":"Q4.0","PqwAddress":"QW20","FeedbackTag":"WWG-P001_FB","FeedbackAddress":"I4.0","BreakerTag":"WWG-P001_TH","BreakerAddress":"I4.1","SwitchTag":"WWG-P001_WS","SwitchAddress":"I4.2","DanfossDrive":false}`,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.f.String(); got != tt.want {
-				t.Errorf("FreqMotor.Stringer() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
 func Test_freqMotor_InputMap(t *testing.T) {
 	tests := []struct {

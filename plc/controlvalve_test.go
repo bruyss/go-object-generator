@@ -238,35 +238,6 @@ func Test_controlValve_InputMap(t *testing.T) {
 	}
 }
 
-func Test_controlValve_String(t *testing.T) {
-	tests := []struct {
-		name string
-		c    *controlValve
-		want string
-	}{
-		{
-			"Control valve",
-			&controlValve{
-				Tag:             "WWG-CV001",
-				Description:     "Test control valve 1",
-				Address:         "QW16",
-				FeedbackTag:     "WWG-CV001_FB",
-				FeedbackAddress: "IW32",
-				MonitoringTime:  10,
-				hasFeedback:     true,
-			},
-			`{"Tag":"WWG-CV001","Description":"Test control valve 1","Address":"QW16","FeedbackTag":"WWG-CV001_FB","FeedbackAddress":"IW32","MonitoringTime":10}`,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.c.String(); got != tt.want {
-				t.Errorf("controlValve.String() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_controlValve_outputPlcTag(t *testing.T) {
 	tests := []struct {
 		name string

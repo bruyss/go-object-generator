@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/bruyss/go-object-generator/obwriter"
 	"github.com/bruyss/go-object-generator/sheetreader"
 	"github.com/bruyss/go-object-generator/utils"
@@ -67,6 +65,7 @@ var generateAllCmd = &cobra.Command{
 			utils.Sugar.Debugw("Generating IDBS",
 				"genAll", genAll,
 				"genIdbs", genIdbs)
+			utils.Sugar.Errorw("Help!")
 			idbTemplate, err := cmd.Flags().GetString("idb-template")
 			if err != nil {
 				utils.Sugar.Error(err)
@@ -104,27 +103,27 @@ var generateAllCmd = &cobra.Command{
 				"genSource", genSource)
 			err := measmonGen.Generate("Measmon_source.scl", "measmon.tmpl", tmp)
 			if err != nil {
-				utils.Sugar.Error(err)
+				utils.Sugar.Errorw(err.Error(), "generator", "measmons")
 			}
 			err = digmonGen.Generate("Digmon_source.scl", "digmon.tmpl", tmp)
 			if err != nil {
-				utils.Sugar.Error(err)
+				utils.Sugar.Errorw(err.Error(), "generator", "digmons")
 			}
 			err = valveGen.Generate("Valve_source.scl", "valve.tmpl", tmp)
 			if err != nil {
-				utils.Sugar.Error(err)
+				utils.Sugar.Errorw(err.Error(), "generator", "valves")
 			}
 			err = controlValveGen.Generate("ControlValve_source.scl", "controlValve.tmpl", tmp)
 			if err != nil {
-				utils.Sugar.Error(err)
+				utils.Sugar.Errorw(err.Error(), "generator", "control valves")
 			}
 			err = motorGen.Generate("Motor_source.scl", "motor.tmpl", tmp)
 			if err != nil {
-				utils.Sugar.Error(err)
+				utils.Sugar.Errorw(err.Error(), "generator", "motors")
 			}
 			err = freqMotorGen.Generate("FreqMotor_source.scl", "freqMotor.tmpl", tmp)
 			if err != nil {
-				utils.Sugar.Error(err)
+				utils.Sugar.Errorw(err.Error(), "generator", "frequency motors")
 			}
 		}
 
@@ -134,16 +133,42 @@ var generateAllCmd = &cobra.Command{
 				"genAll", genAll,
 				"genTags", genTags)
 			var err error
+			err = measmonGen.GeneratePlcTagTable("Measmon_tags.xml", "Measmons")
 			if err != nil {
-				utils.Sugar.Error(err)
+				utils.Sugar.Errorw("Error generating tag table",
+					"generator", "measmons",
+					"error", err)
 			}
-			fmt.Println("Gotta do those tag tables...")
-			measmonGen.GeneratePlcTagTable("Measmon_tags.xml", "Measmons")
-			digmonGen.GeneratePlcTagTable("Digmon_tags.xml", "Digmons")
-			valveGen.GeneratePlcTagTable("Valve_tags.xml", "Valves")
-			controlValveGen.GeneratePlcTagTable("ControlValve_tags.xml", "ControlValves")
-			motorGen.GeneratePlcTagTable("Motor_tags.xml", "Motors")
-			freqMotorGen.GeneratePlcTagTable("FreqMotor_tags.xml", "FreqMotors")
+			err = digmonGen.GeneratePlcTagTable("Digmon_tags.xml", "Digmons")
+			if err != nil {
+				utils.Sugar.Errorw("Error generating tag table",
+					"generator", "digmons",
+					"error", err)
+			}
+			err = valveGen.GeneratePlcTagTable("Valve_tags.xml", "Valves")
+			if err != nil {
+				utils.Sugar.Errorw("Error generating tag table",
+					"generator", "valves",
+					"error", err)
+			}
+			err = controlValveGen.GeneratePlcTagTable("ControlValve_tags.xml", "ControlValves")
+			if err != nil {
+				utils.Sugar.Errorw("Error generating tag table",
+					"generator", "control valves",
+					"error", err)
+			}
+			err = motorGen.GeneratePlcTagTable("Motor_tags.xml", "Motors")
+			if err != nil {
+				utils.Sugar.Errorw("Error generating tag table",
+					"generator", "motors",
+					"error", err)
+			}
+			err = freqMotorGen.GeneratePlcTagTable("FreqMotor_tags.xml", "FreqMotors")
+			if err != nil {
+				utils.Sugar.Errorw("Error generating tag table",
+					"generator", "frequency motors",
+					"error", err)
+			}
 		}
 
 	},

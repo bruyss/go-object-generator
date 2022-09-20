@@ -81,13 +81,6 @@ var generateCmd = &cobra.Command{
 			utils.Sugar.Error(err)
 			return err
 		}
-		genAll = !genIdbs && !genSource && !genTags
-
-		utils.Sugar.Debugw("Generate switch bits",
-			"IDBs", genIdbs,
-			"Source files", genSource,
-			"Tags", genTags,
-			"All", genAll)
 
 		return nil
 	},

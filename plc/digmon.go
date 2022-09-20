@@ -41,13 +41,14 @@ func NewDigmon(tag, description, address, invert, alarm, invertAlarm string) (*d
 	}
 
 	if len(d.Address) == 0 {
-		utils.Sugar.Debugw("No input address given",
-			"Digmon", d.Tag,
-		)
 		d.Address = "M0.0"
+		utils.Sugar.Warnw("No input address given",
+			"digmon", d.Tag,
+			"default", d.Address,
+		)
 	}
 
-	utils.Sugar.Debugw("Object created",
+	utils.Sugar.Infow("Object created",
 		"Digmon", d.String(),
 	)
 

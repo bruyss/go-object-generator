@@ -38,55 +38,6 @@ func TestNewValve(t *testing.T) {
 		})
 	}
 }
-func Test_valve_String(t *testing.T) {
-	tests := []struct {
-		name string
-		v    *valve
-		want string
-	}{
-		{
-			"Valve",
-			&valve{
-				Tag:          "WWG-XV001",
-				Description:  "Test valve 1",
-				ActAddress:   "Q0.0",
-				FboTag:       "WWG-XV001_FBO",
-				FbcTag:       "WWG-XV001_FBC",
-				FboAddress:   "I0.1",
-				FbcAddress:   "I0.2",
-				MonTimeOpen:  10,
-				MonTimeClose: 15,
-				hasFbo:       true,
-				hasFbc:       true,
-			},
-			`{"Tag":"WWG-XV001","Description":"Test valve 1","ActAddress":"Q0.0","FboTag":"WWG-XV001_FBO","FbcTag":"WWG-XV001_FBC","FboAddress":"I0.1","FbcAddress":"I0.2","MonTimeOpen":10,"MonTimeClose":15}`,
-		},
-		{
-			"Valve no feedback open",
-			&valve{
-				Tag:          "WWG-XV002",
-				Description:  "Test valve 2",
-				ActAddress:   "Q0.1",
-				FboTag:       "",
-				FbcTag:       "WWG-XV002_FBC",
-				FboAddress:   "",
-				FbcAddress:   "I0.2",
-				MonTimeOpen:  10,
-				MonTimeClose: 10,
-				hasFbo:       false,
-				hasFbc:       true,
-			},
-			`{"Tag":"WWG-XV002","Description":"Test valve 2","ActAddress":"Q0.1","FboTag":"","FbcTag":"WWG-XV002_FBC","FboAddress":"","FbcAddress":"I0.2","MonTimeOpen":10,"MonTimeClose":10}`,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.v.String(); got != tt.want {
-				t.Errorf("valve.String() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
 func Test_valve_InputMap(t *testing.T) {
 	tests := []struct {

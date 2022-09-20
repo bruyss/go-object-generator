@@ -65,26 +65,6 @@ func TestNewMeasmon(t *testing.T) {
 		})
 	}
 }
-func Test_measmon_String(t *testing.T) {
-	tests := []struct {
-		name string
-		m    *measmon
-		want string
-	}{
-		{
-			"Measmon 1",
-			&measmon{"WWG-TT001", "Test measmon 1", "bar", "IW64", false, -1.1, 10.0},
-			`{"Tag":"WWG-TT001","Description":"Test measmon 1","Unit":"bar","Address":"IW64","Direct":false,"LowLimit":-1.1,"HighLimit":10}`,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.m.String(); got != tt.want {
-				t.Errorf("measmon.String() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 func Test_measmon_PlcTags(t *testing.T) {
 	tests := []struct {
 		name string

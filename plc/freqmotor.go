@@ -1,7 +1,6 @@
 package plc
 
 import (
-	"encoding/json"
 	"strconv"
 
 	"github.com/bruyss/go-object-generator/utils"
@@ -47,32 +46,47 @@ func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, f
 		hasSwitch:        len(switchTag) > 0,
 	}
 
-	if len(f.ContactorAddress) == 0 {
+	if len(f.ContactorAddress) == 0 && !f.DanfossDrive {
 		f.ContactorAddress = "M0.0"
+		utils.Sugar.Warnw("No contactor address given",
+			"frequency motor", f.Tag,
+			"default", f.ContactorAddress,
+		)
 	}
-	if len(f.PqwAddress) == 0 {
+	if len(f.PqwAddress) == 0 && !f.DanfossDrive {
 		f.PqwAddress = "MW0"
+		utils.Sugar.Warnw("No PQW address given",
+			"frequency motor", f.Tag,
+			"default", f.PqwAddress,
+		)
 	}
-	if f.hasFeedback && len(f.FeedbackAddress) == 0 {
+	if f.hasFeedback && len(f.FeedbackAddress) == 0 && !f.DanfossDrive {
 		f.FeedbackAddress = "M0.1"
+		utils.Sugar.Warnw("No feedback address given",
+			"frequency motor", f.Tag,
+			"default", f.FeedbackAddress,
+		)
 	}
 	if f.hasBreaker && len(f.BreakerAddress) == 0 {
 		f.BreakerAddress = "M0.2"
+		utils.Sugar.Warnw("No breaker address given",
+			"frequency motor", f.Tag,
+			"default", f.BreakerAddress,
+		)
 	}
 	if f.hasSwitch && len(f.SwitchAddress) == 0 {
 		f.SwitchAddress = "M0.3"
+		utils.Sugar.Warnw("No switch address given",
+			"frequency motor", f.Tag,
+			"default", f.SwitchAddress,
+		)
 	}
 
-	utils.Sugar.Debug("Object created",
-		"freqMotor", f.String(),
+	utils.Sugar.Infow("Object created",
+		"freq motor", f,
 	)
 
 	return f, nil
-}
-
-func (f *freqMotor) String() string {
-	b, _ := json.Marshal(f)
-	return string(b)
 }
 
 func (f *freqMotor) InputMap() map[string]string {

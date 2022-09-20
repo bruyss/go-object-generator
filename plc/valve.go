@@ -1,7 +1,6 @@
 package plc
 
 import (
-	"encoding/json"
 	"strconv"
 
 	"github.com/bruyss/go-object-generator/utils"
@@ -46,25 +45,32 @@ func NewValve(tag, description, actAddress, fboTag, fbcTag, fboAddress, fbcAddre
 
 	if len(v.ActAddress) == 0 {
 		v.ActAddress = "M0.0"
+		utils.Sugar.Warnw("No output address given",
+			"valve", v.Tag,
+			"default", v.ActAddress,
+		)
 	}
 
 	if v.hasFbo && len(v.FboAddress) == 0 {
 		v.FboAddress = "M0.1"
+		utils.Sugar.Warnw("No feedback open address given",
+			"valve", v.Tag,
+			"default", v.FboAddress,
+		)
 	}
 
 	if v.hasFbc && len(v.FbcAddress) == 0 {
 		v.FbcAddress = "M0.2"
+		utils.Sugar.Warnw("No feedback closed address given",
+			"valve", v.Tag,
+			"default", v.FbcAddress,
+		)
 	}
 
-	utils.Sugar.Debugw("Object created",
-		"Valve", v.String(),
+	utils.Sugar.Infow("Object created",
+		"valve", v,
 	)
 	return v, nil
-}
-
-func (v *valve) String() string {
-	b, _ := json.Marshal(v)
-	return string(b)
 }
 
 func (v *valve) InputMap() map[string]string {
