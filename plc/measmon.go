@@ -49,7 +49,7 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 	}
 
 	if len(m.Unit) == 0 {
-		utils.Sugar.Warnw("No unit give",
+		utils.Sugar.Warnw("No unit given",
 			"measmon", m.Tag)
 	}
 
