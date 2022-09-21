@@ -53,12 +53,18 @@ func NewControlValve(tag, description, address, feedbackTag, feedbackAddress, mo
 }
 
 func (c *controlValve) InputMap() map[string]string {
+	var feedbackTag string
+	if c.hasFeedback {
+		feedbackTag = strconv.Quote(c.FeedbackTag)
+	} else {
+		feedbackTag = strconv.Quote("IDB_"+c.Tag) + ".Q_On"
+	}
 	return map[string]string{
 		"Tag":            c.Tag,
 		"Description":    c.Description,
 		"IDB":            "IDB_" + c.Tag,
 		"NoFeedback":     strconv.FormatBool(!c.hasFeedback),
-		"Feedback":       c.FeedbackTag,
+		"Feedback":       feedbackTag,
 		"MonitoringTime": strconv.Itoa(c.MonitoringTime),
 		"Output":         strconv.Quote(c.outputPlcTag().Name),
 	}

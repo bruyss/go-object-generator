@@ -65,7 +65,6 @@ var generateAllCmd = &cobra.Command{
 			utils.Sugar.Debugw("Generating IDBS",
 				"genAll", genAll,
 				"genIdbs", genIdbs)
-			utils.Sugar.Errorw("Help!")
 			idbTemplate, err := cmd.Flags().GetString("idb-template")
 			if err != nil {
 				utils.Sugar.Error(err)

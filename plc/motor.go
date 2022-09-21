@@ -97,7 +97,7 @@ func (m *motor) InputMap() map[string]string {
 	return map[string]string{
 		"Tag":          m.Tag,
 		"Description":  m.Description,
-		"IDB":          strconv.Quote("IDB_" + m.Tag),
+		"IDB":          "IDB_" + m.Tag,
 		"ContactorTag": strconv.Quote(m.contactorPlcTag().Name),
 		"FeedbackTag":  feedbackTag,
 		"BreakerTag":   breakerTag,
