@@ -19,11 +19,13 @@ func _() {
 	_ = x[freqMotorBreakerAddress-8]
 	_ = x[freqMotorSwitchTag-9]
 	_ = x[freqMotorSwitchAddress-10]
+	_ = x[freqMotorAlarmTag-11]
+	_ = x[freqMotorAlarmAddress-12]
 }
 
-const _freqMotorCol_name = "TagAddressPqwAddressDescriptionDanfossFeedbackTagFeedbackAddressBreakerTagBreakerAddressSwitchTagSwitchAddress"
+const _freqMotorCol_name = "TagAddressPqwAddressDescriptionDanfossFeedbackTagFeedbackAddressBreakerTagBreakerAddressSwitchTagSwitchAddressAlarmTagAlarmAddress"
 
-var _freqMotorCol_index = [...]uint8{0, 3, 10, 20, 31, 38, 49, 64, 74, 88, 97, 110}
+var _freqMotorCol_index = [...]uint8{0, 3, 10, 20, 31, 38, 49, 64, 74, 88, 97, 110, 118, 130}
 
 func (i freqMotorCol) String() string {
 	if i < 0 || i >= freqMotorCol(len(_freqMotorCol_index)-1) {

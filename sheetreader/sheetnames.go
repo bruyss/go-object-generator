@@ -75,6 +75,8 @@ const (
 	freqMotorBreakerAddress
 	freqMotorSwitchTag
 	freqMotorSwitchAddress
+	freqMotorAlarmTag
+	freqMotorAlarmAddress
 )
 
 //go:generate stringer -type=freqMotorCol -trimprefix=freqMotor
@@ -91,6 +93,8 @@ var freqMotorCols = []string{
 	freqMotorBreakerAddress.String(),
 	freqMotorSwitchTag.String(),
 	freqMotorSwitchAddress.String(),
+	freqMotorAlarmTag.String(),
+	freqMotorAlarmAddress.String(),
 }
 
 type digmonCol int

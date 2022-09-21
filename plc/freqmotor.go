@@ -17,13 +17,16 @@ type freqMotor struct {
 	BreakerAddress   string
 	SwitchTag        string
 	SwitchAddress    string
+	AlarmTag         string
+	AlarmAddress     string
 	DanfossDrive     bool
 	hasFeedback      bool
 	hasBreaker       bool
 	hasSwitch        bool
+	hasAlarm         bool
 }
 
-func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, feedbackAddress, breakerTag, breakerAddress, switchTag, switchAddress, danfossDrive string) (*freqMotor, error) {
+func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, feedbackAddress, breakerTag, breakerAddress, switchTag, switchAddress, alarmTag, alarmAddress, danfossDrive string) (*freqMotor, error) {
 	danfossDriveBool, err := strconv.ParseBool(danfossDrive)
 	if err != nil {
 		return nil, err
@@ -40,10 +43,13 @@ func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, f
 		BreakerAddress:   breakerAddress,
 		SwitchTag:        switchTag,
 		SwitchAddress:    switchAddress,
+		AlarmTag:         alarmTag,
+		AlarmAddress:     alarmAddress,
 		DanfossDrive:     danfossDriveBool,
 		hasFeedback:      len(feedbackTag) > 0,
 		hasBreaker:       len(breakerTag) > 0,
 		hasSwitch:        len(switchTag) > 0,
+		hasAlarm:         len(alarmTag) > 0,
 	}
 
 	if len(f.ContactorAddress) == 0 && !f.DanfossDrive {
@@ -79,6 +85,13 @@ func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, f
 		utils.Sugar.Warnw("No switch address given",
 			"frequency motor", f.Tag,
 			"default", f.SwitchAddress,
+		)
+	}
+	if f.hasAlarm && len(f.AlarmAddress) == 0 && !f.DanfossDrive {
+		f.AlarmAddress = "M0.4"
+		utils.Sugar.Warnw("No alarm address given",
+			"frequency motor", f.Tag,
+			"default", f.AlarmAddress,
 		)
 	}
 
@@ -138,10 +151,9 @@ func (f *freqMotor) PlcTags() (t []*PlcTag) {
 	if p := f.switchPlcTag(); p != nil {
 		t = append(t, p)
 	}
-	// TODO: Alarm tag
-	// if p := f.alarmPlcTag(); p != nil {
-	// 	t = append(t, p)
-	// }
+	if p := f.alarmPlcTag(); p != nil {
+		t = append(t, p)
+	}
 	_ = f.alarmPlcTag()
 
 	return
@@ -208,13 +220,13 @@ func (f *freqMotor) switchPlcTag() *PlcTag {
 }
 
 func (f *freqMotor) alarmPlcTag() *PlcTag {
-	if f.DanfossDrive {
+	if !f.hasAlarm {
 		return nil
 	}
 	return &PlcTag{
-		Name:    f.Tag + "_AL",
+		Name:    f.AlarmTag,
 		Dtype:   "Bool",
-		Address: "M0.0", // TODO: Add alarm address
+		Address: f.AlarmAddress,
 		Comment: f.Description + " drive alarm",
 	}
 }

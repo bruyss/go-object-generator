@@ -126,6 +126,8 @@ func ReadFreqMotors(f *excelize.File) (o []plc.PlcObject) {
 			row[freqMotorBreakerAddress],
 			row[freqMotorSwitchTag],
 			row[freqMotorSwitchAddress],
+			row[freqMotorAlarmTag],
+			row[freqMotorAlarmAddress],
 			row[freqMotorDanfoss],
 		)
 		if err != nil {
