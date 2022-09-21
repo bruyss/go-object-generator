@@ -23,11 +23,19 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 	}
 	lowLimitFloat, err := strconv.ParseFloat(lowLimit, 64)
 	if err != nil {
-		return nil, err
+		lowLimitFloat = 0.0
+		utils.Sugar.Warnw("Cannot parse low limit to float",
+			"measmon", tag,
+			"value", lowLimit,
+			"default", lowLimitFloat)
 	}
 	highLimitFloat, err := strconv.ParseFloat(highLimit, 64)
 	if err != nil {
-		return nil, err
+		highLimitFloat = 100.0
+		utils.Sugar.Warnw("Cannot parse high limit to float",
+			"measmon", tag,
+			"value", highLimit,
+			"default", highLimitFloat)
 	}
 
 	m := &measmon{
