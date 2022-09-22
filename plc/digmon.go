@@ -48,15 +48,11 @@ func NewDigmon(tag, description, address, invert, alarm, invertAlarm string) (*d
 		)
 	}
 
-	utils.Sugar.Infow("Object created",
-		"Digmon", d.String(),
+	utils.Sugar.Debugw("Object created",
+		"Digmon", d,
 	)
 
 	return d, nil
-}
-
-func (d *digmon) String() string {
-	return d.Tag
 }
 
 func (d *digmon) InputMap() map[string]string {

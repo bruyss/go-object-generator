@@ -95,7 +95,7 @@ func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, f
 		)
 	}
 
-	utils.Sugar.Infow("Object created",
+	utils.Sugar.Debugw("Object created",
 		"freq motor", f,
 	)
 

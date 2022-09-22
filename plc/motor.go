@@ -66,7 +66,7 @@ func NewMotor(tag, description, contactorAddress, feedbackTag, feedbackAddress, 
 		)
 	}
 
-	utils.Sugar.Infow("Object created",
+	utils.Sugar.Debugw("Object created",
 		"motor", m,
 	)
 

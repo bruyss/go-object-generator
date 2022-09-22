@@ -72,7 +72,7 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 		)
 	}
 
-	utils.Sugar.Infow("Object created",
+	utils.Sugar.Debugw("Object created",
 		"measmon", m)
 
 	return m, nil

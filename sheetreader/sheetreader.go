@@ -23,6 +23,8 @@ func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
 			)
 		} else {
 			o = append(o, m)
+			utils.Sugar.Infow("Object added to generator",
+				"measmon", m.Tag)
 		}
 	}
 	return
@@ -44,6 +46,8 @@ func ReadDigmons(f *excelize.File) (o []plc.PlcObject) {
 			)
 		} else {
 			o = append(o, d)
+			utils.Sugar.Infow("Object added to generator",
+				"digmon", d.Tag)
 		}
 	}
 	return
@@ -67,6 +71,8 @@ func ReadValves(f *excelize.File) (o []plc.PlcObject) {
 			)
 		} else {
 			o = append(o, v)
+			utils.Sugar.Infow("Object added to generator",
+				"valve", v.Tag)
 		}
 	}
 	return
@@ -87,6 +93,8 @@ func ReadControlValves(f *excelize.File) (o []plc.PlcObject) {
 			)
 		} else {
 			o = append(o, c)
+			utils.Sugar.Infow("Object added to generator",
+				"control valve", c.Tag)
 		}
 	}
 	return
@@ -109,6 +117,8 @@ func ReadMotors(f *excelize.File) (o []plc.PlcObject) {
 				"motor", row[motorTag])
 		} else {
 			o = append(o, m)
+			utils.Sugar.Infow("Object added to generator",
+				"motor", m.Tag)
 		}
 	}
 	return
@@ -135,6 +145,8 @@ func ReadFreqMotors(f *excelize.File) (o []plc.PlcObject) {
 				"freqMotor", row[freqMotorTag])
 		} else {
 			o = append(o, fm)
+			utils.Sugar.Infow("Object added to generator",
+				"freqency motor", fm.Tag)
 		}
 	}
 	return

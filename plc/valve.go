@@ -67,7 +67,7 @@ func NewValve(tag, description, actAddress, fboTag, fbcTag, fboAddress, fbcAddre
 		)
 	}
 
-	utils.Sugar.Infow("Object created",
+	utils.Sugar.Debugw("Object created",
 		"valve", v,
 	)
 	return v, nil

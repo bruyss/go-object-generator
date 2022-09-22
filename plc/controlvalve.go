@@ -46,7 +46,7 @@ func NewControlValve(tag, description, address, feedbackTag, feedbackAddress, mo
 			"default", c.FeedbackAddress)
 	}
 
-	utils.Sugar.Infow("Object created",
+	utils.Sugar.Debugw("Object created",
 		"control valve", c)
 
 	return c, nil
