@@ -17,6 +17,8 @@ func TestNewFreqMotor(t *testing.T) {
 		breakerAddress   string
 		switchTag        string
 		switchAddress    string
+		alarmTag         string
+		alarmAddress     string
 		danfossDrive     string
 	}
 	tests := []struct {
@@ -27,7 +29,7 @@ func TestNewFreqMotor(t *testing.T) {
 	}{
 		{
 			"Frequency motor",
-			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "false"},
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "WWG-P001_AL", "I1.3", "false"},
 			&freqMotor{
 				Tag:              "WWG-P001",
 				Description:      "Frequency motor 1",
@@ -39,16 +41,19 @@ func TestNewFreqMotor(t *testing.T) {
 				BreakerAddress:   "I1.1",
 				SwitchTag:        "WWG-P001_WS",
 				SwitchAddress:    "I1.2",
+				AlarmTag:         "WWG-P001_AL",
+				AlarmAddress:     "I1.3",
 				DanfossDrive:     false,
 				hasFeedback:      true,
 				hasBreaker:       true,
 				hasSwitch:        true,
+				hasAlarm:         true,
 			},
 			false,
 		},
 		{
 			"Frequency motor no contactor address",
-			args{"WWG-P001", "Frequency motor 1", "", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "false"},
+			args{"WWG-P001", "Frequency motor 1", "", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "WWG-P001_AL", "I1.3", "false"},
 			&freqMotor{
 				Tag:              "WWG-P001",
 				Description:      "Frequency motor 1",
@@ -64,12 +69,13 @@ func TestNewFreqMotor(t *testing.T) {
 				hasFeedback:      true,
 				hasBreaker:       true,
 				hasSwitch:        true,
+				hasAlarm:         true,
 			},
 			false,
 		},
 		{
 			"Frequency motor no PQW address",
-			args{"WWG-P001", "Frequency motor 1", "Q1.0", "", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "false"},
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "WWG-P001_AL", "I1.3", "false"},
 			&freqMotor{
 				Tag:              "WWG-P001",
 				Description:      "Frequency motor 1",
@@ -81,16 +87,19 @@ func TestNewFreqMotor(t *testing.T) {
 				BreakerAddress:   "I1.1",
 				SwitchTag:        "WWG-P001_WS",
 				SwitchAddress:    "I1.2",
+				AlarmTag:         "WWG-P001_AL",
+				AlarmAddress:     "I1.3",
 				DanfossDrive:     false,
 				hasFeedback:      true,
 				hasBreaker:       true,
 				hasSwitch:        true,
+				hasAlarm:         true,
 			},
 			false,
 		},
 		{
 			"Frequency motor no feedback address",
-			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "false"},
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "WWG-P001_AL", "I1.3", "false"},
 			&freqMotor{
 				Tag:              "WWG-P001",
 				Description:      "Frequency motor 1",
@@ -102,16 +111,19 @@ func TestNewFreqMotor(t *testing.T) {
 				BreakerAddress:   "I1.1",
 				SwitchTag:        "WWG-P001_WS",
 				SwitchAddress:    "I1.2",
+				AlarmTag:         "WWG-P001_AL",
+				AlarmAddress:     "I1.3",
 				DanfossDrive:     false,
 				hasFeedback:      true,
 				hasBreaker:       true,
 				hasSwitch:        true,
+				hasAlarm:         true,
 			},
 			false,
 		},
 		{
 			"Frequency motor no breaker address",
-			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "", "WWG-P001_WS", "I1.2", "false"},
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "", "WWG-P001_WS", "I1.2", "WWG-P001_AL", "I1.3", "false"},
 			&freqMotor{
 				Tag:              "WWG-P001",
 				Description:      "Frequency motor 1",
@@ -123,16 +135,19 @@ func TestNewFreqMotor(t *testing.T) {
 				BreakerAddress:   "M0.2",
 				SwitchTag:        "WWG-P001_WS",
 				SwitchAddress:    "I1.2",
+				AlarmTag:         "WWG-P001_AL",
+				AlarmAddress:     "I1.3",
 				DanfossDrive:     false,
 				hasFeedback:      true,
 				hasBreaker:       true,
 				hasSwitch:        true,
+				hasAlarm:         true,
 			},
 			false,
 		},
 		{
 			"Frequency motor no switch address",
-			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "", "false"},
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "", "WWG-P001_AL", "I1.3", "false"},
 			&freqMotor{
 				Tag:              "WWG-P001",
 				Description:      "Frequency motor 1",
@@ -144,6 +159,8 @@ func TestNewFreqMotor(t *testing.T) {
 				BreakerAddress:   "I1.1",
 				SwitchTag:        "WWG-P001_WS",
 				SwitchAddress:    "M0.3",
+				AlarmTag:         "WWG-P001_AL",
+				AlarmAddress:     "I1.3",
 				DanfossDrive:     false,
 				hasFeedback:      true,
 				hasBreaker:       true,
@@ -153,7 +170,7 @@ func TestNewFreqMotor(t *testing.T) {
 		},
 		{
 			"Frequency motor no feedback",
-			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "", "", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "false"},
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "", "", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "WWG-P001_AL", "I1.3", "false"},
 			&freqMotor{
 				Tag:              "WWG-P001",
 				Description:      "Frequency motor 1",
@@ -165,16 +182,19 @@ func TestNewFreqMotor(t *testing.T) {
 				BreakerAddress:   "I1.1",
 				SwitchTag:        "WWG-P001_WS",
 				SwitchAddress:    "I1.2",
+				AlarmTag:         "WWG-P001_AL",
+				AlarmAddress:     "I1.3",
 				DanfossDrive:     false,
 				hasFeedback:      false,
 				hasBreaker:       true,
 				hasSwitch:        true,
+				hasAlarm:         true,
 			},
 			false,
 		},
 		{
 			"Frequency motor no breaker",
-			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "", "", "WWG-P001_WS", "I1.2", "false"},
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "", "", "WWG-P001_WS", "I1.2", "WWG-P001_AL", "I1.3", "false"},
 			&freqMotor{
 				Tag:              "WWG-P001",
 				Description:      "Frequency motor 1",
@@ -186,16 +206,19 @@ func TestNewFreqMotor(t *testing.T) {
 				BreakerAddress:   "",
 				SwitchTag:        "WWG-P001_WS",
 				SwitchAddress:    "I1.2",
+				AlarmTag:         "WWG-P001_AL",
+				AlarmAddress:     "I1.3",
 				DanfossDrive:     false,
 				hasFeedback:      true,
 				hasBreaker:       false,
 				hasSwitch:        true,
+				hasAlarm:         true,
 			},
 			false,
 		},
 		{
 			"Frequency motor no switch",
-			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "", "", "false"},
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "", "", "WWG-P001_AL", "I1.3", "false"},
 			&freqMotor{
 				Tag:              "WWG-P001",
 				Description:      "Frequency motor 1",
@@ -207,23 +230,26 @@ func TestNewFreqMotor(t *testing.T) {
 				BreakerAddress:   "I1.1",
 				SwitchTag:        "",
 				SwitchAddress:    "",
+				AlarmTag:         "WWG-P001_AL",
+				AlarmAddress:     "I1.3",
 				DanfossDrive:     false,
 				hasFeedback:      true,
 				hasBreaker:       true,
 				hasSwitch:        false,
+				hasAlarm:         true,
 			},
 			false,
 		},
 		{
 			"Frequency motor bad danfoss",
-			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "allo"},
+			args{"WWG-P001", "Frequency motor 1", "Q1.0", "QW2", "WWG-P001_FB", "I1.0", "WWG-P001_TH", "I1.1", "WWG-P001_WS", "I1.2", "WWG-P001_AL", "I1.3", "allo"},
 			nil,
 			true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewFreqMotor(tt.args.tag, tt.args.description, tt.args.contactorAddress, tt.args.pqwAddress, tt.args.feedbackTag, tt.args.feedbackAddress, tt.args.breakerTag, tt.args.breakerAddress, tt.args.switchTag, tt.args.switchAddress, tt.args.danfossDrive)
+			got, err := NewFreqMotor(tt.args.tag, tt.args.description, tt.args.contactorAddress, tt.args.pqwAddress, tt.args.feedbackTag, tt.args.feedbackAddress, tt.args.breakerTag, tt.args.breakerAddress, tt.args.switchTag, tt.args.switchAddress, tt.args.alarmTag, tt.args.alarmAddress, tt.args.danfossDrive)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewFreqMotor() error = %v, wantErr %v", err, tt.wantErr)
 				return

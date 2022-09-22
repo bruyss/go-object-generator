@@ -2,6 +2,7 @@ package plc
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/bruyss/go-object-generator/utils"
 )
@@ -63,7 +64,7 @@ func (c *controlValve) InputMap() map[string]string {
 		"Tag":            c.Tag,
 		"Description":    c.Description,
 		"IDB":            "IDB_" + c.Tag,
-		"NoFeedback":     strconv.FormatBool(!c.hasFeedback),
+		"NoFeedback":     strings.ToUpper(strconv.FormatBool(!c.hasFeedback)),
 		"Feedback":       feedbackTag,
 		"MonitoringTime": strconv.Itoa(c.MonitoringTime),
 		"Output":         strconv.Quote(c.outputPlcTag().Name),

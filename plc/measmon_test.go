@@ -42,14 +42,14 @@ func TestNewMeasmon(t *testing.T) {
 		{
 			"Measmon 1 bad low limit",
 			args{tag: "WWG-TT001", description: "Test measmon 1", unit: "bar", address: "IW64", direct: "false", lowLimit: "allo", highLimit: "10.0"},
-			nil,
-			true,
+			&measmon{"WWG-TT001", "Test measmon 1", "bar", "IW64", false, 0.0, 10.0},
+			false,
 		},
 		{
 			"Measmon 1 bad high limit",
 			args{tag: "WWG-TT001", description: "Test measmon 1", unit: "bar", address: "IW64", direct: "false", lowLimit: "-1.0", highLimit: "allo"},
-			nil,
-			true,
+			&measmon{"WWG-TT001", "Test measmon 1", "bar", "IW64", false, -1.0, 100.0},
+			false,
 		},
 	}
 	for _, tt := range tests {

@@ -295,7 +295,7 @@ func Test_motor_InputMap(t *testing.T) {
 			want: map[string]string{
 				"Tag":          "WWG-M001",
 				"Description":  "Test motor 1",
-				"IDB":          `"IDB_WWG-M001"`,
+				"IDB":          "IDB_WWG-M001",
 				"ContactorTag": `"WWG-M001"`,
 				"FeedbackTag":  `"WWG-M001_FB"`,
 				"BreakerTag":   `"WWG-M001_TH"`,
@@ -321,7 +321,7 @@ func Test_motor_InputMap(t *testing.T) {
 			want: map[string]string{
 				"Tag":          "WWG-M001",
 				"Description":  "Test motor 1",
-				"IDB":          `"IDB_WWG-M001"`,
+				"IDB":          "IDB_WWG-M001",
 				"ContactorTag": `"WWG-M001"`,
 				"FeedbackTag":  `"IDB_WWG-M001".Q_On`,
 				"BreakerTag":   `"WWG-M001_TH"`,
@@ -347,7 +347,7 @@ func Test_motor_InputMap(t *testing.T) {
 			want: map[string]string{
 				"Tag":          "WWG-M001",
 				"Description":  "Test motor 1",
-				"IDB":          `"IDB_WWG-M001"`,
+				"IDB":          "IDB_WWG-M001",
 				"ContactorTag": `"WWG-M001"`,
 				"FeedbackTag":  `"WWG-M001_FB"`,
 				"BreakerTag":   "true",
@@ -373,7 +373,7 @@ func Test_motor_InputMap(t *testing.T) {
 			want: map[string]string{
 				"Tag":          "WWG-M001",
 				"Description":  "Test motor 1",
-				"IDB":          `"IDB_WWG-M001"`,
+				"IDB":          "IDB_WWG-M001",
 				"ContactorTag": `"WWG-M001"`,
 				"FeedbackTag":  `"WWG-M001_FB"`,
 				"BreakerTag":   `"WWG-M001_TH"`,
