@@ -2,6 +2,7 @@ package obwriter
 
 var Templates = map[string]string{
 	"idbs":         idbTemplate,
+	"hmidb":        hmidb,
 	"controlValve": controlValveTemplate,
 	"digmon":       digmonTemplate,
 	"freqMotor":    freqMotorTemplate,
@@ -21,6 +22,21 @@ END_DATA_BLOCK
 
 {{end}}`
 
+	hmidb string = `{{$os := .ObjectSettings -}}
+DATA_BLOCK "{{.ObjectSettings.HmiDb}}"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+   VAR
+      {{range .Objects -}}
+      "{{.InputMap.Tag}}" : "{{$os.HmiType}}";
+      {{end}}
+   END_VAR
+
+BEGIN
+
+END_DATA_BLOCK`
+
 	measmonTemplate string = `FUNCTION {{.ObjectSettings.CallFc}} : Void
 { S7_Optimized_Access := 'TRUE'}
 VERSION : 0.1
@@ -35,7 +51,7 @@ BEGIN
     REGION {{$d.Tag}}: {{$d.Description}}
         "{{$d.IDB}}"(Tagname := '{{$d.Tag}}',
                         Unit := '{{$d.Unit}}',
-                        SecPulse := {{$gs.SecondPulse}},
+                        SecPuls := {{$gs.SecondPulse}},
                         Reset := TRUE,
                         Local := FALSE,
                         Simulation := {{$gs.Simulation}},
@@ -64,7 +80,7 @@ BEGIN
     {{- $d := $object.InputMap }}
     REGION {{$d.Tag}}: {{$d.Description}}
         "{{$d.IDB}}"(Tagname := '{{$d.Tag}}',
-                        SecPulse := {{$gs.SecondPulse}},
+                        SecPuls := {{$gs.SecondPulse}},
                         Reset := FALSE,
                         EnableAlarm := {{$d.Alarm}},
                         InvertAlarm := {{$d.InvertAlarm}},
@@ -92,7 +108,7 @@ BEGIN
     {{- $d := $object.InputMap}}
     REGION {{$d.Tag}}: {{$d.Description}}
         "{{$d.IDB}}"(Tagname := '{{$d.Tag}}',
-                        SecPulse := {{$gs.SecondPulse}},
+                        SecPuls := {{$gs.SecondPulse}},
                         Reset := FALSE,
                         Local := FALSE,
                         Simulation := {{$gs.Simulation}},
@@ -102,7 +118,7 @@ BEGIN
                         FeedbackActivated := {{$d.FBO}},
                         FeedbackDeactivated := {{$d.FBC}},
                         MonitoringTimeAct := {{$d.MonTimeOpen}},
-                        MonitoringTimeDeact := {{$d.MonTimeClose}}
+                        MonitoringTimeDeact := {{$d.MonTimeClose}},
                         Q_Activate := {{$d.Output}},
                         {{if $gs.Wincc -}}
                             HMI := "{{$os.HmiDb}}"."{{$d.Tag}}"
@@ -126,13 +142,15 @@ BEGIN
     {{- $d := $object.InputMap}}
     REGION {{$d.Tag}}: {{$d.Description}}
         "{{$d.IDB}}"(Tagname := '{{$d.Tag}}',
-                        SecPulse := {{$gs.SecondPulse}},
+                        Secpulse := {{$gs.SecondPulse}},
                         Reset := FALSE,
                         Local := FALSE,
                         Simulation := {{$gs.Simulation}},
                         Permit := TRUE,
                         NoFeedback := {{$d.NoFeedback}},
-                        Feedback := {{$d.Feedback}},
+                        {{if eq $d.NoFeedback "false" -}}
+                            Feedback := {{$d.Feedback}},
+                        {{- end}}
                         SP := {{$gs.TodoReal}},
                         TimeMon := {{$d.MonitoringTime}},
                         PQW := {{$d.Output}},
@@ -151,36 +169,38 @@ VERSION : 0.1
 VAR_INPUT
     {{.GeneralSettings.SecondPulse}}   : Bool;
     {{.GeneralSettings.Simulation}} : Bool;
+    iReset  : Bool;
+
 END_VAR
-{{$gs := .GeneralSettings}}{{$os := .ObjectSettings}}
+{{$gs := .GeneralSettings}}{{$os := .ObjectSettings -}}
 BEGIN
 {{range $index, $object := .Objects}}
     {{- $d := $object.InputMap}}
     REGION {{$d.Tag}}: {{$d.Description}} {{$d.Danfoss}}
     {{- if eq $d.Danfoss "true"}}
         "FC_Danfoss"(iHW_ID := "{{$d.Tag}}~PPO_4_-_6_6_Words__Danfoss_Telegra,,,~PPO_4_-_6_6_Words__Danfoss_,,,",
-                        iTagname := {{$d.Tag}},
+                        iTagname := '{{$d.Tag}}',
                         iSecPulse := {{$gs.SecondPulse}},
                         iReset := iReset,
                         iSimulation := {{$gs.Simulation}},
                         iPermit := TRUE,
                         iActivate := {{$gs.TodoBit}},
-                        iThermalProt := {{$d.BreakerTag}},
+                        iThermalProtection := {{$d.BreakerTag}},
                         iProtectionSwitch := {{$d.SwitchTag}},
-                        iSetpoint := {{$gs.TodoBit}},
+                        iSetpoint := {{$gs.TodoReal}},
                         iMinimumFreq := 15.0,
                         iMaximumFreq := 50.0,
                         iMonitoringTime := 10,
                         {{if $gs.Wincc -}}
-                            {{- "HMI"}} := "{{$os.HmiDb}}"."{{$d.Tag}}",
+                            {{- "ioHMI"}} := "{{$os.HmiDb}}"."{{$d.Tag}}",
                         {{- else -}}
-                            {{- "HMI"}} := "{{$os.HmiDb}}".o[{{$index}}],
+                            {{- "ioHMI"}} := "{{$os.HmiDb}}".o[{{$index}}],
                         {{- end}}
-                        ioDrive := "DRIVE_COMM".{{$d.Tag}},
-                        Motor_Freq_Instance := {{$d.IDB}});
+                        ioDrive := "DRIVE_COMM"."{{$d.Tag}}",
+                        Motor_Freq_Instance := "{{$d.IDB}}");
     {{- else}}
         "{{$d.IDB}}"(Tagname := '{{$d.Tag}}',
-                        SecPulse := {{$gs.SecondPulse}},
+                        SecPuls := {{$gs.SecondPulse}},
                         Reset := TRUE,
                         Local := FALSE,
                         Simulation := {{$gs.Simulation}},
@@ -217,7 +237,7 @@ BEGIN
     {{- $d := $object.InputMap}}
     REGION {{$d.Tag}}: {{$d.Description}}
         "{{$d.IDB}}"(Tagname := '{{$d.Tag}}',
-                            SecPulse := {{$gs.SecondPulse}},
+                            SecPuls := {{$gs.SecondPulse}},
                             Reset := TRUE,
                             Local := FALSE,
                             Simulation := {{$gs.Simulation}},
