@@ -29,6 +29,8 @@ func main() {
 	utils.Sugar.Info("####################################################################################################################################################################################")
 	utils.Sugar.Info("Start generation")
 
+	utils.GetConfig()
+
 	cmd.Execute()
 
 	utils.Sugar.Info("Generation complete")

@@ -16,8 +16,8 @@ const genFolderRoot string = "genfiles"
 var genFolderName string
 
 type Generator struct {
-	GeneralSettings generalSettings
-	ObjectSettings  objectSettings
+	GeneralSettings map[string]string
+	ObjectSettings  map[string]string
 	Objects         []plc.PlcObject
 }
 
