@@ -3,7 +3,6 @@
     "encoding": "console",
     "development": true,
     "outputPaths": [
-        "stdout",
         "./gen.log"
     ],
     "errorOutputPaths": [
@@ -16,6 +15,6 @@
         "messageKey": "message",
         "levelKey": "level",
         "levelEncoder": "capital",
-        "stacktraceKey": "stacktrace"
+        "stacktraceKey": ""
     }
 }

@@ -13,8 +13,8 @@ import (
 const genFolderName string = "genfiles"
 
 type Generator struct {
-	GeneralSettings generalSettings
-	ObjectSettings  objectSettings
+	GeneralSettings map[string]string
+	ObjectSettings  map[string]string
 	Objects         []plc.PlcObject
 }
 

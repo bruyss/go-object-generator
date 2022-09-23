@@ -20,6 +20,7 @@ import (
 	"github.com/bruyss/go-object-generator/sheetreader"
 	"github.com/bruyss/go-object-generator/utils"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // generateAllCmd represents the generateAll command
@@ -30,33 +31,33 @@ var generateAllCmd = &cobra.Command{
 
 		// Define generators
 		measmonGen := obwriter.Generator{
-			GeneralSettings: *genSettings.General,
-			ObjectSettings:  *genSettings.Measmon,
+			GeneralSettings: viper.GetStringMapString("gensettings.general"),
+			ObjectSettings:  viper.GetStringMapString("gensettings.measmon"),
 			Objects:         sheetreader.ReadMeasmons(excelSource),
 		}
 		digmonGen := obwriter.Generator{
-			GeneralSettings: *genSettings.General,
-			ObjectSettings:  *genSettings.Digmon,
+			GeneralSettings: viper.GetStringMapString("gensettings.general"),
+			ObjectSettings:  viper.GetStringMapString("gensettings.digmon"),
 			Objects:         sheetreader.ReadDigmons(excelSource),
 		}
 		valveGen := obwriter.Generator{
-			GeneralSettings: *genSettings.General,
-			ObjectSettings:  *genSettings.Valve,
+			GeneralSettings: viper.GetStringMapString("gensettings.general"),
+			ObjectSettings:  viper.GetStringMapString("gensettings.valve"),
 			Objects:         sheetreader.ReadValves(excelSource),
 		}
 		controlValveGen := obwriter.Generator{
-			GeneralSettings: *genSettings.General,
-			ObjectSettings:  *genSettings.ControlValve,
+			GeneralSettings: viper.GetStringMapString("gensettings.general"),
+			ObjectSettings:  viper.GetStringMapString("gensettings.controlvalve"),
 			Objects:         sheetreader.ReadControlValves(excelSource),
 		}
 		motorGen := obwriter.Generator{
-			GeneralSettings: *genSettings.General,
-			ObjectSettings:  *genSettings.Motor,
+			GeneralSettings: viper.GetStringMapString("gensettings.general"),
+			ObjectSettings:  viper.GetStringMapString("gensettings.motor"),
 			Objects:         sheetreader.ReadMotors(excelSource),
 		}
 		freqMotorGen := obwriter.Generator{
-			GeneralSettings: *genSettings.General,
-			ObjectSettings:  *genSettings.FreqMotor,
+			GeneralSettings: viper.GetStringMapString("gensettings.general"),
+			ObjectSettings:  viper.GetStringMapString("gensettings.freqmotor"),
 			Objects:         sheetreader.ReadFreqMotors(excelSource),
 		}
 

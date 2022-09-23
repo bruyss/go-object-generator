@@ -29,8 +29,8 @@ var generateDigmonsCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		digmonGen := obwriter.Generator{
-			GeneralSettings: *genSettings.General,
-			ObjectSettings:  *genSettings.Digmon,
+			GeneralSettings: map[string]string{},
+			ObjectSettings:  map[string]string{},
 			Objects:         sheetreader.ReadDigmons(excelSource),
 		}
 
