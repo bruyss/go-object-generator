@@ -33,4 +33,5 @@ genfiles/
 
 # Settings files
 *settings*.json
+config.json
 loggerconfig.json
