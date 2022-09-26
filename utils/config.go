@@ -6,9 +6,10 @@ func init() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("json")
 	viper.AddConfigPath(".")
+	viper.AddConfigPath("./config/")
 
 	// Generation settings
-	viper.SetDefault("gensettings.general.second-pulse", "iSecPulse")
+	viper.SetDefault("gensettings.general.secondpulse", "iSecPulse")
 	viper.SetDefault("gensettings.general.simulation", "iSimulation")
 	viper.SetDefault("gensettings.general.todobit", "\"DB_Test\".TODO_BOOL")
 	viper.SetDefault("gensettings.general.todoreal", "\"DB_Test\".TODO_REAL")
