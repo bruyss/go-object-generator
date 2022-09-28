@@ -37,9 +37,9 @@ func InitializeCustomLogger() {
 
 	rawJson, err := os.ReadFile("./loggerconfig.json")
 	if errors.Is(err, os.ErrNotExist) {
-		b, _ := json.MarshalIndent(defaultLoggerSettings, "", "    ")
+		// b, _ := json.MarshalIndent(defaultLoggerSettings, "", "    ")
 		f, _ := os.Create("loggerconfig.json")
-		f.WriteString(string(b))
+		f.WriteString(defaultLoggerSettings)
 		rawJson = []byte(defaultLoggerSettings)
 
 	} else if err != nil {
@@ -48,7 +48,7 @@ func InitializeCustomLogger() {
 
 	var cfg zap.Config
 	if err = json.Unmarshal(rawJson, &cfg); err != nil {
-		log.Fatal("Error unmarshalling data", err)
+		log.Fatal("Error unmarshalling data: ", err)
 	}
 
 	Logger, err = cfg.Build()
