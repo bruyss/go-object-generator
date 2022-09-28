@@ -98,19 +98,6 @@ func init() {
 	viper.SetDefault("filenames.valve.sourcefile", "Valve_source.scl")
 	viper.SetDefault("filenames.valve.tagfile", "Valve_tags.xml")
 
-	// Logger
-	viper.SetDefault("logger.level", "warn")
-	viper.SetDefault("logger.encoding", "console")
-	viper.SetDefault("logger.development", true)
-	viper.SetDefault("logger.outputPaths", [...]string{"./gen.log"})
-	viper.SetDefault("logger.errorOutputPaths", [...]string{"stderr", "./gen.log"})
-	viper.SetDefault("logger.encoderConfig.timeKey", "time")
-	viper.SetDefault("logger.encoderConfig.timeEncoder", "iso8601")
-	viper.SetDefault("logger.encoderConfig.messageKey", "message")
-	viper.SetDefault("logger.encoderConfig.levelKey", "level")
-	viper.SetDefault("logger.encoderConfig.levelEncoder", "capital")
-	viper.SetDefault("logger.encoderConfig.stacktraceKey", "")
-
 	viper.SafeWriteConfig()
 }
 
