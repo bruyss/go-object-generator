@@ -78,6 +78,6 @@ const defaultLoggerSettings string = `{
         "messageKey": "message",
         "levelKey": "level",
         "levelEncoder": "capital",
-        "stacktraceKey": "stacktrace"
+        "stacktraceKey": ""
     }
 }`

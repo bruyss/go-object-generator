@@ -21,6 +21,7 @@ import (
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/bruyss/go-object-generator/utils"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var excelSource *excelize.File
@@ -40,7 +41,7 @@ var generateCmd = &cobra.Command{
 	// to quickly create a Cobra application.`,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		var err error
-		fileName, err := cmd.Flags().GetString("file")
+		fileName := viper.GetString("filenames.general.objectsource")
 		if err != nil {
 			utils.Sugar.Error(err)
 			return err
