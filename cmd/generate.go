@@ -16,16 +16,13 @@ limitations under the License.
 package cmd
 
 import (
-	"os"
 	"text/template"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
-	"github.com/bruyss/go-object-generator/obwriter"
 	"github.com/bruyss/go-object-generator/utils"
 	"github.com/spf13/cobra"
 )
 
-var genSettings *obwriter.GeneratorSettings
 var excelSource *excelize.File
 var tmp *template.Template
 
@@ -43,13 +40,6 @@ var generateCmd = &cobra.Command{
 	// to quickly create a Cobra application.`,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		var err error
-		genSettings, err = obwriter.ReadSettings("settings.json")
-		if err == os.ErrNotExist {
-			obwriter.WriteDefaultSettings("settings.json")
-			genSettings = obwriter.DefaultSettings
-		} else if err != nil {
-			return err
-		}
 		fileName, err := cmd.Flags().GetString("file")
 		if err != nil {
 			utils.Sugar.Error(err)
@@ -95,10 +85,8 @@ func init() {
 	rootCmd.AddCommand(generateCmd)
 
 	// Persistent flags
-	generateCmd.PersistentFlags().StringP("file", "f", "excelsource_go.xlsx", "File name of the spreadsheet containing object information")
-
 	generateCmd.PersistentFlags().BoolP("idbs", "i", false, "Generate instance DBs.")
-	generateCmd.PersistentFlags().BoolP("hmiDBs", "d", false, "Generate HMI DBs.")
+	generateCmd.PersistentFlags().BoolP("hmiDBs", "d", false, "Generate HMI DB.")
 	generateCmd.PersistentFlags().BoolP("source-files", "s", false, "Generate source files.")
 	generateCmd.PersistentFlags().BoolP("tag-tables", "t", false, "Generate tag tables.")
 
@@ -106,26 +94,4 @@ func init() {
 	generateCmd.Flag("hmiDBs").NoOptDefVal = "true"
 	generateCmd.Flag("source-files").NoOptDefVal = "true"
 	generateCmd.Flag("tag-tables").NoOptDefVal = "true"
-
-	generateCmd.PersistentFlags().String("idb-file", "", "Instance DB file name.")
-	generateCmd.PersistentFlags().String("hmidb-file", "", "HMI DB file name.")
-	generateCmd.PersistentFlags().String("source-file", "", "Instance DB file name.")
-	generateCmd.PersistentFlags().String("tag-file", "", "Instance DB file name.")
-	generateCmd.PersistentFlags().String("idb-template", "idbs.tmpl", "Instance DB file template name.")
-	generateCmd.PersistentFlags().String("hmidb-template", "hmidb.tmpl", "HMI DB file template name.")
-	generateCmd.PersistentFlags().String("source-template", "", "Source file template name.")
-	generateCmd.PersistentFlags().String("tag-template", "tagTable.tmpl", "Tag table file template name.")
-
-	generateCmd.Flag("idb-file").Hidden = true
-	generateCmd.Flag("hmidb-file").Hidden = true
-	generateCmd.Flag("source-file").Hidden = true
-	generateCmd.Flag("tag-file").Hidden = true
-
-	generateCmd.Flag("idb-template").Hidden = true
-	generateCmd.Flag("hmidb-template").Hidden = true
-	generateCmd.Flag("source-template").Hidden = true
-	generateCmd.Flag("tag-template").Hidden = true
-
-	// Local flags
-
 }

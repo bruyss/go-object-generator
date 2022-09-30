@@ -69,12 +69,4 @@ var generateDigmonsCmd = &cobra.Command{
 
 func init() {
 	generateCmd.AddCommand(generateDigmonsCmd)
-
-	generateDigmonsCmd.Flag("idb-file").Hidden = false
-	generateDigmonsCmd.Flag("source-file").Hidden = false
-	generateDigmonsCmd.Flag("tag-file").Hidden = false
-
-	generateDigmonsCmd.Flag("idb-file").DefValue = "Digmon_IDBs.db"
-	generateDigmonsCmd.Flag("source-file").DefValue = "Digmon_source.scl"
-	generateDigmonsCmd.Flag("tag-file").DefValue = "Digmon_tags.xml"
 }
