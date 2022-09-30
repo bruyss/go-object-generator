@@ -66,31 +66,32 @@ var generateAllCmd = &cobra.Command{
 			utils.Sugar.Debugw("Generating IDBS",
 				"genAll", genAll,
 				"genIdbs", genIdbs)
-			idbTemplate, err := cmd.Flags().GetString("idb-template")
+			var err error
+			idbTemplate := viper.GetString("filenames.general.idbtemplate")
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
-			err = measmonGen.Generate("Measmon_IDBs.db", idbTemplate, tmp)
+			err = measmonGen.Generate(viper.GetString("filenames.measmon.idbfile"), idbTemplate, tmp)
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
-			err = digmonGen.Generate("Digmon_IDBs.db", idbTemplate, tmp)
+			err = digmonGen.Generate(viper.GetString("filenames.digmon.idbfile"), idbTemplate, tmp)
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
-			err = valveGen.Generate("Valve_IDBs.db", idbTemplate, tmp)
+			err = valveGen.Generate(viper.GetString("filenames.valve.idbfile"), idbTemplate, tmp)
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
-			err = controlValveGen.Generate("ControlValve_IDBs.db", idbTemplate, tmp)
+			err = controlValveGen.Generate(viper.GetString("filenames.controlvalve.idbfile"), idbTemplate, tmp)
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
-			err = motorGen.Generate("Motor_IDBs.db", idbTemplate, tmp)
+			err = motorGen.Generate(viper.GetString("filenames.motor.idbfile"), idbTemplate, tmp)
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
-			err = freqMotorGen.Generate("FreqMotor_IDBs.db", idbTemplate, tmp)
+			err = freqMotorGen.Generate(viper.GetString("filenames.freqmotor.idbfile"), idbTemplate, tmp)
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
@@ -98,31 +99,32 @@ var generateAllCmd = &cobra.Command{
 
 		// Generate HMI DBs
 		if genAll || genIdbs {
-			hmiDbTemplate, err := cmd.Flags().GetString("hmidb-template")
+			var err error
+			hmiDbTemplate := viper.GetString("filenames.general.hmidbtemplate")
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
-			err = measmonGen.Generate("Measmon_HMIDB.db", hmiDbTemplate, tmp)
+			err = measmonGen.Generate(viper.GetString("filenames.measmon.hmidbfile"), hmiDbTemplate, tmp)
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
-			err = digmonGen.Generate("Digmon_HMIDB.db", hmiDbTemplate, tmp)
+			err = digmonGen.Generate(viper.GetString("filenames.digmon.hmidbfile"), hmiDbTemplate, tmp)
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
-			err = valveGen.Generate("Valve_HMIDB.db", hmiDbTemplate, tmp)
+			err = valveGen.Generate(viper.GetString("filenames.valve.hmidbfile"), hmiDbTemplate, tmp)
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
-			err = controlValveGen.Generate("ControlValve_HMIDB.db", hmiDbTemplate, tmp)
+			err = controlValveGen.Generate(viper.GetString("filenames.controlvalve.hmidbfile"), hmiDbTemplate, tmp)
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
-			err = motorGen.Generate("Motor_HMIDB.db", hmiDbTemplate, tmp)
+			err = motorGen.Generate(viper.GetString("filenames.motor.hmidbfile"), hmiDbTemplate, tmp)
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
-			err = freqMotorGen.Generate("FreqMotor_HMIDB.db", hmiDbTemplate, tmp)
+			err = freqMotorGen.Generate(viper.GetString("filenames.freqmotor.hmidbfile"), hmiDbTemplate, tmp)
 			if err != nil {
 				utils.Sugar.Error(err)
 			}
@@ -133,27 +135,27 @@ var generateAllCmd = &cobra.Command{
 			utils.Sugar.Debugw("Generating source files",
 				"genAll", genAll,
 				"genSource", genSource)
-			err := measmonGen.Generate("Measmon_source.scl", "measmon.tmpl", tmp)
+			err := measmonGen.Generate(viper.GetString("filenames.measmon.sourcefile"), viper.GetString("filenames.measmon.sourcetemplate"), tmp)
 			if err != nil {
 				utils.Sugar.Errorw(err.Error(), "generator", "measmons")
 			}
-			err = digmonGen.Generate("Digmon_source.scl", "digmon.tmpl", tmp)
+			err = digmonGen.Generate(viper.GetString("filenames.digmon.sourcefile"), viper.GetString("filenames.digmon.sourcetemplate"), tmp)
 			if err != nil {
 				utils.Sugar.Errorw(err.Error(), "generator", "digmons")
 			}
-			err = valveGen.Generate("Valve_source.scl", "valve.tmpl", tmp)
+			err = valveGen.Generate(viper.GetString("filenames.valve.sourcefile"), viper.GetString("filenames.valve.sourcetemplate"), tmp)
 			if err != nil {
 				utils.Sugar.Errorw(err.Error(), "generator", "valves")
 			}
-			err = controlValveGen.Generate("ControlValve_source.scl", "controlValve.tmpl", tmp)
+			err = controlValveGen.Generate(viper.GetString("filenames.controlvalve.sourcefile"), viper.GetString("filenames.controlvalve.sourcetemplate"), tmp)
 			if err != nil {
 				utils.Sugar.Errorw(err.Error(), "generator", "control valves")
 			}
-			err = motorGen.Generate("Motor_source.scl", "motor.tmpl", tmp)
+			err = motorGen.Generate(viper.GetString("filenames.motor.sourcefile"), viper.GetString("filenames.motor.sourcetemplate"), tmp)
 			if err != nil {
 				utils.Sugar.Errorw(err.Error(), "generator", "motors")
 			}
-			err = freqMotorGen.Generate("FreqMotor_source.scl", "freqMotor.tmpl", tmp)
+			err = freqMotorGen.Generate(viper.GetString("filenames.freqmotor.sourcefile"), viper.GetString("filenames.freqmotor.sourcetemplate"), tmp)
 			if err != nil {
 				utils.Sugar.Errorw(err.Error(), "generator", "frequency motors")
 			}
@@ -165,37 +167,37 @@ var generateAllCmd = &cobra.Command{
 				"genAll", genAll,
 				"genTags", genTags)
 			var err error
-			err = measmonGen.GeneratePlcTagTable("Measmon_tags.xml", "Measmons")
+			err = measmonGen.GeneratePlcTagTable(viper.GetString("filenames.measmon.tagfile"), "Measmons")
 			if err != nil {
 				utils.Sugar.Errorw("Error generating tag table",
 					"generator", "measmons",
 					"error", err)
 			}
-			err = digmonGen.GeneratePlcTagTable("Digmon_tags.xml", "Digmons")
+			err = digmonGen.GeneratePlcTagTable(viper.GetString("filenames.digmon.tagfile"), "Digmons")
 			if err != nil {
 				utils.Sugar.Errorw("Error generating tag table",
 					"generator", "digmons",
 					"error", err)
 			}
-			err = valveGen.GeneratePlcTagTable("Valve_tags.xml", "Valves")
+			err = valveGen.GeneratePlcTagTable(viper.GetString("filenames.valve.tagfile"), "Valves")
 			if err != nil {
 				utils.Sugar.Errorw("Error generating tag table",
 					"generator", "valves",
 					"error", err)
 			}
-			err = controlValveGen.GeneratePlcTagTable("ControlValve_tags.xml", "ControlValves")
+			err = controlValveGen.GeneratePlcTagTable(viper.GetString("filenames.controlvalve.tagfile"), "ControlValves")
 			if err != nil {
 				utils.Sugar.Errorw("Error generating tag table",
 					"generator", "control valves",
 					"error", err)
 			}
-			err = motorGen.GeneratePlcTagTable("Motor_tags.xml", "Motors")
+			err = motorGen.GeneratePlcTagTable(viper.GetString("filenames.motor.tagfile"), "Motors")
 			if err != nil {
 				utils.Sugar.Errorw("Error generating tag table",
 					"generator", "motors",
 					"error", err)
 			}
-			err = freqMotorGen.GeneratePlcTagTable("FreqMotor_tags.xml", "FreqMotors")
+			err = freqMotorGen.GeneratePlcTagTable(viper.GetString("filenames.freqmotor.tagfile"), "FreqMotors")
 			if err != nil {
 				utils.Sugar.Errorw("Error generating tag table",
 					"generator", "frequency motors",
@@ -208,8 +210,4 @@ var generateAllCmd = &cobra.Command{
 
 func init() {
 	generateCmd.AddCommand(generateAllCmd)
-
-	// generateAllCmd.Flag("idbs").NoOptDefVal = "true"
-	// generateAllCmd.Flag("source-files").NoOptDefVal = "true"
-	// generateAllCmd.Flag("tag-tables").NoOptDefVal = "true"
 }

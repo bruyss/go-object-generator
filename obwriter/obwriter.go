@@ -32,8 +32,13 @@ func init() {
 
 func (g *Generator) Generate(fileName, templateName string, tmp *template.Template) error {
 	if len(g.Objects) == 0 {
+		utils.Sugar.Debugw("No objects, not generating",
+			"filename", fileName,
+			"template", templateName,
+		)
 		return nil
 	}
+
 	f, err := os.Create(genFolderName + "/" + fileName)
 	if err != nil {
 		return err
@@ -44,6 +49,11 @@ func (g *Generator) Generate(fileName, templateName string, tmp *template.Templa
 	if err != nil {
 		return err
 	}
+
+	utils.Sugar.Debugw("Generating",
+		"filename", fileName,
+		"template", templateName,
+	)
 
 	return nil
 }

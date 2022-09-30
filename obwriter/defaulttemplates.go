@@ -1,7 +1,7 @@
 package obwriter
 
 var Templates = map[string]string{
-	"idbs":         idbTemplate,
+	"idb":          idbTemplate,
 	"hmidb":        hmidb,
 	"controlValve": controlValveTemplate,
 	"digmon":       digmonTemplate,
