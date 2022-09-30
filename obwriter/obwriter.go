@@ -5,12 +5,15 @@ import (
 	"io"
 	"os"
 	"text/template"
+	"time"
 
 	"github.com/bruyss/go-object-generator/plc"
 	"github.com/bruyss/go-object-generator/utils"
 )
 
-const genFolderName string = "genfiles"
+const genFolderRoot string = "genfiles"
+
+var genFolderName string
 
 type Generator struct {
 	GeneralSettings generalSettings
@@ -19,7 +22,9 @@ type Generator struct {
 }
 
 func init() {
-	err := os.Mkdir(genFolderName, 0666)
+	now := time.Now().Format("20060102_150405")
+	genFolderName = genFolderRoot + "/" + now
+	err := os.MkdirAll(genFolderName, 0666)
 	if err != nil && !os.IsExist(err) {
 		utils.Sugar.Info(err)
 	}
