@@ -24,6 +24,7 @@ import (
 	"github.com/bruyss/go-object-generator/sheetreader"
 	"github.com/bruyss/go-object-generator/utils"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // initCmd represents the init command
@@ -58,17 +59,17 @@ var initCmd = &cobra.Command{
 		flagTemplates, _ := cmd.Flags().GetBool("templates")
 		if !(flagExcel || flagSettings || flagTemplates) {
 			utils.Sugar.Info("Initializing all...")
-			sheetreader.InitializeWorkbook("excelsource_go.xlsx")
-			obwriter.WriteDefaultSettings("settings.json")
+			sheetreader.InitializeWorkbook(viper.GetString("filenames.general.objectsource"))
+			viper.WriteConfig()
 			obwriter.WriteTemplates(obwriter.Templates)
 		} else {
 			if flagExcel {
 				utils.Sugar.Info("Initializing spreadsheet...")
-				sheetreader.InitializeWorkbook("excelsource_go.xlsx")
+				sheetreader.InitializeWorkbook(viper.GetString("filenames.general.objectsource"))
 			}
 			if flagSettings {
 				utils.Sugar.Info("Initializing settings...")
-				obwriter.WriteDefaultSettings("settings.json")
+				viper.WriteConfig()
 			}
 			if flagTemplates {
 				utils.Sugar.Info("Initializing templates...")

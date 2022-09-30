@@ -30,12 +30,4 @@ var generateMeasmonsCmd = &cobra.Command{
 
 func init() {
 	generateCmd.AddCommand(generateMeasmonsCmd)
-
-	generateMeasmonsCmd.Flag("idb-file").Hidden = false
-	generateMeasmonsCmd.Flag("source-file").Hidden = false
-	generateMeasmonsCmd.Flag("tag-file").Hidden = false
-
-	generateMeasmonsCmd.Flag("idb-file").DefValue = "Measmon_IDBs.db"
-	generateMeasmonsCmd.Flag("source-file").DefValue = "Measmon_source.scl"
-	generateMeasmonsCmd.Flag("tag-file").DefValue = "Measmon_tags.xml"
 }

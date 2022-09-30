@@ -6,7 +6,6 @@ func init() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("json")
 	viper.AddConfigPath(".")
-	viper.AddConfigPath("./config/")
 
 	// Generation settings
 	viper.SetDefault("gensettings.general.secondpulse", "iSecPulse")
