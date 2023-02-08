@@ -51,7 +51,7 @@ func init() {
 
 	viper.SetDefault("gensettings.freqmotor.objectfb", "FB_Motor_Freq")
 	viper.SetDefault("gensettings.freqmotor.callfc", "FreqMotor_Call")
-	viper.SetDefault("gensettings.freqmotor.hmidb", "HMI_FreqMotors")
+	viper.SetDefault("gensettings.freqmotor.hmidb", "HMI_Motor_Freq")
 	viper.SetDefault("gensettings.freqmotor.hmitype", "HMI_FreqMotor")
 	viper.SetDefault("gensettings.freqmotor.startindex", 0)
 	viper.SetDefault("gensettings.freqmotor.tagtable", "FreqMotors")
@@ -64,7 +64,7 @@ func init() {
 	viper.SetDefault("filenames.controlvalve.sourcetemplate", "controlValve.tmpl")
 	viper.SetDefault("filenames.controlvalve.idbfile", "ControlValve_IDBs.db")
 	viper.SetDefault("filenames.controlvalve.hmidbfile", "ControlValve_HMIDB.db")
-	viper.SetDefault("filenames.controlvalve.sourcefile", "controlValve_source.scl")
+	viper.SetDefault("filenames.controlvalve.sourcefile", "ControlValve_source.scl")
 	viper.SetDefault("filenames.controlvalve.tagfile", "ControlValve_tags.xml")
 
 	viper.SetDefault("filenames.digmon.sourcetemplate", "digmon.tmpl")

@@ -29,7 +29,7 @@ VERSION : 0.1
 NON_RETAIN
    VAR
       {{range .Objects -}}
-      "{{.InputMap.Tag}}" : "{{$os.hmitype}}";
+      "{{.InputMap.Tag}}" : "{{$os.hmitype}}";      // {{.InputMap.Description}}
       {{end}}
    END_VAR
 
