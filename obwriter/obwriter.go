@@ -5,29 +5,19 @@ import (
 	"io"
 	"os"
 	"text/template"
-	"time"
 
 	"github.com/bruyss/go-object-generator/plc"
 	"github.com/bruyss/go-object-generator/utils"
 )
 
-const genFolderRoot string = "genfiles"
+const GenFolderRoot string = "genfiles"
 
-var genFolderName string
+var GenFolderName string
 
 type Generator struct {
 	GeneralSettings map[string]string
 	ObjectSettings  map[string]string
 	Objects         []plc.PlcObject
-}
-
-func init() {
-	now := time.Now().Format("20060102_150405")
-	genFolderName = genFolderRoot + "/" + now
-	err := os.MkdirAll(genFolderName, 0666)
-	if err != nil && !os.IsExist(err) {
-		utils.Sugar.Info(err)
-	}
 }
 
 func (g *Generator) Generate(fileName, templateName string, tmp *template.Template) error {
@@ -39,7 +29,7 @@ func (g *Generator) Generate(fileName, templateName string, tmp *template.Templa
 		return nil
 	}
 
-	f, err := os.Create(genFolderName + "/" + fileName)
+	f, err := os.Create(GenFolderName + "/" + fileName)
 	if err != nil {
 		return err
 	}
@@ -80,7 +70,7 @@ func (g *Generator) GeneratePlcTagTable(fileName, tagTableName string) error {
 	if len(g.Objects) == 0 {
 		return nil
 	}
-	f, err := os.Create(genFolderName + "/" + fileName)
+	f, err := os.Create(GenFolderName + "/" + fileName)
 	if err != nil {
 		return err
 	}
