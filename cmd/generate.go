@@ -40,6 +40,12 @@ var generateCmd = &cobra.Command{
 	// This application is a tool to generate the needed files
 	// to quickly create a Cobra application.`,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		utils.Sugar.Info("####################################################################################################################################################################################")
+		utils.Sugar.Info("####################################################################################################################################################################################")
+		utils.Sugar.Info("####################################################################################################################################################################################")
+		utils.Sugar.Info("####################################################################################################################################################################################")
+		utils.Sugar.Info("Start generation")
+
 		var err error
 		fileName := viper.GetString("filenames.general.objectsource")
 		if err != nil {
@@ -76,6 +82,9 @@ var generateCmd = &cobra.Command{
 		genAll = !genIdbs && !genSource && !genTags
 
 		return nil
+	},
+	PersistentPostRun: func(cmd *cobra.Command, args []string) {
+		utils.Sugar.Info("Generation complete")
 	},
 	// Run: func(cmd *cobra.Command, args []string) {
 	// 	fmt.Println("generate called")
