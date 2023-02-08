@@ -16,6 +16,9 @@ limitations under the License.
 package cmd
 
 import (
+	"os"
+	"time"
+
 	"github.com/bruyss/go-object-generator/obwriter"
 	"github.com/bruyss/go-object-generator/sheetreader"
 	"github.com/bruyss/go-object-generator/utils"
@@ -26,6 +29,15 @@ import (
 var generateDigmonsCmd = &cobra.Command{
 	Use:   "digmons",
 	Short: "Generate digmon objects.",
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		now := time.Now().Format("20060102_150405")
+		obwriter.GenFolderName = obwriter.GenFolderRoot + "/" + now + "_digmons"
+		err := os.MkdirAll(obwriter.GenFolderName, 0666)
+		if err != nil && !os.IsExist(err) {
+			return err
+		}
+		return nil
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 
 		digmonGen := obwriter.Generator{

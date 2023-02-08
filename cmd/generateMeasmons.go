@@ -16,6 +16,10 @@ limitations under the License.
 package cmd
 
 import (
+	"os"
+	"time"
+
+	"github.com/bruyss/go-object-generator/obwriter"
 	"github.com/spf13/cobra"
 )
 
@@ -23,6 +27,15 @@ import (
 var generateMeasmonsCmd = &cobra.Command{
 	Use:   "measmons",
 	Short: "Generate measmon objects",
+	PreRunE: func(cmd *cobra.Command, args []string) error {
+		now := time.Now().Format("20060102_150405")
+		obwriter.GenFolderName = obwriter.GenFolderRoot + "/" + now + "_measmons"
+		err := os.MkdirAll(obwriter.GenFolderName, 0666)
+		if err != nil && !os.IsExist(err) {
+			return err
+		}
+		return nil
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 
 	},
