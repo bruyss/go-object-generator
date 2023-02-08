@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
-	"go.uber.org/zap"
 
 	"github.com/bruyss/go-object-generator/utils"
 )
@@ -45,7 +44,9 @@ func InitializeWorkbook(name string) {
 	f.DeleteSheet(f.GetSheetName(1))
 
 	if err := f.SaveAs(name); err != nil {
-		utils.Logger.Error("Initializing workbook failed", zap.String("filename", name), zap.Error(err))
+		utils.Sugar.Error("Initializing workbook failed",
+			"filename", name,
+			"error", err)
 	}
 
 }
