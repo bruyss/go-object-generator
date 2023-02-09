@@ -1,5 +1,6 @@
 package obwriter
 
+// Templates contains the link between the file name and variable name for the default templates
 var Templates = map[string]string{
 	"idb":          idbTemplate,
 	"hmidb":        hmidb,

@@ -30,19 +30,8 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:   "go-object-generator",
 	Short: "PLC object generator",
-	Long: `###### go-object-generator ######
-
-A generator for PLC objects, reads data from a spreadsheet and 
-outputs source files.
-
-To initialize a new object generator project run: go-object-generator.exe init
-
-To generate all objects entered in the spreadsheet run: go-object-generator.exe generate all
-
-For further information the the available commands run: go-object-generator.exe --help`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Long: `A generator for PLC objects, reads data from a spreadsheet and 
+outputs source files.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

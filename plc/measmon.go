@@ -19,7 +19,11 @@ type measmon struct {
 func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit string) (*measmon, error) {
 	directBool, err := strconv.ParseBool(direct)
 	if err != nil {
-		return nil, err
+		directBool = false
+		utils.Sugar.Warnw("Cannot parse Direct to bool",
+			"measmon", tag,
+			"value", direct,
+			"default", directBool)
 	}
 	lowLimitFloat, err := strconv.ParseFloat(lowLimit, 64)
 	if err != nil {

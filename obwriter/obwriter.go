@@ -10,10 +10,18 @@ import (
 	"github.com/bruyss/go-object-generator/utils"
 )
 
+// GenFolderRoot is the default root directory for storing the generated files
 const GenFolderRoot string = "genfiles"
 
+// GenFolderName is the directory in the root directory where the generated files are stored
+// At the start of generation, this value is filled with the current date & time
 var GenFolderName string
 
+// Generator represents the information needed to generate a certain object type.
+//
+// GeneralSettings contains settings that apply to all object types.
+// ObjectSettings contains settings that apply to this specific object type.
+// Objects is a slice of the objects to generate.
 type Generator struct {
 	GeneralSettings map[string]string
 	ObjectSettings  map[string]string

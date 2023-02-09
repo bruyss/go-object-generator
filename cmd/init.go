@@ -32,7 +32,6 @@ var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialize the object generator",
 	Long: `Command will create the following files to initialize object generation:
-	
 	- excelsource_go.xlsx: spreadsheet for entering object data
 	- setting.json: settings for object generation
 	- /templates: folder containing the object generation templates`,
