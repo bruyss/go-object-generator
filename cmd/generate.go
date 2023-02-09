@@ -27,7 +27,7 @@ import (
 var excelSource *excelize.File
 var tmp *template.Template
 
-var genAll, genIdbs, genSource, genTags bool
+var genAll, genIdbs, genHmiDbs, genSource, genTags bool
 
 // generateCmd represents the generate command
 var generateCmd = &cobra.Command{
@@ -68,6 +68,11 @@ var generateCmd = &cobra.Command{
 			utils.Sugar.Error(err)
 			return err
 		}
+		genHmiDbs, err = cmd.Flags().GetBool("hmiDBs")
+		if err != nil {
+			utils.Sugar.Error(err)
+			return err
+		}
 		genSource, err = cmd.Flags().GetBool("source-files")
 		if err != nil {
 			utils.Sugar.Error(err)
@@ -79,7 +84,7 @@ var generateCmd = &cobra.Command{
 			return err
 		}
 
-		genAll = !genIdbs && !genSource && !genTags
+		genAll = !genIdbs && !genSource && !genTags && !genHmiDbs
 
 		return nil
 	},

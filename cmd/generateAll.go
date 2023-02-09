@@ -111,7 +111,7 @@ var generateAllCmd = &cobra.Command{
 		}
 
 		// Generate HMI DBs
-		if genAll || genIdbs {
+		if genAll || genHmiDbs {
 			var err error
 			hmiDbTemplate := viper.GetString("filenames.general.hmidbtemplate")
 			if err != nil {
