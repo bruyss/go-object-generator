@@ -1,8 +1,9 @@
-package utils
+package logger
 
 import (
 	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -35,12 +36,15 @@ func InitializeDevLogger() {
 
 func InitializeCustomLogger() {
 
-	rawJson, err := os.ReadFile("./loggerconfig.json")
+	rawJson, err := ioutil.ReadFile("./loggerconfig.json")
 	if errors.Is(err, os.ErrNotExist) {
 		// b, _ := json.MarshalIndent(defaultLoggerSettings, "", "    ")
-		f, _ := os.Create("loggerconfig.json")
-		f.WriteString(defaultLoggerSettings)
-		rawJson = []byte(defaultLoggerSettings)
+		// f, _ := os.Create("loggerconfig.json")
+		err := ioutil.WriteFile("loggerconfig.json", sampleLoggerConfig, 0777)
+		if err != nil {
+			panic(err)
+		}
+		rawJson = sampleLoggerConfig
 
 	} else if err != nil {
 		log.Fatal("Error opening loggerconfig.json", err)
@@ -60,6 +64,18 @@ func InitializeCustomLogger() {
 
 	defer Logger.Sync()
 }
+
+var sampleLoggerConfig = []byte(`{
+       "level" : "info",
+       "encoding": "console",
+       "outputPaths":["stdout", "gen.log"],
+       "errorOutputPaths":["stderr"],
+       "encoderConfig": {
+           "messageKey":"message",
+           "levelKey":"level",
+           "levelEncoder":"lowercase"
+       }
+   }`)
 
 const defaultLoggerSettings string = `{
     "level": "info",

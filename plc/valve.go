@@ -3,7 +3,7 @@ package plc
 import (
 	"strconv"
 
-	"github.com/bruyss/go-object-generator/utils"
+	"github.com/bruyss/go-object-generator/logger"
 )
 
 type valve struct {
@@ -45,7 +45,7 @@ func NewValve(tag, description, actAddress, fboTag, fbcTag, fboAddress, fbcAddre
 
 	if len(v.ActAddress) == 0 {
 		v.ActAddress = "M0.0"
-		utils.Sugar.Warnw("No output address given",
+		logger.Sugar.Warnw("No output address given",
 			"valve", v.Tag,
 			"default", v.ActAddress,
 		)
@@ -53,7 +53,7 @@ func NewValve(tag, description, actAddress, fboTag, fbcTag, fboAddress, fbcAddre
 
 	if v.hasFbo && len(v.FboAddress) == 0 {
 		v.FboAddress = "M0.1"
-		utils.Sugar.Warnw("No feedback open address given",
+		logger.Sugar.Warnw("No feedback open address given",
 			"valve", v.Tag,
 			"default", v.FboAddress,
 		)
@@ -61,13 +61,13 @@ func NewValve(tag, description, actAddress, fboTag, fbcTag, fboAddress, fbcAddre
 
 	if v.hasFbc && len(v.FbcAddress) == 0 {
 		v.FbcAddress = "M0.2"
-		utils.Sugar.Warnw("No feedback closed address given",
+		logger.Sugar.Warnw("No feedback closed address given",
 			"valve", v.Tag,
 			"default", v.FbcAddress,
 		)
 	}
 
-	utils.Sugar.Debugw("Object created",
+	logger.Sugar.Debugw("Object created",
 		"valve", v,
 	)
 	return v, nil

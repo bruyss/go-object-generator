@@ -5,7 +5,7 @@ import (
 
 	"github.com/360EntSecGroup-Skylar/excelize"
 
-	"github.com/bruyss/go-object-generator/utils"
+	"github.com/bruyss/go-object-generator/logger"
 )
 
 func AddSheet(f *excelize.File, sheetName string, columns []string) int {
@@ -24,7 +24,7 @@ func AddSheet(f *excelize.File, sheetName string, columns []string) int {
 	err := f.AddTable(sheetName, "A1", bottomRight, formatString)
 
 	if err != nil {
-		utils.Sugar.Error(err.Error(),
+		logger.Sugar.Error(err.Error(),
 			"sheet", sheetName)
 	}
 
@@ -44,7 +44,7 @@ func InitializeWorkbook(name string) {
 	f.DeleteSheet(f.GetSheetName(1))
 
 	if err := f.SaveAs(name); err != nil {
-		utils.Sugar.Error("Initializing workbook failed",
+		logger.Sugar.Error("Initializing workbook failed",
 			"filename", name,
 			"error", err)
 	}

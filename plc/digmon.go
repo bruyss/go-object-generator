@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/bruyss/go-object-generator/utils"
+	"github.com/bruyss/go-object-generator/logger"
 )
 
 type digmon struct {
@@ -42,13 +42,13 @@ func NewDigmon(tag, description, address, invert, alarm, invertAlarm string) (*d
 
 	if len(d.Address) == 0 {
 		d.Address = "M0.0"
-		utils.Sugar.Warnw("No input address given",
+		logger.Sugar.Warnw("No input address given",
 			"digmon", d.Tag,
 			"default", d.Address,
 		)
 	}
 
-	utils.Sugar.Debugw("Object created",
+	logger.Sugar.Debugw("Object created",
 		"Digmon", d,
 	)
 

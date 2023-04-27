@@ -6,8 +6,8 @@ import (
 	"os"
 	"text/template"
 
+	"github.com/bruyss/go-object-generator/logger"
 	"github.com/bruyss/go-object-generator/plc"
-	"github.com/bruyss/go-object-generator/utils"
 )
 
 const GenFolderRoot string = "genfiles"
@@ -22,7 +22,7 @@ type Generator struct {
 
 func (g *Generator) Generate(fileName, templateName string, tmp *template.Template) error {
 	if len(g.Objects) == 0 {
-		utils.Sugar.Debugw("No objects, not generating",
+		logger.Sugar.Debugw("No objects, not generating",
 			"filename", fileName,
 			"template", templateName,
 		)
@@ -40,7 +40,7 @@ func (g *Generator) Generate(fileName, templateName string, tmp *template.Templa
 		return err
 	}
 
-	utils.Sugar.Debugw("Generating",
+	logger.Sugar.Debugw("Generating",
 		"filename", fileName,
 		"template", templateName,
 	)

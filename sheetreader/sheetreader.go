@@ -2,8 +2,8 @@ package sheetreader
 
 import (
 	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/bruyss/go-object-generator/logger"
 	"github.com/bruyss/go-object-generator/plc"
-	"github.com/bruyss/go-object-generator/utils"
 )
 
 func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
@@ -18,12 +18,12 @@ func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
 			row[measmonMax],
 		)
 		if err != nil {
-			utils.Sugar.Errorw(err.Error(),
+			logger.Sugar.Errorw(err.Error(),
 				"measmon", row[measmonTag],
 			)
 		} else {
 			o = append(o, m)
-			utils.Sugar.Infow("Object added to generator",
+			logger.Sugar.Infow("Object added to generator",
 				"measmon", m.Tag)
 		}
 	}
@@ -41,12 +41,12 @@ func ReadDigmons(f *excelize.File) (o []plc.PlcObject) {
 			row[digmonInvertAlarm],
 		)
 		if err != nil {
-			utils.Sugar.Errorw(err.Error(),
+			logger.Sugar.Errorw(err.Error(),
 				"digmon", row[digmonTag],
 			)
 		} else {
 			o = append(o, d)
-			utils.Sugar.Infow("Object added to generator",
+			logger.Sugar.Infow("Object added to generator",
 				"digmon", d.Tag)
 		}
 	}
@@ -66,12 +66,12 @@ func ReadValves(f *excelize.File) (o []plc.PlcObject) {
 			row[valveMonitoringTimeClose],
 		)
 		if err != nil {
-			utils.Sugar.Errorw(err.Error(),
+			logger.Sugar.Errorw(err.Error(),
 				"valve", row[valveTag],
 			)
 		} else {
 			o = append(o, v)
-			utils.Sugar.Infow("Object added to generator",
+			logger.Sugar.Infow("Object added to generator",
 				"valve", v.Tag)
 		}
 	}
@@ -88,12 +88,12 @@ func ReadControlValves(f *excelize.File) (o []plc.PlcObject) {
 			row[controlValveMonitoringTime],
 		)
 		if err != nil {
-			utils.Sugar.Errorw(err.Error(),
+			logger.Sugar.Errorw(err.Error(),
 				"valve", row[controlValveTag],
 			)
 		} else {
 			o = append(o, c)
-			utils.Sugar.Infow("Object added to generator",
+			logger.Sugar.Infow("Object added to generator",
 				"control valve", c.Tag)
 		}
 	}
@@ -113,11 +113,11 @@ func ReadMotors(f *excelize.File) (o []plc.PlcObject) {
 			row[motorSwitchAddress],
 		)
 		if err != nil {
-			utils.Sugar.Errorw(err.Error(),
+			logger.Sugar.Errorw(err.Error(),
 				"motor", row[motorTag])
 		} else {
 			o = append(o, m)
-			utils.Sugar.Infow("Object added to generator",
+			logger.Sugar.Infow("Object added to generator",
 				"motor", m.Tag)
 		}
 	}
@@ -141,11 +141,11 @@ func ReadFreqMotors(f *excelize.File) (o []plc.PlcObject) {
 			row[freqMotorDanfoss],
 		)
 		if err != nil {
-			utils.Sugar.Errorw(err.Error(),
+			logger.Sugar.Errorw(err.Error(),
 				"freqMotor", row[freqMotorTag])
 		} else {
 			o = append(o, fm)
-			utils.Sugar.Infow("Object added to generator",
+			logger.Sugar.Infow("Object added to generator",
 				"freqency motor", fm.Tag)
 		}
 	}

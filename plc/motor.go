@@ -3,7 +3,7 @@ package plc
 import (
 	"strconv"
 
-	"github.com/bruyss/go-object-generator/utils"
+	"github.com/bruyss/go-object-generator/logger"
 )
 
 type motor struct {
@@ -39,34 +39,34 @@ func NewMotor(tag, description, contactorAddress, feedbackTag, feedbackAddress, 
 
 	if len(m.ContactorAddress) == 0 {
 		m.ContactorAddress = "M0.0"
-		utils.Sugar.Warnw("No contactor address given",
+		logger.Sugar.Warnw("No contactor address given",
 			"motor", m.Tag,
 			"default", m.ContactorAddress,
 		)
 	}
 	if m.hasFeedback && len(m.FeedbackAddress) == 0 {
 		m.FeedbackAddress = "M0.1"
-		utils.Sugar.Warnw("No feedback address given",
+		logger.Sugar.Warnw("No feedback address given",
 			"motor", m.Tag,
 			"default", m.FeedbackAddress,
 		)
 	}
 	if m.hasBreaker && len(m.BreakerAddress) == 0 {
 		m.BreakerAddress = "M0.2"
-		utils.Sugar.Warnw("No breaker address given",
+		logger.Sugar.Warnw("No breaker address given",
 			"motor", m.Tag,
 			"default", m.BreakerAddress,
 		)
 	}
 	if m.hasSwitch && len(m.SwitchAddress) == 0 {
 		m.SwitchAddress = "M0.3"
-		utils.Sugar.Warnw("No switch address given",
+		logger.Sugar.Warnw("No switch address given",
 			"motor", m.Tag,
 			"default", m.SwitchAddress,
 		)
 	}
 
-	utils.Sugar.Debugw("Object created",
+	logger.Sugar.Debugw("Object created",
 		"motor", m,
 	)
 

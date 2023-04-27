@@ -1,10 +1,13 @@
-package utils
+package config
 
-import "github.com/spf13/viper"
+import (
+	"github.com/bruyss/go-object-generator/logger"
+	"github.com/spf13/viper"
+)
 
 func init() {
 	viper.SetConfigName("config")
-	viper.SetConfigType("json")
+	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 
 	// Generation settings
@@ -106,7 +109,10 @@ func init() {
 func GetConfig() {
 	err := viper.ReadInConfig()
 	if err != nil {
-		Sugar.Fatalln(err)
+		logger.Sugar.Fatalln(err)
 	}
+}
+
+func WriteConfig() {
 	viper.WriteConfig()
 }
