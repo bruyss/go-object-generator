@@ -20,11 +20,18 @@ import (
 	"os"
 	"strings"
 
+	"github.com/bruyss/go-object-generator/config"
 	"github.com/bruyss/go-object-generator/logger"
 	"github.com/bruyss/go-object-generator/obwriter"
 	"github.com/bruyss/go-object-generator/sheetreader"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+)
+
+var (
+	flagExcel     bool
+	flagSettings  bool
+	flagTemplates bool
 )
 
 // InitCmd represents the init command
@@ -54,13 +61,10 @@ var InitCmd = &cobra.Command{
 		return os.ErrInvalid
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		flagExcel, _ := cmd.Flags().GetBool("excel")
-		flagSettings, _ := cmd.Flags().GetBool("settings")
-		flagTemplates, _ := cmd.Flags().GetBool("templates")
 		if !(flagExcel || flagSettings || flagTemplates) {
 			logger.Sugar.Info("Initializing all...")
 			sheetreader.InitializeWorkbook(viper.GetString("filenames.general.objectsource"))
-			viper.WriteConfig()
+			config.WriteConfig()
 			obwriter.WriteTemplates(obwriter.Templates)
 		} else {
 			if flagExcel {
@@ -69,7 +73,7 @@ var InitCmd = &cobra.Command{
 			}
 			if flagSettings {
 				logger.Sugar.Info("Initializing settings...")
-				viper.WriteConfig()
+				config.WriteConfig()
 			}
 			if flagTemplates {
 				logger.Sugar.Info("Initializing templates...")
@@ -90,9 +94,9 @@ func init() {
 	// is called directly, e.g.:
 	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	InitCmd.Flags().Bool("excel", false, "Initialize spreadsheet")
-	InitCmd.Flags().Bool("settings", false, "Initialize settings")
-	InitCmd.Flags().Bool("templates", false, "Initialize templates")
+	InitCmd.Flags().BoolVarP(&flagExcel, "excel", "e", false, "Initialize spreadsheet")
+	InitCmd.Flags().BoolVarP(&flagSettings, "settings", "s", false, "Initialize settings")
+	InitCmd.Flags().BoolVarP(&flagTemplates, "templates", "t", false, "Initialize templates")
 
 	InitCmd.Flag("excel").NoOptDefVal = "true"
 	InitCmd.Flag("settings").NoOptDefVal = "true"
