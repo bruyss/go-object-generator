@@ -1,6 +1,7 @@
 /*
 Copyright © 2023 Jeroen Van Bruyssel <jeroen.vb1@gmail.com>
 */
+
 package cmd
 
 import (
@@ -9,6 +10,7 @@ import (
 
 	"github.com/bruyss/go-object-generator/cmd/generate"
 	"github.com/bruyss/go-object-generator/cmd/initialize"
+	"github.com/bruyss/go-object-generator/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -22,8 +24,7 @@ var rootCmd = &cobra.Command{
 	Use:     "go-object-generator",
 	Version: Version,
 	Short:   "PLC object generator",
-	Long: `A generator for PLC objects, reads data from a spreadsheet and 
-outputs source files.
+	Long: `A generator for PLC objects, reads data from a spreadsheet and outputs source files.
 
 To initialize a new object generator project run: go-object-generator.exe init
 
@@ -51,7 +52,8 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.go-object-generator.yaml)")
+	rootCmd.PersistentFlags().
+		StringVar(&cfgFile, "config", "", "config file (default is $HOME/.go-object-generator.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -60,18 +62,19 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
+	// Set default configuration
+	config.SetDefaults()
+
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
-		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
-
 		// Search config in home directory with name ".go-object-generator" (without extension).
-		viper.AddConfigPath(home)
+		// viper.AddConfigPath(".")
+		viper.AddConfigPath(".")
+		viper.SetConfigName("config")
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".go-object-generator")
+		viper.SafeWriteConfig()
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

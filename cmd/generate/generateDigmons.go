@@ -73,7 +73,7 @@ var generateDigmonsCmd = &cobra.Command{
 		}
 
 		if genAll || genTags {
-			logger.Logger.Info("Gotta do those tag tables...")
+			logger.Sugar.Error("Gotta do those tag tables...")
 		}
 
 	},

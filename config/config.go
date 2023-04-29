@@ -1,15 +1,10 @@
 package config
 
 import (
-	"github.com/bruyss/go-object-generator/logger"
 	"github.com/spf13/viper"
 )
 
-func init() {
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
-
+func SetDefaults() {
 	// Generation settings
 	viper.SetDefault("gensettings.general.secondpulse", "iSecPulse")
 	viper.SetDefault("gensettings.general.simulation", "iSimulation")
@@ -99,20 +94,4 @@ func init() {
 	viper.SetDefault("filenames.valve.hmidbfile", "Valve_HMIDB.db")
 	viper.SetDefault("filenames.valve.sourcefile", "Valve_source.scl")
 	viper.SetDefault("filenames.valve.tagfile", "Valve_tags.xml")
-
-	viper.SafeWriteConfig()
-}
-
-// GetConfig reads the configuration file defined in the init() function.
-// After reading in the config file it writes all the missing fields with
-// the default value.
-func GetConfig() {
-	err := viper.ReadInConfig()
-	if err != nil {
-		logger.Sugar.Fatalln(err)
-	}
-}
-
-func WriteConfig() {
-	viper.WriteConfig()
 }

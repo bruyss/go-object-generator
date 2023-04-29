@@ -17,15 +17,11 @@ package main
 
 import (
 	"github.com/bruyss/go-object-generator/cmd"
-	"github.com/bruyss/go-object-generator/config"
 	"github.com/bruyss/go-object-generator/logger"
 )
 
 func main() {
-
 	logger.InitializeCustomLogger()
-
-	config.GetConfig()
 
 	cmd.Execute()
 }

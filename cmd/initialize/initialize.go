@@ -20,7 +20,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/bruyss/go-object-generator/config"
 	"github.com/bruyss/go-object-generator/logger"
 	"github.com/bruyss/go-object-generator/obwriter"
 	"github.com/bruyss/go-object-generator/sheetreader"
@@ -64,7 +63,7 @@ var InitCmd = &cobra.Command{
 		if !(flagExcel || flagSettings || flagTemplates) {
 			logger.Sugar.Info("Initializing all...")
 			sheetreader.InitializeWorkbook(viper.GetString("filenames.general.objectsource"))
-			config.WriteConfig()
+			viper.WriteConfig()
 			obwriter.WriteTemplates(obwriter.Templates)
 		} else {
 			if flagExcel {
@@ -73,7 +72,7 @@ var InitCmd = &cobra.Command{
 			}
 			if flagSettings {
 				logger.Sugar.Info("Initializing settings...")
-				config.WriteConfig()
+				viper.WriteConfig()
 			}
 			if flagTemplates {
 				logger.Sugar.Info("Initializing templates...")
@@ -101,5 +100,4 @@ func init() {
 	InitCmd.Flag("excel").NoOptDefVal = "true"
 	InitCmd.Flag("settings").NoOptDefVal = "true"
 	InitCmd.Flag("templates").NoOptDefVal = "true"
-
 }
