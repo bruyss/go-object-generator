@@ -3,7 +3,6 @@ package logger
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"log"
 	"os"
 	"time"
@@ -55,9 +54,9 @@ func InitializeDevLogger() {
 }
 
 func InitializeCustomLogger() {
-	jsonString, err := ioutil.ReadFile("./loggerconfig.json")
+	jsonString, err := os.ReadFile("./loggerconfig.json")
 	if errors.Is(err, os.ErrNotExist) {
-		err = ioutil.WriteFile("loggerconfig.json", defaultLoggerSettings, 0777)
+		err = os.WriteFile("loggerconfig.json", defaultLoggerSettings, 0777)
 		if err != nil {
 			log.Fatal(err)
 		}
