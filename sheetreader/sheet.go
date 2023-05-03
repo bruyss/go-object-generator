@@ -1,28 +1,34 @@
 package sheetreader
 
 import (
-	"fmt"
-
-	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/xuri/excelize/v2"
 
 	"github.com/bruyss/go-object-generator/logger"
 )
 
 func AddSheet(f *excelize.File, sheetName string, columns []string) int {
-	index := f.NewSheet(sheetName)
+	index, err := f.NewSheet(sheetName)
+	if err != nil {
+		logger.Sugar.Fatal(err)
+	}
 
 	f.SetSheetRow(sheetName, "A1", &columns)
-	bottomRight := excelize.ToAlphaString(len(columns)-1) + "2"
-	formatString := fmt.Sprintf(`{
-		"table_name": "%s",
-		"table_style": "TableStyleMedium2",
-    	"show_first_column": true,
-    	"show_last_column": false,
-    	"show_row_stripes": true,
-    	"show_column_stripes": false
-	}`, sheetName)
-	err := f.AddTable(sheetName, "A1", bottomRight, formatString)
+	bottomRight, err := excelize.CoordinatesToCellName(len(columns), 2)
+	if err != nil {
+		logger.Sugar.Fatal(err)
+	}
 
+	enable := true
+	err = f.AddTable(sheetName, &excelize.Table{
+		Range:             "A1:" + bottomRight,
+		Name:              sheetName,
+		StyleName:         "TableStyleMedium2",
+		ShowColumnStripes: false,
+		ShowFirstColumn:   true,
+		ShowHeaderRow:     &enable,
+		ShowLastColumn:    false,
+		ShowRowStripes:    &enable,
+	})
 	if err != nil {
 		logger.Sugar.Error(err.Error(),
 			"sheet", sheetName)
@@ -32,7 +38,6 @@ func AddSheet(f *excelize.File, sheetName string, columns []string) int {
 }
 
 func InitializeWorkbook(name string) {
-
 	f := excelize.NewFile()
 	_ = AddSheet(f, sheetMeasmons, measmonCols)
 	_ = AddSheet(f, sheetDigmons, digmonCols)
@@ -41,12 +46,11 @@ func InitializeWorkbook(name string) {
 	_ = AddSheet(f, sheetMotors, motorCols)
 	_ = AddSheet(f, sheetFreqMotors, freqMotorCols)
 
-	f.DeleteSheet(f.GetSheetName(1))
+	f.DeleteSheet(f.GetSheetName(0))
 
 	if err := f.SaveAs(name); err != nil {
 		logger.Sugar.Error("Initializing workbook failed",
 			"filename", name,
 			"error", err)
 	}
-
 }
