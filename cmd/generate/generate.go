@@ -15,10 +15,12 @@ limitations under the License.
 */package generate
 
 import (
+	"os"
 	"text/template"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/bruyss/go-object-generator/logger"
+	"github.com/bruyss/go-object-generator/obwriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -57,6 +59,12 @@ var GenerateCmd = &cobra.Command{
 		}
 
 		genAll = !genIdbs && !genSource && !genTags
+
+		obwriter.GenFolderName = obwriter.GenFolderRoot
+		err = os.MkdirAll(obwriter.GenFolderName, 0666)
+		if err != nil && !os.IsExist(err) {
+			return err
+		}
 
 		return nil
 	},

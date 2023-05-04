@@ -16,9 +16,6 @@ limitations under the License.
 package generate
 
 import (
-	"os"
-	"time"
-
 	"github.com/bruyss/go-object-generator/logger"
 	"github.com/bruyss/go-object-generator/obwriter"
 	"github.com/bruyss/go-object-generator/sheetreader"
@@ -31,15 +28,6 @@ var generateAllCmd = &cobra.Command{
 	Use:   "all",
 	Short: "Generate all objects",
 
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		now := time.Now().Format("20060102_150405")
-		obwriter.GenFolderName = obwriter.GenFolderRoot + "/" + now + "_all"
-		err := os.MkdirAll(obwriter.GenFolderName, 0666)
-		if err != nil && !os.IsExist(err) {
-			return err
-		}
-		return nil
-	},
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// Define generators
