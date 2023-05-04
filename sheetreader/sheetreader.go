@@ -1,13 +1,39 @@
 package sheetreader
 
 import (
-	"github.com/360EntSecGroup-Skylar/excelize"
+	"fmt"
+
 	"github.com/bruyss/go-object-generator/logger"
 	"github.com/bruyss/go-object-generator/plc"
+	"github.com/xuri/excelize/v2"
 )
 
+func getTable(f *excelize.File, sheet_name string) ([][]string, error) {
+	rows, err := f.GetRows(sheet_name)
+	if err != nil {
+		return nil, err
+	}
+	logger.Sugar.Debugw("Column names",
+		"sheet name", sheet_name,
+		"columns", rows[0])
+	table := make([][]string, 0)
+	for i, row := range rows {
+		diff := len(rows[0]) - len(row)
+		for j := 0; j < diff; j++ {
+			row = append(row, "")
+		}
+		rows[i] = row
+		table = append(table, row)
+	}
+	return table, nil
+}
+
 func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
-	for _, row := range f.GetRows(sheetMeasmons)[1:] {
+	table, err := getTable(f, sheetMeasmons)
+	if err != nil {
+		logger.Sugar.Fatalln(err)
+	}
+	for _, row := range table {
 		m, err := plc.NewMeasmon(
 			row[measmonTag],
 			row[measmonDescription],
@@ -31,7 +57,11 @@ func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
 }
 
 func ReadDigmons(f *excelize.File) (o []plc.PlcObject) {
-	for _, row := range f.GetRows(sheetDigmons)[1:] {
+	table, err := getTable(f, sheetDigmons)
+	if err != nil {
+		logger.Sugar.Fatalln(err)
+	}
+	for _, row := range table {
 		d, err := plc.NewDigmon(
 			row[digmonTag],
 			row[digmonDescription],
@@ -52,8 +82,13 @@ func ReadDigmons(f *excelize.File) (o []plc.PlcObject) {
 	}
 	return
 }
+
 func ReadValves(f *excelize.File) (o []plc.PlcObject) {
-	for _, row := range f.GetRows(sheetValves)[1:] {
+	table, err := getTable(f, sheetValves)
+	if err != nil {
+		logger.Sugar.Fatalln(err)
+	}
+	for _, row := range table {
 		v, err := plc.NewValve(
 			row[valveTag],
 			row[valveDescription],
@@ -77,8 +112,13 @@ func ReadValves(f *excelize.File) (o []plc.PlcObject) {
 	}
 	return
 }
+
 func ReadControlValves(f *excelize.File) (o []plc.PlcObject) {
-	for _, row := range f.GetRows(sheetControlValves)[1:] {
+	table, err := getTable(f, sheetControlValves)
+	if err != nil {
+		logger.Sugar.Fatalln(err)
+	}
+	for _, row := range table {
 		c, err := plc.NewControlValve(
 			row[controlValveTag],
 			row[controlValveDescription],
@@ -99,8 +139,13 @@ func ReadControlValves(f *excelize.File) (o []plc.PlcObject) {
 	}
 	return
 }
+
 func ReadMotors(f *excelize.File) (o []plc.PlcObject) {
-	for _, row := range f.GetRows(sheetMotors)[1:] {
+	table, err := getTable(f, sheetMotors)
+	if err != nil {
+		logger.Sugar.Fatalln(err)
+	}
+	for _, row := range table {
 		m, err := plc.NewMotor(
 			row[motorTag],
 			row[motorDescription],
@@ -123,8 +168,14 @@ func ReadMotors(f *excelize.File) (o []plc.PlcObject) {
 	}
 	return
 }
+
 func ReadFreqMotors(f *excelize.File) (o []plc.PlcObject) {
-	for _, row := range f.GetRows(sheetFreqMotors)[1:] {
+	table, err := getTable(f, sheetFreqMotors)
+	if err != nil {
+		logger.Sugar.Fatalln(err)
+	}
+	fmt.Println(table)
+	for _, row := range table {
 		fm, err := plc.NewFreqMotor(
 			row[freqMotorTag],
 			row[freqMotorDescription],

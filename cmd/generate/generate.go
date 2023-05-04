@@ -18,11 +18,11 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/bruyss/go-object-generator/logger"
 	"github.com/bruyss/go-object-generator/obwriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/xuri/excelize/v2"
 )
 
 var (
@@ -69,6 +69,7 @@ var GenerateCmd = &cobra.Command{
 		return nil
 	},
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
+		excelSource.Close()
 		logger.Sugar.Info("Generation complete")
 	},
 	// Run: func(cmd *cobra.Command, args []string) {
