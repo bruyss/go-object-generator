@@ -1,8 +1,6 @@
 package sheetreader
 
 import (
-	"fmt"
-
 	"github.com/bruyss/go-object-generator/logger"
 	"github.com/bruyss/go-object-generator/plc"
 	"github.com/xuri/excelize/v2"
@@ -17,7 +15,7 @@ func getTable(f *excelize.File, sheet_name string) ([][]string, error) {
 		"sheet name", sheet_name,
 		"columns", rows[0])
 	table := make([][]string, 0)
-	for i, row := range rows {
+	for i, row := range rows[1:] {
 		diff := len(rows[0]) - len(row)
 		for j := 0; j < diff; j++ {
 			row = append(row, "")
@@ -174,7 +172,6 @@ func ReadFreqMotors(f *excelize.File) (o []plc.PlcObject) {
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	fmt.Println(table)
 	for _, row := range table {
 		fm, err := plc.NewFreqMotor(
 			row[freqMotorTag],
