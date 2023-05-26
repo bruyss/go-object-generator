@@ -29,7 +29,7 @@ func (g *Generator) Generate(fileName, templateName string, tmp *template.Templa
 		return nil
 	}
 
-	f, err := os.Create(GenFolderName + "/" + fileName)
+	f, err := os.Create(GenFolderRoot + "/" + fileName)
 	if err != nil {
 		return err
 	}
@@ -93,6 +93,8 @@ func (g *Generator) GeneratePlcTagTable(fileName, tagTableName string) error {
 	if err != nil {
 		return err
 	}
-	f.Write(b)
+	if _, err = f.Write(b); err != nil {
+		return err
+	}
 	return nil
 }
