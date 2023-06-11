@@ -1,8 +1,6 @@
 package sheetreader
 
 import (
-	"fmt"
-
 	"github.com/bruyss/go-object-generator/logger"
 	"github.com/bruyss/go-object-generator/plc"
 	"github.com/xuri/excelize/v2"
@@ -28,12 +26,47 @@ func getTable(f *excelize.File, sheet_name string) ([][]string, error) {
 	return table, nil
 }
 
+func getStandardData(table [][]string, nr_columns int) ([]string, [][]string) {
+	column_names := table[0][:nr_columns]
+	standard_data := make([][]string, len(table)-1)
+	for i := range standard_data {
+		standard_data[i] = table[i+1][:nr_columns]
+	}
+	return column_names, standard_data
+}
+
+func getCustomData(table [][]string, nr_columns int) ([]string, [][]string) {
+	column_names := table[0][nr_columns:]
+	if len(table[0]) == nr_columns {
+		return column_names, [][]string{}
+	}
+	custom_data := make([][]string, len(table)-1)
+	for i := range custom_data {
+		custom_data[i] = table[i+1][nr_columns:]
+	}
+	return column_names, custom_data
+}
+
+func makeCustomDataMap(column_names []string, data [][]string) []map[string]string {
+	data_map := make([]map[string]string, len(data))
+	for i := range data_map {
+		data_map[i] = make(map[string]string)
+		for j, column := range column_names {
+			data_map[i][column] = data[i][j]
+		}
+	}
+	return data_map
+}
+
 func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
 	table, err := getTable(f, sheetMeasmons)
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	for _, row := range table {
+	_, standard_data := getStandardData(table, len(measmonCols))
+	custom_columns, custom_data := getCustomData(table, len(measmonCols))
+	custom_map := makeCustomDataMap(custom_columns, custom_data)
+	for n, row := range standard_data {
 		m, err := plc.NewMeasmon(
 			row[measmonTag],
 			row[measmonDescription],
@@ -42,7 +75,7 @@ func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
 			row[measmonDirect],
 			row[measmonMin],
 			row[measmonMax],
-			map[string]string{},
+			custom_map[n],
 		)
 		if err != nil {
 			logger.Sugar.Errorw(err.Error(),
@@ -175,7 +208,6 @@ func ReadFreqMotors(f *excelize.File) (o []plc.PlcObject) {
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	fmt.Println(table)
 	for _, row := range table {
 		fm, err := plc.NewFreqMotor(
 			row[freqMotorTag],

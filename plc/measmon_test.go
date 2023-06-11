@@ -182,7 +182,7 @@ func Test_measmon_InputMap(t *testing.T) {
 				Direct:      false,
 				LowLimit:    0.0,
 				HighLimit:   150.0,
-				data: map[string]string{
+				Data: map[string]string{
 					"allo1": "1",
 					"allo2": "2",
 					"allo3": "3",
@@ -201,6 +201,7 @@ func Test_measmon_InputMap(t *testing.T) {
 				"allo1":       "1",
 				"allo2":       "2",
 				"allo3":       "3",
+				"Iets":        "",
 			},
 		},
 	}

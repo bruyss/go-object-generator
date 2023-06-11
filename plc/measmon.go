@@ -14,7 +14,7 @@ type measmon struct {
 	Direct      bool
 	LowLimit    float64
 	HighLimit   float64
-	data        map[string]string
+	Data        map[string]string
 }
 
 func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit string, data map[string]string) (*measmon, error) {
@@ -47,7 +47,7 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 		Direct:      directBool,
 		LowLimit:    lowLimitFloat,
 		HighLimit:   highLimitFloat,
-		data:        data,
+		Data:        data,
 	}
 
 	if len(m.Unit) == 0 {
@@ -90,9 +90,9 @@ func (m *measmon) InputMap() map[string]string {
 		"LowLimit":    strconv.FormatFloat(m.LowLimit, 'f', 1, 64),
 		"HighLimit":   strconv.FormatFloat(m.HighLimit, 'f', 1, 64),
 	}
-	for k, v := range m.data {
+	for k, v := range m.Data {
 		_, exists := input[k]
-		if !exists && len(v) > 0 {
+		if !exists {
 			input[k] = v
 			logger.Sugar.Debugw("Additional data added to input map",
 				"measmon", m.Tag,
