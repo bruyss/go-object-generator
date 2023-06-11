@@ -92,7 +92,7 @@ func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
 	}
 	_, standard_data := getStandardData(table, len(measmonCols))
 	custom_columns, custom_data := getCustomData(table, len(measmonCols))
-	custom_map := makeCustomDataMap(custom_columns, custom_data)
+	custom_maps := makeCustomDataMap(custom_columns, custom_data)
 	for n, row := range standard_data {
 		m, err := plc.NewMeasmon(
 			row[measmonTag],
@@ -102,7 +102,7 @@ func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
 			row[measmonDirect],
 			row[measmonMin],
 			row[measmonMax],
-			custom_map[n],
+			custom_maps[n],
 		)
 		if err != nil {
 			logger.Sugar.Errorw(err.Error(),
@@ -179,7 +179,10 @@ func ReadControlValves(f *excelize.File) (o []plc.PlcObject) {
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	for _, row := range table {
+	_, standard_data := getStandardData(table, len(measmonCols))
+	custom_columns, custom_data := getCustomData(table, len(measmonCols))
+	custom_maps := makeCustomDataMap(custom_columns, custom_data)
+	for n, row := range standard_data {
 		c, err := plc.NewControlValve(
 			row[controlValveTag],
 			row[controlValveDescription],
@@ -187,10 +190,11 @@ func ReadControlValves(f *excelize.File) (o []plc.PlcObject) {
 			row[controlValveFeedbackTag],
 			row[controlValveFeedbackAddress],
 			row[controlValveMonitoringTime],
+			custom_maps[n],
 		)
 		if err != nil {
 			logger.Sugar.Errorw(err.Error(),
-				"valve", row[controlValveTag],
+				"control valve", row[controlValveTag],
 			)
 		} else {
 			o = append(o, c)

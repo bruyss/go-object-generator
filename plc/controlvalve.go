@@ -15,9 +15,10 @@ type controlValve struct {
 	FeedbackAddress string
 	MonitoringTime  int
 	hasFeedback     bool
+	Data            map[string]string
 }
 
-func NewControlValve(tag, description, address, feedbackTag, feedbackAddress, monitoringTime string) (*controlValve, error) {
+func NewControlValve(tag, description, address, feedbackTag, feedbackAddress, monitoringTime string, data map[string]string) (*controlValve, error) {
 	monitoringTimeInt, err := strconv.Atoi(monitoringTime)
 	if err != nil {
 		return nil, err
@@ -31,6 +32,7 @@ func NewControlValve(tag, description, address, feedbackTag, feedbackAddress, mo
 		FeedbackAddress: feedbackAddress,
 		MonitoringTime:  monitoringTimeInt,
 		hasFeedback:     len(feedbackTag) > 0,
+		Data:            data,
 	}
 
 	if len(c.Address) == 0 {
@@ -60,7 +62,7 @@ func (c *controlValve) InputMap() map[string]string {
 	} else {
 		feedbackTag = strconv.Quote("IDB_"+c.Tag) + ".Q_On"
 	}
-	return map[string]string{
+	input := map[string]string{
 		"Tag":            c.Tag,
 		"Description":    c.Description,
 		"IDB":            "IDB_" + c.Tag,
@@ -69,6 +71,17 @@ func (c *controlValve) InputMap() map[string]string {
 		"MonitoringTime": strconv.Itoa(c.MonitoringTime),
 		"Output":         strconv.Quote(c.outputPlcTag().Name),
 	}
+	for k, v := range c.Data {
+		_, exists := input[k]
+		if !exists {
+			input[k] = v
+			logger.Sugar.Debugw("Additional data added to input map",
+				"control valve", c.Tag,
+				"name", k,
+				"data", v)
+		}
+	}
+	return input
 }
 
 func (c *controlValve) PlcTags() (t []*PlcTag) {
