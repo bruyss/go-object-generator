@@ -16,14 +16,15 @@ func getTable(f *excelize.File, sheet_name string) ([][]string, error) {
 	logger.Sugar.Debugw("Column names",
 		"sheet name", sheet_name,
 		"columns", rows[0])
-	table := make([][]string, 0)
+	table := make([][]string, len(rows))
+
+	table[0] = rows[0]
 	for i, row := range rows[1:] {
 		diff := len(rows[0]) - len(row)
 		for j := 0; j < diff; j++ {
 			row = append(row, "")
 		}
-		rows[i] = row
-		table = append(table, row)
+		table[i+1] = row
 	}
 	return table, nil
 }
@@ -74,15 +75,15 @@ func getCustomData(table [][]string, nr_standard_columns int) ([]string, [][]str
 //	{"Col 1": "12", "Col 2": 22, "Col 3": 32},
 //
 // ]
-func makeCustomDataMap(column_names []string, data [][]string) []map[string]string {
-	data_map := make([]map[string]string, len(data))
-	for i := range data_map {
-		data_map[i] = make(map[string]string)
+func makeCustomDataMap(column_names []string, data [][]string, data_map *[]map[string]string) {
+	for i := range *data_map {
+		(*data_map)[i] = make(map[string]string, len(column_names))
 		for j, column := range column_names {
-			data_map[i][column] = data[i][j]
+			// fmt.Printf("Row %d column %d-%s: %s", i, j, column, data[i][j])
+			(*data_map)[i][column] = data[i][j]
 		}
 	}
-	return data_map
+	// fmt.Println(*data_map)
 }
 
 func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
@@ -92,7 +93,8 @@ func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
 	}
 	_, standard_data := getStandardData(table, len(measmonCols))
 	custom_columns, custom_data := getCustomData(table, len(measmonCols))
-	custom_maps := makeCustomDataMap(custom_columns, custom_data)
+	custom_maps := make([]map[string]string, len(standard_data))
+	makeCustomDataMap(custom_columns, custom_data, &custom_maps)
 	for n, row := range standard_data {
 		m, err := plc.NewMeasmon(
 			row[measmonTag],
@@ -122,7 +124,11 @@ func ReadDigmons(f *excelize.File) (o []plc.PlcObject) {
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	for _, row := range table {
+	_, standard_data := getStandardData(table, len(digmonCols))
+	custom_columns, custom_data := getCustomData(table, len(digmonCols))
+	custom_maps := make([]map[string]string, len(standard_data))
+	makeCustomDataMap(custom_columns, custom_data, &custom_maps)
+	for n, row := range standard_data {
 		d, err := plc.NewDigmon(
 			row[digmonTag],
 			row[digmonDescription],
@@ -130,6 +136,7 @@ func ReadDigmons(f *excelize.File) (o []plc.PlcObject) {
 			row[digmonInvert],
 			row[digmonAlarm],
 			row[digmonInvertAlarm],
+			custom_maps[n],
 		)
 		if err != nil {
 			logger.Sugar.Errorw(err.Error(),
@@ -180,8 +187,9 @@ func ReadControlValves(f *excelize.File) (o []plc.PlcObject) {
 		logger.Sugar.Fatalln(err)
 	}
 	_, standard_data := getStandardData(table, len(controlValveCols))
-	custom_columns, custom_data := getCustomData(table, len(controlValveCols))
-	custom_maps := makeCustomDataMap(custom_columns, custom_data)
+	custom_columns_names, custom_data := getCustomData(table, len(controlValveCols))
+	custom_maps := make([]map[string]string, len(standard_data))
+	makeCustomDataMap(custom_columns_names, custom_data, &custom_maps)
 	for n, row := range standard_data {
 		c, err := plc.NewControlValve(
 			row[controlValveTag],
