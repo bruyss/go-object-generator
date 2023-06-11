@@ -42,6 +42,7 @@ func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
 			row[measmonDirect],
 			row[measmonMin],
 			row[measmonMax],
+			map[string]string{},
 		)
 		if err != nil {
 			logger.Sugar.Errorw(err.Error(),

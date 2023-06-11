@@ -14,9 +14,10 @@ type measmon struct {
 	Direct      bool
 	LowLimit    float64
 	HighLimit   float64
+	data        map[string]string
 }
 
-func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit string) (*measmon, error) {
+func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit string, data map[string]string) (*measmon, error) {
 	directBool, err := strconv.ParseBool(direct)
 	if err != nil {
 		return nil, err
@@ -46,6 +47,7 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 		Direct:      directBool,
 		LowLimit:    lowLimitFloat,
 		HighLimit:   highLimitFloat,
+		data:        data,
 	}
 
 	if len(m.Unit) == 0 {
@@ -79,7 +81,7 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 }
 
 func (m *measmon) InputMap() map[string]string {
-	return map[string]string{
+	input := map[string]string{
 		"Tag":         m.Tag,
 		"Description": m.Description,
 		"IDB":         "IDB_" + m.Tag,
@@ -88,6 +90,17 @@ func (m *measmon) InputMap() map[string]string {
 		"LowLimit":    strconv.FormatFloat(m.LowLimit, 'f', 1, 64),
 		"HighLimit":   strconv.FormatFloat(m.HighLimit, 'f', 1, 64),
 	}
+	for k, v := range m.data {
+		_, exists := input[k]
+		if !exists && len(v) > 0 {
+			input[k] = v
+			logger.Sugar.Debugw("Additional data added to input map",
+				"measmon", m.Tag,
+				"name", k,
+				"data", v)
+		}
+	}
+	return input
 }
 
 func (m *measmon) PlcTags() (t []*PlcTag) {

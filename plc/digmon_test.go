@@ -3,7 +3,13 @@ package plc
 import (
 	"reflect"
 	"testing"
+
+	"github.com/bruyss/go-object-generator/logger"
 )
+
+func init() {
+	logger.InitializeDevLogger()
+}
 
 func TestNewDigmon(t *testing.T) {
 	type args struct {

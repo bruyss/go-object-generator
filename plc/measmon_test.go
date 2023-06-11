@@ -3,7 +3,13 @@ package plc
 import (
 	"reflect"
 	"testing"
+
+	"github.com/bruyss/go-object-generator/logger"
 )
+
+func init() {
+	logger.InitializeDevLogger()
+}
 
 func TestNewMeasmon(t *testing.T) {
 	type args struct {
@@ -14,6 +20,7 @@ func TestNewMeasmon(t *testing.T) {
 		direct      string
 		lowLimit    string
 		highLimit   string
+		data        map[string]string
 	}
 	tests := []struct {
 		name    string
@@ -23,38 +30,44 @@ func TestNewMeasmon(t *testing.T) {
 	}{
 		{
 			"Measmon 1",
-			args{tag: "WWG-TT001", description: "Test measmon 1", unit: "bar", address: "IW64", direct: "false", lowLimit: "-1.0", highLimit: "10.0"},
-			&measmon{"WWG-TT001", "Test measmon 1", "bar", "IW64", false, -1.0, 10.0},
+			args{tag: "WWG-TT001", description: "Test measmon 1", unit: "bar", address: "IW64", direct: "false", lowLimit: "-1.0", highLimit: "10.0", data: map[string]string{}},
+			&measmon{"WWG-TT001", "Test measmon 1", "bar", "IW64", false, -1.0, 10.0, map[string]string{}},
 			false,
 		},
 		{
 			"Measmon 2",
-			args{tag: "WWG-TT002", description: "Test measmon 2", unit: "°C", address: "IW68", direct: "false", lowLimit: "-50.0", highLimit: "-100.0"},
-			&measmon{"WWG-TT002", "Test measmon 2", "°C", "IW68", false, 0.0, 100.0},
+			args{tag: "WWG-TT002", description: "Test measmon 2", unit: "°C", address: "IW68", direct: "false", lowLimit: "-50.0", highLimit: "-100.0", data: map[string]string{}},
+			&measmon{"WWG-TT002", "Test measmon 2", "°C", "IW68", false, 0.0, 100.0, map[string]string{}},
+			false,
+		},
+		{
+			"Measmon 3",
+			args{tag: "WWG-TT002", description: "Test measmon 2", unit: "°C", address: "IW68", direct: "false", lowLimit: "-50.0", highLimit: "-100.0", data: map[string]string{"test": "test data"}},
+			&measmon{"WWG-TT002", "Test measmon 2", "°C", "IW68", false, 0.0, 100.0, map[string]string{"test": "test data"}},
 			false,
 		},
 		{
 			"Measmon 1 bad direct",
-			args{tag: "WWG-TT001", description: "Test measmon 1", unit: "bar", address: "IW64", direct: "allo", lowLimit: "-1.0", highLimit: "10.0"},
+			args{tag: "WWG-TT001", description: "Test measmon 1", unit: "bar", address: "IW64", direct: "allo", lowLimit: "-1.0", highLimit: "10.0", data: map[string]string{}},
 			nil,
 			true,
 		},
 		{
 			"Measmon 1 bad low limit",
-			args{tag: "WWG-TT001", description: "Test measmon 1", unit: "bar", address: "IW64", direct: "false", lowLimit: "allo", highLimit: "10.0"},
-			&measmon{"WWG-TT001", "Test measmon 1", "bar", "IW64", false, 0.0, 10.0},
+			args{tag: "WWG-TT001", description: "Test measmon 1", unit: "bar", address: "IW64", direct: "false", lowLimit: "allo", highLimit: "10.0", data: map[string]string{}},
+			&measmon{"WWG-TT001", "Test measmon 1", "bar", "IW64", false, 0.0, 10.0, map[string]string{}},
 			false,
 		},
 		{
 			"Measmon 1 bad high limit",
-			args{tag: "WWG-TT001", description: "Test measmon 1", unit: "bar", address: "IW64", direct: "false", lowLimit: "-1.0", highLimit: "allo"},
-			&measmon{"WWG-TT001", "Test measmon 1", "bar", "IW64", false, -1.0, 100.0},
+			args{tag: "WWG-TT001", description: "Test measmon 1", unit: "bar", address: "IW64", direct: "false", lowLimit: "-1.0", highLimit: "allo", data: map[string]string{}},
+			&measmon{"WWG-TT001", "Test measmon 1", "bar", "IW64", false, -1.0, 100.0, map[string]string{}},
 			false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewMeasmon(tt.args.tag, tt.args.description, tt.args.unit, tt.args.address, tt.args.direct, tt.args.lowLimit, tt.args.highLimit)
+			got, err := NewMeasmon(tt.args.tag, tt.args.description, tt.args.unit, tt.args.address, tt.args.direct, tt.args.lowLimit, tt.args.highLimit, tt.args.data)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewMeasmon() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -157,6 +170,37 @@ func Test_measmon_InputMap(t *testing.T) {
 				"Input":       `"WWG-FT656"`,
 				"LowLimit":    "0.0",
 				"HighLimit":   "150.0",
+			},
+		},
+		{
+			"Case 3",
+			&measmon{
+				Tag:         "WWG-FT656",
+				Description: "Test measmon 2",
+				Unit:        "m³/h",
+				Address:     "IW18",
+				Direct:      false,
+				LowLimit:    0.0,
+				HighLimit:   150.0,
+				data: map[string]string{
+					"allo1": "1",
+					"allo2": "2",
+					"allo3": "3",
+					"Tag":   "zever",
+					"Iets":  "",
+				},
+			},
+			map[string]string{
+				"Tag":         "WWG-FT656",
+				"Description": "Test measmon 2",
+				"IDB":         "IDB_WWG-FT656",
+				"Unit":        "m³/h",
+				"Input":       `"WWG-FT656"`,
+				"LowLimit":    "0.0",
+				"HighLimit":   "150.0",
+				"allo1":       "1",
+				"allo2":       "2",
+				"allo3":       "3",
 			},
 		},
 	}

@@ -3,8 +3,15 @@ package plc
 import (
 	"reflect"
 	"testing"
+
+	"github.com/bruyss/go-object-generator/logger"
 )
 
+func init() {
+	logger.InitializeDevLogger()
+}
+
+/*  */
 func TestNewControlValve(t *testing.T) {
 	type args struct {
 		tag             string
