@@ -20,8 +20,10 @@ import (
 	"github.com/bruyss/go-object-generator/logger"
 )
 
-func main() {
+func init() {
 	logger.InitializeCustomLogger()
+}
 
+func main() {
 	cmd.Execute()
 }
