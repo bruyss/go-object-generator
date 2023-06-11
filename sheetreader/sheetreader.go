@@ -6,6 +6,8 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
+// getTable reads in an excel file and returns a table starting on cell A1.
+// Appends empty string in the case of empty last columns for certain rows to get around default behaviour.
 func getTable(f *excelize.File, sheet_name string) ([][]string, error) {
 	rows, err := f.GetRows(sheet_name)
 	if err != nil {
@@ -26,27 +28,52 @@ func getTable(f *excelize.File, sheet_name string) ([][]string, error) {
 	return table, nil
 }
 
-func getStandardData(table [][]string, nr_columns int) ([]string, [][]string) {
-	column_names := table[0][:nr_columns]
+// getStandardData reads a table of PLC objects and returns the columns defined in the default per object.
+// Returns the column names and values as seperate values.
+func getStandardData(table [][]string, nr_standard_columns int) ([]string, [][]string) {
+	column_names := table[0][:nr_standard_columns]
 	standard_data := make([][]string, len(table)-1)
 	for i := range standard_data {
-		standard_data[i] = table[i+1][:nr_columns]
+		standard_data[i] = table[i+1][:nr_standard_columns]
 	}
 	return column_names, standard_data
 }
 
-func getCustomData(table [][]string, nr_columns int) ([]string, [][]string) {
-	column_names := table[0][nr_columns:]
-	if len(table[0]) == nr_columns {
+// getCustomData reads a table of PLC objects and returns the columns not defined in the default per object.
+// These columns should appear after the default columns.
+// Returns the column names and values as seperate values.
+func getCustomData(table [][]string, nr_standard_columns int) ([]string, [][]string) {
+	column_names := table[0][nr_standard_columns:]
+	if len(table[0]) == nr_standard_columns {
 		return column_names, [][]string{}
 	}
 	custom_data := make([][]string, len(table)-1)
 	for i := range custom_data {
-		custom_data[i] = table[i+1][nr_columns:]
+		custom_data[i] = table[i+1][nr_standard_columns:]
 	}
 	return column_names, custom_data
 }
 
+// makeCustomDataMap takes in a 2D list of strings with columns names
+// and return a list of maps mapping the column name to the values per row of data
+//
+// | Col 1 | Col 2 | Col 3 |
+//
+// |   10  |   20  |   30  |
+//
+// |   11  |   21  |   31  |
+//
+// |   12  |   22  |   32  |
+//
+// transforms to =>
+//
+// [
+//
+//	{"Col 1": "10", "Col 2": 20, "Col 3": 30},
+//	{"Col 1": "11", "Col 2": 21, "Col 3": 31},
+//	{"Col 1": "12", "Col 2": 22, "Col 3": 32},
+//
+// ]
 func makeCustomDataMap(column_names []string, data [][]string) []map[string]string {
 	data_map := make([]map[string]string, len(data))
 	for i := range data_map {
