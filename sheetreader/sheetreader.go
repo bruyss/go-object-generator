@@ -156,7 +156,11 @@ func ReadValves(f *excelize.File) (o []plc.PlcObject) {
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	for _, row := range table {
+	_, standard_data := getStandardData(table, len(valveCols))
+	custom_columns, custom_data := getCustomData(table, len(valveCols))
+	custom_maps := make([]map[string]string, len(standard_data))
+	makeCustomDataMap(custom_columns, custom_data, &custom_maps)
+	for n, row := range table {
 		v, err := plc.NewValve(
 			row[valveTag],
 			row[valveDescription],
@@ -167,6 +171,7 @@ func ReadValves(f *excelize.File) (o []plc.PlcObject) {
 			row[valveFeedbackClosedAddress],
 			row[valveMonitoringTimeOpen],
 			row[valveMonitoringTimeClose],
+			custom_maps[n],
 		)
 		if err != nil {
 			logger.Sugar.Errorw(err.Error(),

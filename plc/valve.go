@@ -18,9 +18,10 @@ type valve struct {
 	MonTimeClose int
 	hasFbo       bool
 	hasFbc       bool
+	Data         map[string]string
 }
 
-func NewValve(tag, description, actAddress, fboTag, fbcTag, fboAddress, fbcAddress, monTimeOpen, monTimeClose string) (*valve, error) {
+func NewValve(tag, description, actAddress, fboTag, fbcTag, fboAddress, fbcAddress, monTimeOpen, monTimeClose string, data map[string]string) (*valve, error) {
 	monTimeOpenInt, err := strconv.Atoi(monTimeOpen)
 	if err != nil {
 		return nil, err
@@ -41,6 +42,7 @@ func NewValve(tag, description, actAddress, fboTag, fbcTag, fboAddress, fbcAddre
 		MonTimeClose: monTimeCloseInt,
 		hasFbo:       len(fboTag) > 0,
 		hasFbc:       len(fbcTag) > 0,
+		Data:         data,
 	}
 
 	if len(v.ActAddress) == 0 {
@@ -86,7 +88,7 @@ func (v *valve) InputMap() map[string]string {
 		fbc = "NOT " + strconv.Quote("IDB_"+v.Tag) + ".Q_On"
 	}
 
-	return map[string]string{
+	input := map[string]string{
 		"Tag":          v.Tag,
 		"Description":  v.Description,
 		"IDB":          "IDB_" + v.Tag,
@@ -96,6 +98,17 @@ func (v *valve) InputMap() map[string]string {
 		"MonTimeOpen":  strconv.Itoa(v.MonTimeOpen),
 		"MonTimeClose": strconv.Itoa(v.MonTimeClose),
 	}
+	for k, val := range v.Data {
+		_, exists := input[k]
+		if !exists {
+			input[k] = val
+			logger.Sugar.Debugw("Additional data added to input map",
+				"valve", v.Tag,
+				"name", k,
+				"data", val)
+		}
+	}
+	return input
 }
 
 func (v *valve) PlcTags() (t []*PlcTag) {
