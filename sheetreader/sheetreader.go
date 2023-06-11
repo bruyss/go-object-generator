@@ -179,8 +179,8 @@ func ReadControlValves(f *excelize.File) (o []plc.PlcObject) {
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	_, standard_data := getStandardData(table, len(measmonCols))
-	custom_columns, custom_data := getCustomData(table, len(measmonCols))
+	_, standard_data := getStandardData(table, len(controlValveCols))
+	custom_columns, custom_data := getCustomData(table, len(controlValveCols))
 	custom_maps := makeCustomDataMap(custom_columns, custom_data)
 	for n, row := range standard_data {
 		c, err := plc.NewControlValve(
