@@ -25,5 +25,6 @@ func init() {
 }
 
 func main() {
+	defer logger.Sugar.Sync()
 	cmd.Execute()
 }

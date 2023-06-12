@@ -22,6 +22,7 @@ func TestNewMotor(t *testing.T) {
 		breakerAddress   string
 		switchTag        string
 		switchAddress    string
+		data             map[string]string
 	}
 	tests := []struct {
 		name    string
@@ -41,6 +42,7 @@ func TestNewMotor(t *testing.T) {
 				breakerAddress:   "I10.1",
 				switchTag:        "WWG-M001_WS",
 				switchAddress:    "I10.2",
+				data:             map[string]string{},
 			},
 			want: &motor{
 				Tag:              "WWG-M001",
@@ -55,6 +57,38 @@ func TestNewMotor(t *testing.T) {
 				hasFeedback:      true,
 				hasBreaker:       true,
 				hasSwitch:        true,
+				Data:             map[string]string{},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Motor extra data",
+			args: args{
+				tag:              "WWG-M001",
+				description:      "Test motor 1",
+				contactorAddress: "Q10.0",
+				feedbackTag:      "WWG-M001_FB",
+				feedbackAddress:  "I10.0",
+				breakerTag:       "WWG-M001_TH",
+				breakerAddress:   "I10.1",
+				switchTag:        "WWG-M001_WS",
+				switchAddress:    "I10.2",
+				data:             map[string]string{"Custom": "allo motor"},
+			},
+			want: &motor{
+				Tag:              "WWG-M001",
+				Description:      "Test motor 1",
+				ContactorAddress: "Q10.0",
+				FeedbackTag:      "WWG-M001_FB",
+				FeedbackAddress:  "I10.0",
+				BreakerTag:       "WWG-M001_TH",
+				BreakerAddress:   "I10.1",
+				SwitchTag:        "WWG-M001_WS",
+				SwitchAddress:    "I10.2",
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+				Data:             map[string]string{"Custom": "allo motor"},
 			},
 			wantErr: false,
 		},
@@ -70,6 +104,7 @@ func TestNewMotor(t *testing.T) {
 				breakerAddress:   "I10.1",
 				switchTag:        "WWG-M001_WS",
 				switchAddress:    "I10.2",
+				data:             map[string]string{},
 			},
 			want: &motor{
 				Tag:              "WWG-M001",
@@ -84,6 +119,7 @@ func TestNewMotor(t *testing.T) {
 				hasFeedback:      true,
 				hasBreaker:       true,
 				hasSwitch:        true,
+				Data:             map[string]string{},
 			},
 			wantErr: false,
 		},
@@ -99,6 +135,7 @@ func TestNewMotor(t *testing.T) {
 				breakerAddress:   "I10.1",
 				switchTag:        "WWG-M001_WS",
 				switchAddress:    "I10.2",
+				data:             map[string]string{},
 			},
 			want: &motor{
 				Tag:              "WWG-M001",
@@ -113,6 +150,7 @@ func TestNewMotor(t *testing.T) {
 				hasFeedback:      true,
 				hasBreaker:       true,
 				hasSwitch:        true,
+				Data:             map[string]string{},
 			},
 			wantErr: false,
 		},
@@ -128,6 +166,7 @@ func TestNewMotor(t *testing.T) {
 				breakerAddress:   "",
 				switchTag:        "WWG-M001_WS",
 				switchAddress:    "I10.2",
+				data:             map[string]string{},
 			},
 			want: &motor{
 				Tag:              "WWG-M001",
@@ -142,6 +181,7 @@ func TestNewMotor(t *testing.T) {
 				hasFeedback:      true,
 				hasBreaker:       true,
 				hasSwitch:        true,
+				Data:             map[string]string{},
 			},
 			wantErr: false,
 		},
@@ -157,6 +197,7 @@ func TestNewMotor(t *testing.T) {
 				breakerAddress:   "I10.1",
 				switchTag:        "WWG-M001_WS",
 				switchAddress:    "",
+				data:             map[string]string{},
 			},
 			want: &motor{
 				Tag:              "WWG-M001",
@@ -171,6 +212,7 @@ func TestNewMotor(t *testing.T) {
 				hasFeedback:      true,
 				hasBreaker:       true,
 				hasSwitch:        true,
+				Data:             map[string]string{},
 			},
 			wantErr: false,
 		},
@@ -186,6 +228,7 @@ func TestNewMotor(t *testing.T) {
 				breakerAddress:   "I10.1",
 				switchTag:        "WWG-M001_WS",
 				switchAddress:    "I10.2",
+				data:             map[string]string{},
 			},
 			want: &motor{
 				Tag:              "WWG-M001",
@@ -200,6 +243,7 @@ func TestNewMotor(t *testing.T) {
 				hasFeedback:      false,
 				hasBreaker:       true,
 				hasSwitch:        true,
+				Data:             map[string]string{},
 			},
 			wantErr: false,
 		},
@@ -215,6 +259,7 @@ func TestNewMotor(t *testing.T) {
 				breakerAddress:   "",
 				switchTag:        "WWG-M001_WS",
 				switchAddress:    "I10.2",
+				data:             map[string]string{},
 			},
 			want: &motor{
 				Tag:              "WWG-M001",
@@ -229,6 +274,7 @@ func TestNewMotor(t *testing.T) {
 				hasFeedback:      true,
 				hasBreaker:       false,
 				hasSwitch:        true,
+				Data:             map[string]string{},
 			},
 			wantErr: false,
 		},
@@ -244,6 +290,7 @@ func TestNewMotor(t *testing.T) {
 				breakerAddress:   "I10.1",
 				switchTag:        "",
 				switchAddress:    "",
+				data:             map[string]string{},
 			},
 			want: &motor{
 				Tag:              "WWG-M001",
@@ -258,13 +305,14 @@ func TestNewMotor(t *testing.T) {
 				hasFeedback:      true,
 				hasBreaker:       true,
 				hasSwitch:        false,
+				Data:             map[string]string{},
 			},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewMotor(tt.args.tag, tt.args.description, tt.args.contactorAddress, tt.args.feedbackTag, tt.args.feedbackAddress, tt.args.breakerTag, tt.args.breakerAddress, tt.args.switchTag, tt.args.switchAddress)
+			got, err := NewMotor(tt.args.tag, tt.args.description, tt.args.contactorAddress, tt.args.feedbackTag, tt.args.feedbackAddress, tt.args.breakerTag, tt.args.breakerAddress, tt.args.switchTag, tt.args.switchAddress, tt.args.data)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewMotor() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -306,6 +354,34 @@ func Test_motor_InputMap(t *testing.T) {
 				"FeedbackTag":  `"WWG-M001_FB"`,
 				"BreakerTag":   `"WWG-M001_TH"`,
 				"SwitchTag":    `"WWG-M001_WS"`,
+			},
+		},
+		{
+			name: "Motor extra data",
+			m: &motor{
+				Tag:              "WWG-M001",
+				Description:      "Test motor 1",
+				ContactorAddress: "Q10.0",
+				FeedbackTag:      "WWG-M001_FB",
+				FeedbackAddress:  "I10.0",
+				BreakerTag:       "WWG-M001_TH",
+				BreakerAddress:   "I10.1",
+				SwitchTag:        "WWG-M001_WS",
+				SwitchAddress:    "I10.2",
+				hasFeedback:      true,
+				hasBreaker:       true,
+				hasSwitch:        true,
+				Data:             map[string]string{"Custom": "allo motor", "Tag": "dont"},
+			},
+			want: map[string]string{
+				"Tag":          "WWG-M001",
+				"Description":  "Test motor 1",
+				"IDB":          "IDB_WWG-M001",
+				"ContactorTag": `"WWG-M001"`,
+				"FeedbackTag":  `"WWG-M001_FB"`,
+				"BreakerTag":   `"WWG-M001_TH"`,
+				"SwitchTag":    `"WWG-M001_WS"`,
+				"Custom":       "allo motor",
 			},
 		},
 		{

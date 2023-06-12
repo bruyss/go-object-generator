@@ -92,6 +92,9 @@ func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
 		logger.Sugar.Fatalln(err)
 	}
 	_, standard_data := getStandardData(table, len(measmonCols))
+	if len(standard_data) == 0 {
+		return
+	}
 	custom_columns, custom_data := getCustomData(table, len(measmonCols))
 	custom_maps := make([]map[string]string, len(standard_data))
 	makeCustomDataMap(custom_columns, custom_data, &custom_maps)
@@ -125,6 +128,9 @@ func ReadDigmons(f *excelize.File) (o []plc.PlcObject) {
 		logger.Sugar.Fatalln(err)
 	}
 	_, standard_data := getStandardData(table, len(digmonCols))
+	if len(standard_data) == 0 {
+		return
+	}
 	custom_columns, custom_data := getCustomData(table, len(digmonCols))
 	custom_maps := make([]map[string]string, len(standard_data))
 	makeCustomDataMap(custom_columns, custom_data, &custom_maps)
@@ -157,10 +163,13 @@ func ReadValves(f *excelize.File) (o []plc.PlcObject) {
 		logger.Sugar.Fatalln(err)
 	}
 	_, standard_data := getStandardData(table, len(valveCols))
+	if len(standard_data) == 0 {
+		return
+	}
 	custom_columns, custom_data := getCustomData(table, len(valveCols))
 	custom_maps := make([]map[string]string, len(standard_data))
 	makeCustomDataMap(custom_columns, custom_data, &custom_maps)
-	for n, row := range table {
+	for n, row := range standard_data {
 		v, err := plc.NewValve(
 			row[valveTag],
 			row[valveDescription],
@@ -192,6 +201,9 @@ func ReadControlValves(f *excelize.File) (o []plc.PlcObject) {
 		logger.Sugar.Fatalln(err)
 	}
 	_, standard_data := getStandardData(table, len(controlValveCols))
+	if len(standard_data) == 0 {
+		return
+	}
 	custom_columns_names, custom_data := getCustomData(table, len(controlValveCols))
 	custom_maps := make([]map[string]string, len(standard_data))
 	makeCustomDataMap(custom_columns_names, custom_data, &custom_maps)
@@ -223,7 +235,14 @@ func ReadMotors(f *excelize.File) (o []plc.PlcObject) {
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	for _, row := range table {
+	_, standard_data := getStandardData(table, len(motorCols))
+	if len(standard_data) == 0 {
+		return
+	}
+	custom_columns_names, custom_data := getCustomData(table, len(motorCols))
+	custom_maps := make([]map[string]string, len(standard_data))
+	makeCustomDataMap(custom_columns_names, custom_data, &custom_maps)
+	for n, row := range standard_data {
 		m, err := plc.NewMotor(
 			row[motorTag],
 			row[motorDescription],
@@ -234,6 +253,7 @@ func ReadMotors(f *excelize.File) (o []plc.PlcObject) {
 			row[motorBreakerAddress],
 			row[motorSwitchTag],
 			row[motorSwitchAddress],
+			custom_maps[n],
 		)
 		if err != nil {
 			logger.Sugar.Errorw(err.Error(),

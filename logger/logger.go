@@ -50,13 +50,11 @@ func InitializeProductionLogger() {
 func InitializeDevLogger() {
 	logger, _ := zap.NewDevelopment()
 	Sugar = logger.Sugar()
-	defer Sugar.Sync()
 }
 
 func InitializeTestLogger() {
 	logger, _ := zap.NewDevelopment()
 	Sugar = logger.Sugar()
-	defer Sugar.Sync()
 }
 
 func InitializeCustomLogger() {
@@ -84,6 +82,4 @@ func InitializeCustomLogger() {
 	}
 
 	Sugar = logger.Sugar()
-
-	defer Sugar.Sync()
 }

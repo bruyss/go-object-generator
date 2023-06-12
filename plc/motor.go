@@ -19,9 +19,10 @@ type motor struct {
 	hasFeedback      bool
 	hasBreaker       bool
 	hasSwitch        bool
+	Data             map[string]string
 }
 
-func NewMotor(tag, description, contactorAddress, feedbackTag, feedbackAddress, breakerTag, breakerAddress, switchTag, switchAddress string) (*motor, error) {
+func NewMotor(tag, description, contactorAddress, feedbackTag, feedbackAddress, breakerTag, breakerAddress, switchTag, switchAddress string, data map[string]string) (*motor, error) {
 	m := &motor{
 		Tag:              tag,
 		Description:      description,
@@ -35,6 +36,7 @@ func NewMotor(tag, description, contactorAddress, feedbackTag, feedbackAddress, 
 		hasFeedback:      len(feedbackTag) > 0,
 		hasBreaker:       len(breakerTag) > 0,
 		hasSwitch:        len(switchTag) > 0,
+		Data:             data,
 	}
 
 	if len(m.ContactorAddress) == 0 {
@@ -93,8 +95,7 @@ func (m *motor) InputMap() map[string]string {
 	}
 
 	// TODO: Add monitoring time
-	// TODO: Add contactor tag
-	return map[string]string{
+	input := map[string]string{
 		"Tag":          m.Tag,
 		"Description":  m.Description,
 		"IDB":          "IDB_" + m.Tag,
@@ -103,6 +104,17 @@ func (m *motor) InputMap() map[string]string {
 		"BreakerTag":   breakerTag,
 		"SwitchTag":    switchTag,
 	}
+	for k, v := range m.Data {
+		_, exists := input[k]
+		if !exists {
+			input[k] = v
+			logger.Sugar.Debugw("Additional data added to input map",
+				"measmon", m.Tag,
+				"name", k,
+				"data", v)
+		}
+	}
+	return input
 }
 
 func (m *motor) PlcTags() (t []*PlcTag) {
