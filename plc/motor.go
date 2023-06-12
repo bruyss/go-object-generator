@@ -109,7 +109,7 @@ func (m *motor) InputMap() map[string]string {
 		if !exists {
 			input[k] = v
 			logger.Sugar.Debugw("Additional data added to input map",
-				"measmon", m.Tag,
+				"motor", m.Tag,
 				"name", k,
 				"data", v)
 		}

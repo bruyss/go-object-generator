@@ -272,7 +272,14 @@ func ReadFreqMotors(f *excelize.File) (o []plc.PlcObject) {
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	for _, row := range table {
+	_, standard_data := getStandardData(table, len(freqMotorCols))
+	if len(standard_data) == 0 {
+		return
+	}
+	custom_columns_names, custom_data := getCustomData(table, len(freqMotorCols))
+	custom_maps := make([]map[string]string, len(standard_data))
+	makeCustomDataMap(custom_columns_names, custom_data, &custom_maps)
+	for n, row := range standard_data {
 		fm, err := plc.NewFreqMotor(
 			row[freqMotorTag],
 			row[freqMotorDescription],
@@ -287,6 +294,7 @@ func ReadFreqMotors(f *excelize.File) (o []plc.PlcObject) {
 			row[freqMotorAlarmTag],
 			row[freqMotorAlarmAddress],
 			row[freqMotorDanfoss],
+			custom_maps[n],
 		)
 		if err != nil {
 			logger.Sugar.Errorw(err.Error(),

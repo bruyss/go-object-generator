@@ -24,9 +24,10 @@ type freqMotor struct {
 	hasBreaker       bool
 	hasSwitch        bool
 	hasAlarm         bool
+	Data             map[string]string
 }
 
-func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, feedbackAddress, breakerTag, breakerAddress, switchTag, switchAddress, alarmTag, alarmAddress, danfossDrive string) (*freqMotor, error) {
+func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, feedbackAddress, breakerTag, breakerAddress, switchTag, switchAddress, alarmTag, alarmAddress, danfossDrive string, data map[string]string) (*freqMotor, error) {
 	danfossDriveBool, err := strconv.ParseBool(danfossDrive)
 	if err != nil {
 		return nil, err
@@ -50,6 +51,7 @@ func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, f
 		hasBreaker:       len(breakerTag) > 0,
 		hasSwitch:        len(switchTag) > 0,
 		hasAlarm:         len(alarmTag) > 0,
+		Data:             data,
 	}
 
 	if len(f.ContactorAddress) == 0 && !f.DanfossDrive {
@@ -120,7 +122,7 @@ func (f *freqMotor) InputMap() map[string]string {
 		switchTag = "TRUE"
 	}
 
-	return map[string]string{
+	input := map[string]string{
 		"Tag":          f.Tag,
 		"Description":  f.Description,
 		"IDB":          "IDB_" + f.Tag,
@@ -132,6 +134,17 @@ func (f *freqMotor) InputMap() map[string]string {
 		"AlarmTag":     strconv.Quote(f.Tag + "_AL"),
 		"Danfoss":      strconv.FormatBool(f.DanfossDrive),
 	}
+	for k, v := range f.Data {
+		_, exists := input[k]
+		if !exists {
+			input[k] = v
+			logger.Sugar.Debugw("Additional data added to input map",
+				"freq motor", f.Tag,
+				"name", k,
+				"data", v)
+		}
+	}
+	return input
 }
 
 func (f *freqMotor) PlcTags() (t []*PlcTag) {
