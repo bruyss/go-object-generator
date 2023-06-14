@@ -73,9 +73,9 @@ func initConfig() {
 		// viper.AddConfigPath(".")
 		viper.AddConfigPath(".")
 		viper.SetConfigName("config")
-		viper.SetConfigType("yaml")
-		if err := viper.SafeWriteConfig(); err != nil {
-			logger.Sugar.Warn(err)
+		viper.SetConfigType("json")
+		if err := viper.SafeWriteConfig(); err != nil && err != viper.ConfigFileAlreadyExistsError("config.json") {
+			logger.Sugar.Info(err)
 		}
 	}
 
@@ -83,7 +83,6 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		// fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 		logger.Sugar.Info("Config file found")
 	}
 }

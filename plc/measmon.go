@@ -51,13 +51,13 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 	}
 
 	if len(m.Unit) == 0 {
-		logger.Sugar.Warnw("No unit given",
+		logger.Sugar.Infow("No unit given",
 			"measmon", m.Tag)
 	}
 
 	if len(m.Address) == 0 {
 		m.Address = "MW0"
-		logger.Sugar.Warnw("No input address given",
+		logger.Sugar.Infow("No input address given",
 			"measmon", m.Tag,
 			"default", m.Address)
 	}
@@ -65,7 +65,7 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 	if m.LowLimit >= m.HighLimit {
 		m.LowLimit = 0.0
 		m.HighLimit = 100.0
-		logger.Sugar.Warnw(
+		logger.Sugar.Infow(
 			"Low limit must be higher than high limit",
 			"measmon", m.Tag,
 			"low limit", lowLimitFloat,

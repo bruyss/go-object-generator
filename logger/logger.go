@@ -1,11 +1,7 @@
 package logger
 
 import (
-	"encoding/json"
-	"errors"
-	"log"
 	"os"
-	"time"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -58,28 +54,31 @@ func InitializeTestLogger() {
 }
 
 func InitializeCustomLogger() {
-	jsonString, err := os.ReadFile("./loggerconfig.json")
-	if errors.Is(err, os.ErrNotExist) {
-		err = os.WriteFile("loggerconfig.json", defaultLoggerSettings, 0777)
-		if err != nil {
-			log.Fatal(err)
-		}
-		jsonString = defaultLoggerSettings
-	} else if err != nil {
-		log.Fatal("Error opening logging config file", err)
+	encoderCfg := zap.NewProductionEncoderConfig()
+	encoderCfg.TimeKey = "timestamp"
+	encoderCfg.EncodeTime = zapcore.ISO8601TimeEncoder
+	encoderCfg.EncodeLevel = zapcore.CapitalLevelEncoder
+
+	var level zapcore.Level
+	if os.Getenv("LOG_LEVEL") == "debug" {
+		level = zap.DebugLevel
+	} else {
+		level = zap.InfoLevel
 	}
 
-	var cfg zap.Config
-	if err = json.Unmarshal(jsonString, &cfg); err != nil {
-		log.Fatal("Error unmarshalling data: ", err)
+	config := zap.Config{
+		Level:             zap.NewAtomicLevelAt(level),
+		Development:       false,
+		DisableCaller:     true,
+		DisableStacktrace: true,
+		Sampling:          nil,
+		Encoding:          "console",
+		EncoderConfig:     encoderCfg,
+		OutputPaths:       []string{"./gen.log"},
+		ErrorOutputPaths:  []string{"stderr", "./gen.log"},
 	}
 
-	cfg.EncoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout(time.DateTime)
-
-	logger, err := cfg.Build()
-	if err != nil {
-		log.Fatal(err)
-	}
+	logger := zap.Must(config.Build())
 
 	Sugar = logger.Sugar()
 }

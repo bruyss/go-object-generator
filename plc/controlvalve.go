@@ -37,14 +37,14 @@ func NewControlValve(tag, description, address, feedbackTag, feedbackAddress, mo
 
 	if len(c.Address) == 0 {
 		c.Address = "MW0"
-		logger.Sugar.Warnw("No output address provided",
+		logger.Sugar.Infow("No output address provided",
 			"control valve", c.Tag,
 			"default", c.Address)
 	}
 
 	if len(c.FeedbackAddress) == 0 && c.hasFeedback {
 		c.FeedbackAddress = "MW2"
-		logger.Sugar.Warnw("No feedback address provided",
+		logger.Sugar.Infow("No feedback address provided",
 			"control valve", c.Tag,
 			"default", c.FeedbackAddress)
 	}

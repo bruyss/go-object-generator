@@ -44,7 +44,7 @@ func NewDigmon(tag, description, address, invert, alarm, invertAlarm string, dat
 
 	if len(d.Address) == 0 {
 		d.Address = "M0.0"
-		logger.Sugar.Warnw("No input address given",
+		logger.Sugar.Infow("No input address given",
 			"digmon", d.Tag,
 			"default", d.Address,
 		)

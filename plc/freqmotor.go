@@ -56,42 +56,42 @@ func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, f
 
 	if len(f.ContactorAddress) == 0 && !f.DanfossDrive {
 		f.ContactorAddress = "M0.0"
-		logger.Sugar.Warnw("No contactor address given",
+		logger.Sugar.Infow("No contactor address given",
 			"frequency motor", f.Tag,
 			"default", f.ContactorAddress,
 		)
 	}
 	if len(f.PqwAddress) == 0 && !f.DanfossDrive {
 		f.PqwAddress = "MW0"
-		logger.Sugar.Warnw("No PQW address given",
+		logger.Sugar.Infow("No PQW address given",
 			"frequency motor", f.Tag,
 			"default", f.PqwAddress,
 		)
 	}
 	if f.hasFeedback && len(f.FeedbackAddress) == 0 && !f.DanfossDrive {
 		f.FeedbackAddress = "M0.1"
-		logger.Sugar.Warnw("No feedback address given",
+		logger.Sugar.Infow("No feedback address given",
 			"frequency motor", f.Tag,
 			"default", f.FeedbackAddress,
 		)
 	}
 	if f.hasBreaker && len(f.BreakerAddress) == 0 {
 		f.BreakerAddress = "M0.2"
-		logger.Sugar.Warnw("No breaker address given",
+		logger.Sugar.Infow("No breaker address given",
 			"frequency motor", f.Tag,
 			"default", f.BreakerAddress,
 		)
 	}
 	if f.hasSwitch && len(f.SwitchAddress) == 0 {
 		f.SwitchAddress = "M0.3"
-		logger.Sugar.Warnw("No switch address given",
+		logger.Sugar.Infow("No switch address given",
 			"frequency motor", f.Tag,
 			"default", f.SwitchAddress,
 		)
 	}
 	if f.hasAlarm && len(f.AlarmAddress) == 0 && !f.DanfossDrive {
 		f.AlarmAddress = "M0.4"
-		logger.Sugar.Warnw("No alarm address given",
+		logger.Sugar.Infow("No alarm address given",
 			"frequency motor", f.Tag,
 			"default", f.AlarmAddress,
 		)
