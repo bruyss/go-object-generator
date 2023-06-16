@@ -9,19 +9,20 @@ func _() {
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
 	_ = x[motorTag-0]
-	_ = x[motorAddress-1]
-	_ = x[motorDescription-2]
-	_ = x[motorFeedbackTag-3]
-	_ = x[motorFeedbackAddress-4]
-	_ = x[motorBreakerTag-5]
-	_ = x[motorBreakerAddress-6]
-	_ = x[motorSwitchTag-7]
-	_ = x[motorSwitchAddress-8]
+	_ = x[motorDescription-1]
+	_ = x[motorOutput-2]
+	_ = x[motorOutputAddress-3]
+	_ = x[motorFeedbackTag-4]
+	_ = x[motorFeedbackAddress-5]
+	_ = x[motorBreakerTag-6]
+	_ = x[motorBreakerAddress-7]
+	_ = x[motorSwitchTag-8]
+	_ = x[motorSwitchAddress-9]
 }
 
-const _motorCol_name = "TagAddressDescriptionFeedbackTagFeedbackAddressBreakerTagBreakerAddressSwitchTagSwitchAddress"
+const _motorCol_name = "TagDescriptionOutputOutputAddressFeedbackTagFeedbackAddressBreakerTagBreakerAddressSwitchTagSwitchAddress"
 
-var _motorCol_index = [...]uint8{0, 3, 10, 21, 32, 47, 57, 71, 80, 93}
+var _motorCol_index = [...]uint8{0, 3, 14, 20, 33, 44, 59, 69, 83, 92, 105}
 
 func (i motorCol) String() string {
 	if i < 0 || i >= motorCol(len(_motorCol_index)-1) {

@@ -9,23 +9,24 @@ func _() {
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
 	_ = x[freqMotorTag-0]
-	_ = x[freqMotorAddress-1]
-	_ = x[freqMotorPqwAddress-2]
-	_ = x[freqMotorDescription-3]
-	_ = x[freqMotorDanfoss-4]
-	_ = x[freqMotorFeedbackTag-5]
-	_ = x[freqMotorFeedbackAddress-6]
-	_ = x[freqMotorBreakerTag-7]
-	_ = x[freqMotorBreakerAddress-8]
-	_ = x[freqMotorSwitchTag-9]
-	_ = x[freqMotorSwitchAddress-10]
-	_ = x[freqMotorAlarmTag-11]
-	_ = x[freqMotorAlarmAddress-12]
+	_ = x[freqMotorDescription-1]
+	_ = x[freqMotorOutput-2]
+	_ = x[freqMotorOutputAddress-3]
+	_ = x[freqMotorPqwAddress-4]
+	_ = x[freqMotorDanfoss-5]
+	_ = x[freqMotorFeedbackTag-6]
+	_ = x[freqMotorFeedbackAddress-7]
+	_ = x[freqMotorBreakerTag-8]
+	_ = x[freqMotorBreakerAddress-9]
+	_ = x[freqMotorSwitchTag-10]
+	_ = x[freqMotorSwitchAddress-11]
+	_ = x[freqMotorAlarmTag-12]
+	_ = x[freqMotorAlarmAddress-13]
 }
 
-const _freqMotorCol_name = "TagAddressPqwAddressDescriptionDanfossFeedbackTagFeedbackAddressBreakerTagBreakerAddressSwitchTagSwitchAddressAlarmTagAlarmAddress"
+const _freqMotorCol_name = "TagDescriptionOutputOutputAddressPqwAddressDanfossFeedbackTagFeedbackAddressBreakerTagBreakerAddressSwitchTagSwitchAddressAlarmTagAlarmAddress"
 
-var _freqMotorCol_index = [...]uint8{0, 3, 10, 20, 31, 38, 49, 64, 74, 88, 97, 110, 118, 130}
+var _freqMotorCol_index = [...]uint8{0, 3, 14, 20, 33, 43, 50, 61, 76, 86, 100, 109, 122, 130, 142}
 
 func (i freqMotorCol) String() string {
 	if i < 0 || i >= freqMotorCol(len(_freqMotorCol_index)-1) {

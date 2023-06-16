@@ -13,8 +13,8 @@ type measmonCol int
 
 const (
 	measmonTag measmonCol = iota
-	measmonAddress
 	measmonDescription
+	measmonAddress
 	measmonUnit
 	measmonDirect
 	measmonMin
@@ -25,8 +25,8 @@ const (
 
 var measmonCols = []string{
 	measmonTag.String(),
-	measmonAddress.String(),
 	measmonDescription.String(),
+	measmonAddress.String(),
 	measmonUnit.String(),
 	measmonDirect.String(),
 	measmonMin.String(),
@@ -37,8 +37,9 @@ type motorCol int
 
 const (
 	motorTag motorCol = iota
-	motorAddress
 	motorDescription
+	motorOutput
+	motorOutputAddress
 	motorFeedbackTag
 	motorFeedbackAddress
 	motorBreakerTag
@@ -51,8 +52,9 @@ const (
 
 var motorCols = []string{
 	motorTag.String(),
-	motorAddress.String(),
 	motorDescription.String(),
+	motorOutput.String(),
+	motorOutputAddress.String(),
 	motorFeedbackTag.String(),
 	motorFeedbackAddress.String(),
 	motorBreakerTag.String(),
@@ -65,9 +67,10 @@ type freqMotorCol int
 
 const (
 	freqMotorTag freqMotorCol = iota
-	freqMotorAddress
-	freqMotorPqwAddress
 	freqMotorDescription
+	freqMotorOutput
+	freqMotorOutputAddress
+	freqMotorPqwAddress
 	freqMotorDanfoss
 	freqMotorFeedbackTag
 	freqMotorFeedbackAddress
@@ -83,9 +86,10 @@ const (
 
 var freqMotorCols = []string{
 	freqMotorTag.String(),
-	freqMotorAddress.String(),
-	freqMotorPqwAddress.String(),
 	freqMotorDescription.String(),
+	freqMotorOutput.String(),
+	freqMotorOutputAddress.String(),
+	freqMotorPqwAddress.String(),
 	freqMotorDanfoss.String(),
 	freqMotorFeedbackTag.String(),
 	freqMotorFeedbackAddress.String(),
@@ -101,8 +105,8 @@ type digmonCol int
 
 const (
 	digmonTag digmonCol = iota
-	digmonAddress
 	digmonDescription
+	digmonAddress
 	digmonInvert
 	digmonAlarm
 	digmonInvertAlarm
@@ -112,8 +116,8 @@ const (
 
 var digmonCols = []string{
 	digmonTag.String(),
-	digmonAddress.String(),
 	digmonDescription.String(),
+	digmonAddress.String(),
 	digmonInvert.String(),
 	digmonAlarm.String(),
 	digmonInvertAlarm.String(),
@@ -124,7 +128,8 @@ type valveCol int
 const (
 	valveTag valveCol = iota
 	valveDescription
-	valveAddress
+	valveOutput
+	valveOutputAddress
 	valveFeedbackOpenTag
 	valveFeedbackOpenAddress
 	valveFeedbackClosedTag
@@ -138,7 +143,8 @@ const (
 var valveCols = []string{
 	valveTag.String(),
 	valveDescription.String(),
-	valveAddress.String(),
+	valveOutput.String(),
+	valveOutputAddress.String(),
 	valveFeedbackOpenTag.String(),
 	valveFeedbackOpenAddress.String(),
 	valveFeedbackClosedTag.String(),
@@ -152,7 +158,8 @@ type controlValveCol int
 const (
 	controlValveTag controlValveCol = iota
 	controlValveDescription
-	controlValveAddress
+	controlValveOutput
+	controlValveOutputAddress
 	controlValveFeedbackTag
 	controlValveFeedbackAddress
 	controlValveMonitoringTime
@@ -163,7 +170,8 @@ const (
 var controlValveCols = []string{
 	controlValveTag.String(),
 	controlValveDescription.String(),
-	controlValveAddress.String(),
+	controlValveOutput.String(),
+	controlValveOutputAddress.String(),
 	controlValveFeedbackTag.String(),
 	controlValveFeedbackAddress.String(),
 	controlValveMonitoringTime.String(),

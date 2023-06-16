@@ -173,7 +173,7 @@ func ReadValves(f *excelize.File) (o []plc.PlcObject) {
 		v, err := plc.NewValve(
 			row[valveTag],
 			row[valveDescription],
-			row[valveAddress],
+			row[valveOutputAddress],
 			row[valveFeedbackOpenTag],
 			row[valveFeedbackClosedTag],
 			row[valveFeedbackOpenAddress],
@@ -211,7 +211,7 @@ func ReadControlValves(f *excelize.File) (o []plc.PlcObject) {
 		c, err := plc.NewControlValve(
 			row[controlValveTag],
 			row[controlValveDescription],
-			row[controlValveAddress],
+			row[controlValveOutputAddress],
 			row[controlValveFeedbackTag],
 			row[controlValveFeedbackAddress],
 			row[controlValveMonitoringTime],
@@ -246,7 +246,7 @@ func ReadMotors(f *excelize.File) (o []plc.PlcObject) {
 		m, err := plc.NewMotor(
 			row[motorTag],
 			row[motorDescription],
-			row[motorAddress],
+			row[motorOutputAddress],
 			row[motorFeedbackTag],
 			row[motorFeedbackAddress],
 			row[motorBreakerTag],
@@ -283,7 +283,7 @@ func ReadFreqMotors(f *excelize.File) (o []plc.PlcObject) {
 		fm, err := plc.NewFreqMotor(
 			row[freqMotorTag],
 			row[freqMotorDescription],
-			row[freqMotorAddress],
+			row[freqMotorOutputAddress],
 			row[freqMotorPqwAddress],
 			row[freqMotorFeedbackTag],
 			row[freqMotorFeedbackAddress],

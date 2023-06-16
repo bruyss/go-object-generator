@@ -9,17 +9,17 @@ func _() {
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
 	_ = x[measmonTag-0]
-	_ = x[measmonAddress-1]
-	_ = x[measmonDescription-2]
+	_ = x[measmonDescription-1]
+	_ = x[measmonAddress-2]
 	_ = x[measmonUnit-3]
 	_ = x[measmonDirect-4]
 	_ = x[measmonMin-5]
 	_ = x[measmonMax-6]
 }
 
-const _measmonCol_name = "TagAddressDescriptionUnitDirectMinMax"
+const _measmonCol_name = "TagDescriptionAddressUnitDirectMinMax"
 
-var _measmonCol_index = [...]uint8{0, 3, 10, 21, 25, 31, 34, 37}
+var _measmonCol_index = [...]uint8{0, 3, 14, 21, 25, 31, 34, 37}
 
 func (i measmonCol) String() string {
 	if i < 0 || i >= measmonCol(len(_measmonCol_index)-1) {
