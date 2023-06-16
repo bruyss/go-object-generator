@@ -10,7 +10,8 @@ import (
 type controlValve struct {
 	Tag             string
 	Description     string
-	Address         string
+	OutputTag       string
+	OutputAddress   string
 	FeedbackTag     string
 	FeedbackAddress string
 	MonitoringTime  int
@@ -18,7 +19,7 @@ type controlValve struct {
 	Data            map[string]string
 }
 
-func NewControlValve(tag, description, address, feedbackTag, feedbackAddress, monitoringTime string, data map[string]string) (*controlValve, error) {
+func NewControlValve(tag, description, outputTag, outputAddress, feedbackTag, feedbackAddress, monitoringTime string, data map[string]string) (*controlValve, error) {
 	monitoringTimeInt, err := strconv.Atoi(monitoringTime)
 	if err != nil {
 		return nil, err
@@ -27,7 +28,8 @@ func NewControlValve(tag, description, address, feedbackTag, feedbackAddress, mo
 	c := &controlValve{
 		Tag:             tag,
 		Description:     description,
-		Address:         address,
+		OutputTag:       outputTag,
+		OutputAddress:   outputAddress,
 		FeedbackTag:     feedbackTag,
 		FeedbackAddress: feedbackAddress,
 		MonitoringTime:  monitoringTimeInt,
@@ -35,11 +37,18 @@ func NewControlValve(tag, description, address, feedbackTag, feedbackAddress, mo
 		Data:            data,
 	}
 
-	if len(c.Address) == 0 {
-		c.Address = "MW0"
+	if len(c.OutputTag) == 0 {
+		c.OutputTag = tag
+		logger.Sugar.Debugw("No output tag given, using default",
+			"control valve", c.Tag,
+			"default", c.OutputTag)
+	}
+
+	if len(c.OutputAddress) == 0 {
+		c.OutputAddress = "MW0"
 		logger.Sugar.Infow("No output address provided",
 			"control valve", c.Tag,
-			"default", c.Address)
+			"default", c.OutputAddress)
 	}
 
 	if len(c.FeedbackAddress) == 0 && c.hasFeedback {
@@ -69,7 +78,7 @@ func (c *controlValve) InputMap() map[string]string {
 		"NoFeedback":     strings.ToUpper(strconv.FormatBool(!c.hasFeedback)),
 		"Feedback":       feedbackTag,
 		"MonitoringTime": strconv.Itoa(c.MonitoringTime),
-		"Output":         strconv.Quote(c.outputPlcTag().Name),
+		"Output":         strconv.Quote(c.OutputTag),
 	}
 	for k, v := range c.Data {
 		_, exists := input[k]
@@ -96,9 +105,9 @@ func (c *controlValve) PlcTags() (t []*PlcTag) {
 
 func (c *controlValve) outputPlcTag() *PlcTag {
 	return &PlcTag{
-		Name:    c.Tag,
+		Name:    c.OutputTag,
 		Dtype:   "Int",
-		Address: c.Address,
+		Address: c.OutputAddress,
 		Comment: c.Description + " output",
 	}
 }
@@ -108,7 +117,7 @@ func (c *controlValve) feedbackPlcTag() *PlcTag {
 		return nil
 	}
 	return &PlcTag{
-		Name:    c.Tag + "_FB",
+		Name:    c.FeedbackTag,
 		Dtype:   "Int",
 		Address: c.FeedbackAddress,
 		Comment: c.Description + " feedback",

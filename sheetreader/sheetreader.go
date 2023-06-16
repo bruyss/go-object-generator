@@ -211,6 +211,7 @@ func ReadControlValves(f *excelize.File) (o []plc.PlcObject) {
 		c, err := plc.NewControlValve(
 			row[controlValveTag],
 			row[controlValveDescription],
+			row[controlValveOutput],
 			row[controlValveOutputAddress],
 			row[controlValveFeedbackTag],
 			row[controlValveFeedbackAddress],
