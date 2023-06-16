@@ -6,6 +6,9 @@ import (
 	"github.com/bruyss/go-object-generator/logger"
 )
 
+// TODO Separate tag name from output address tag name
+// Make sure that double tags are not created in the tag tables
+
 type freqMotor struct {
 	Tag              string
 	Description      string
