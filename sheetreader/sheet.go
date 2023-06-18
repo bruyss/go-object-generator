@@ -30,8 +30,9 @@ func AddSheet(f *excelize.File, sheetName string, columns []string) int {
 		ShowRowStripes:    &enable,
 	})
 	if err != nil {
-		logger.Sugar.Error(err.Error(),
-			"sheet", sheetName)
+		logger.Sugar.Errorf(err.Error(),
+			"sheet", sheetName
+		)
 	}
 
 	return index
@@ -39,12 +40,13 @@ func AddSheet(f *excelize.File, sheetName string, columns []string) int {
 
 func InitializeWorkbook(name string) {
 	f := excelize.NewFile()
-	_ = AddSheet(f, sheetMeasmons, measmonCols)
-	_ = AddSheet(f, sheetDigmons, digmonCols)
-	_ = AddSheet(f, sheetValves, valveCols)
-	_ = AddSheet(f, sheetControlValves, controlValveCols)
-	_ = AddSheet(f, sheetMotors, motorCols)
-	_ = AddSheet(f, sheetFreqMotors, freqMotorCols)
+	_ = addSheet(f, sheetMeasmons, measmonCols)
+	_ = addSheet(f, sheetDigmons, digmonCols)
+	_ = addSheet(f, sheetValves, valveCols)
+	_ = addSheet(f, sheetControlValves, controlValveCols)
+	_ = addSheet(f, sheetMotors, motorCols)
+	_ = addSheet(f, sheetFreqMotors, freqMotorCols)
+	_ = addSheet(f, sheetDigouts, digoutCols)
 
 	f.DeleteSheet(f.GetSheetName(0))
 

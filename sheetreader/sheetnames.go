@@ -7,6 +7,7 @@ const (
 	sheetControlValves = "ControlValves"
 	sheetMotors        = "Motors"
 	sheetFreqMotors    = "FreqMotors"
+	sheetDigouts       = "DigitalOut"
 )
 
 type measmonCol int
@@ -175,4 +176,32 @@ var controlValveCols = []string{
 	controlValveFeedbackTag.String(),
 	controlValveFeedbackAddress.String(),
 	controlValveMonitoringTime.String(),
+}
+
+type digoutCol int
+
+const (
+	digoutTag digoutCol = iota
+	digoutDescription
+	digoutOutput
+	digoutOutputAddress
+	digoutFeedbackTag
+	digoutFeedbackAddress
+	digoutBreakerTag
+	digoutBreakerAddress
+	digoutMonitoringTime
+)
+
+//go:generate stringer -type=digoutCol -trimprefix=digout
+
+var digoutCols = []string{
+	digoutTag.String(),
+	digoutDescription.String(),
+	digoutOutput.String(),
+	digoutOutputAddress.String(),
+	digoutFeedbackTag.String(),
+	digoutFeedbackAddress.String(),
+	digoutBreakerTag.String(),
+	digoutBreakerAddress.String(),
+	digoutMonitoringTime.String(),
 }
