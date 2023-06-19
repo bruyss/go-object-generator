@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// SetDefaults defines the default viper settings for the tool
 func SetDefaults() {
 	// Generation settings
 	viper.SetDefault("gensettings.general.secondpulse", "iSecPulse")
@@ -47,6 +48,13 @@ func SetDefaults() {
 	viper.SetDefault("gensettings.motor.startindex", 0)
 	viper.SetDefault("gensettings.motor.tagtable", "Motors")
 
+	viper.SetDefault("gensettings.digout.objectfb", "FB_DigitalOut")
+	viper.SetDefault("gensettings.digout.callfc", "DigitalOut_Call")
+	viper.SetDefault("gensettings.digout.hmidb", "HMI_DigitalOut")
+	viper.SetDefault("gensettings.digout.hmitype", "HMI_DigitalOut")
+	viper.SetDefault("gensettings.digout.startindex", 0)
+	viper.SetDefault("gensettings.digout.tagtable", "DigitalOuts")
+
 	viper.SetDefault("gensettings.freqmotor.objectfb", "FB_Motor_Freq")
 	viper.SetDefault("gensettings.freqmotor.callfc", "FreqMotor_Call")
 	viper.SetDefault("gensettings.freqmotor.hmidb", "HMI_Motor_Freq")
@@ -88,6 +96,12 @@ func SetDefaults() {
 	viper.SetDefault("filenames.motor.hmidbfile", "Motor_HMIDB.db")
 	viper.SetDefault("filenames.motor.sourcefile", "Motor_source.scl")
 	viper.SetDefault("filenames.motor.tagfile", "Motor_tags.xml")
+
+	viper.SetDefault("filenames.digout.sourcetemplate", "digout.tmpl")
+	viper.SetDefault("filenames.digout.idbfile", "DigitalOut_IDBs.db")
+	viper.SetDefault("filenames.digout.hmidbfile", "DigitalOut_HMIDB.db")
+	viper.SetDefault("filenames.digout.sourcefile", "DigitalOut_source.scl")
+	viper.SetDefault("filenames.digout.tagfile", "DigitalOut_tags.xml")
 
 	viper.SetDefault("filenames.valve.sourcetemplate", "valve.tmpl")
 	viper.SetDefault("filenames.valve.idbfile", "Valve_IDBs.db")

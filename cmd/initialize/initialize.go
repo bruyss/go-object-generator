@@ -64,7 +64,7 @@ var InitCmd = &cobra.Command{
 			logger.Sugar.Info("Initializing all...")
 			sheetreader.InitializeWorkbook(viper.GetString("filenames.general.objectsource"))
 			viper.WriteConfig()
-			obwriter.WriteTemplates(obwriter.Templates)
+			obwriter.WriteTemplates(obwriter.DefaultTemplates)
 		} else {
 			if flagExcel {
 				logger.Sugar.Info("Initializing spreadsheet...")
@@ -76,7 +76,7 @@ var InitCmd = &cobra.Command{
 			}
 			if flagTemplates {
 				logger.Sugar.Info("Initializing templates...")
-				obwriter.WriteTemplates(obwriter.Templates)
+				obwriter.WriteTemplates(obwriter.DefaultTemplates)
 			}
 		}
 	},

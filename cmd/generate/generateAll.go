@@ -29,7 +29,6 @@ var generateAllCmd = &cobra.Command{
 	Short: "Generate all objects",
 
 	Run: func(cmd *cobra.Command, args []string) {
-
 		// Define generators
 		measmonGen := obwriter.Generator{
 			GeneralSettings: viper.GetStringMapString("gensettings.general"),
@@ -55,6 +54,11 @@ var generateAllCmd = &cobra.Command{
 			GeneralSettings: viper.GetStringMapString("gensettings.general"),
 			ObjectSettings:  viper.GetStringMapString("gensettings.motor"),
 			Objects:         sheetreader.ReadMotors(excelSource),
+		}
+		digoutGen := obwriter.Generator{
+			GeneralSettings: viper.GetStringMapString("gensettings.general"),
+			ObjectSettings:  viper.GetStringMapString("gensettings.digout"),
+			Objects:         sheetreader.ReadDigouts(excelSource),
 		}
 		freqMotorGen := obwriter.Generator{
 			GeneralSettings: viper.GetStringMapString("gensettings.general"),
@@ -92,6 +96,10 @@ var generateAllCmd = &cobra.Command{
 			if err != nil {
 				logger.Sugar.Error(err)
 			}
+			err = digoutGen.Generate(viper.GetString("filenames.digout.idbfile"), idbTemplate, tmp)
+			if err != nil {
+				logger.Sugar.Error(err)
+			}
 			err = freqMotorGen.Generate(viper.GetString("filenames.freqmotor.idbfile"), idbTemplate, tmp)
 			if err != nil {
 				logger.Sugar.Error(err)
@@ -125,6 +133,10 @@ var generateAllCmd = &cobra.Command{
 			if err != nil {
 				logger.Sugar.Error(err)
 			}
+			err = digoutGen.Generate(viper.GetString("filenames.digout.hmidbfile"), hmiDbTemplate, tmp)
+			if err != nil {
+				logger.Sugar.Error(err)
+			}
 			err = freqMotorGen.Generate(viper.GetString("filenames.freqmotor.hmidbfile"), hmiDbTemplate, tmp)
 			if err != nil {
 				logger.Sugar.Error(err)
@@ -155,6 +167,10 @@ var generateAllCmd = &cobra.Command{
 			err = motorGen.Generate(viper.GetString("filenames.motor.sourcefile"), viper.GetString("filenames.motor.sourcetemplate"), tmp)
 			if err != nil {
 				logger.Sugar.Errorw(err.Error(), "generator", "motors")
+			}
+			err = digoutGen.Generate(viper.GetString("filenames.digout.sourcefile"), viper.GetString("filenames.digout.sourcetemplate"), tmp)
+			if err != nil {
+				logger.Sugar.Errorw(err.Error(), "generator", "digout")
 			}
 			err = freqMotorGen.Generate(viper.GetString("filenames.freqmotor.sourcefile"), viper.GetString("filenames.freqmotor.sourcetemplate"), tmp)
 			if err != nil {
@@ -198,6 +214,12 @@ var generateAllCmd = &cobra.Command{
 					"generator", "motors",
 					"error", err)
 			}
+			err = digoutGen.GeneratePlcTagTable(viper.GetString("filenames.digout.tagfile"), "DigitalOuts")
+			if err != nil {
+				logger.Sugar.Errorw("Error generating tag table",
+					"generator", "DigitalOuts",
+					"error", err)
+			}
 			err = freqMotorGen.GeneratePlcTagTable(viper.GetString("filenames.freqmotor.tagfile"), "FreqMotors")
 			if err != nil {
 				logger.Sugar.Errorw("Error generating tag table",
@@ -205,7 +227,6 @@ var generateAllCmd = &cobra.Command{
 					"error", err)
 			}
 		}
-
 	},
 }
 

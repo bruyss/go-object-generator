@@ -99,6 +99,8 @@ func NewDigout(tag, description, outputAddress, feedbackTag, feedbackAddress, br
 func (d *digout) InputMap() map[string]string {
 	var feedbackTag, breakerTag string
 
+	logger.Sugar.Debugf("Yo what the fuck")
+
 	if d.hasFeedback {
 		feedbackTag = strconv.Quote(d.feedbackTag().Name)
 	} else {

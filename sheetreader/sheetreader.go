@@ -273,7 +273,7 @@ func ReadMotors(f *excelize.File) (o []plc.PlcObject) {
 	return
 }
 
-// ReadFreqMotors reads the "Measmon" sheet and returns a slice of PLC objects containing the created frequency motors
+// ReadFreqMotors reads the "DigitalOut" sheet and returns a slice of PLC objects containing the created frequency motors
 func ReadFreqMotors(f *excelize.File) (o []plc.PlcObject) {
 	table, err := getTable(f, sheetFreqMotors)
 	if err != nil {
@@ -323,8 +323,9 @@ func readObjects(objectName, sheetName string, columns []string, makeFunc func([
 			logger.Sugar.Fatalln(err)
 		}
 		_, standardData := getStandardData(table, len(columns))
+		logger.Sugar.Debugf("Standard data length %d", len(standardData))
 
-		objects := make([]plc.PlcObject, len(standardData))
+		objects := make([]plc.PlcObject, 0)
 
 		if len(standardData) == 0 {
 			return objects
@@ -348,7 +349,7 @@ func readObjects(objectName, sheetName string, columns []string, makeFunc func([
 	}
 }
 
-// ReadDigouts reads the "Measmon" sheet and returns a slice of PLC objects containing the generated digital outs
+// ReadDigouts reads the "DigitalOuts" sheet and returns a slice of PLC objects containing the generated digital outs
 var ReadDigouts = readObjects(
 	"digital out",
 	sheetDigouts,
