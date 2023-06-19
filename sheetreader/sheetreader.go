@@ -314,3 +314,56 @@ func ReadFreqMotors(f *excelize.File) (o []plc.PlcObject) {
 	}
 	return
 }
+
+// readObjects reads the given sheet and returns a slice of PLC objects
+func readObjects(objectName, sheetName string, columns []string, makeFunc func([]string, map[string]string) (plc.PlcObject, error)) func(*excelize.File) []plc.PlcObject {
+	return func(f *excelize.File) []plc.PlcObject {
+		table, err := getTable(f, sheetName)
+		if err != nil {
+			logger.Sugar.Fatalln(err)
+		}
+		_, standardData := getStandardData(table, len(columns))
+
+		objects := make([]plc.PlcObject, len(standardData))
+
+		if len(standardData) == 0 {
+			return objects
+		}
+
+		customColumns, customData := getCustomData(table, len(columns))
+		customMaps := make([]map[string]string, len(standardData))
+		makeCustomDataMap(customColumns, customData, &customMaps)
+		for n, row := range standardData {
+			object, err := makeFunc(row, customMaps[n])
+			if err != nil {
+				logger.Sugar.Errorw(err.Error(),
+					objectName, row[0]) // row 0 should contain the tag name
+			} else {
+				objects = append(objects, object)
+				logger.Sugar.Infow("Object added to generator",
+					objectName, object)
+			}
+		}
+		return objects
+	}
+}
+
+// ReadDigouts reads the "Measmon" sheet and returns a slice of PLC objects containing the generated digital outs
+var ReadDigouts = readObjects(
+	"digital out",
+	sheetDigouts,
+	digoutCols,
+	func(standard []string, custom map[string]string) (plc.PlcObject, error) {
+		return plc.NewDigout(
+			standard[digoutTag],
+			standard[digoutDescription],
+			standard[digoutOutputAddress],
+			standard[digoutFeedbackTag],
+			standard[digoutFeedbackAddress],
+			standard[digoutBreakerTag],
+			standard[digoutBreakerAddress],
+			standard[digoutMonitoringTime],
+			custom,
+		)
+	},
+)
