@@ -8,13 +8,13 @@ import (
 
 // getTable reads in an excel file and returns a table starting on cell A1.
 // Appends empty string in the case of empty last columns for certain rows to get around default behaviour.
-func getTable(f *excelize.File, sheet_name string) ([][]string, error) {
-	rows, err := f.GetRows(sheet_name)
+func getTable(f *excelize.File, sheetName string) ([][]string, error) {
+	rows, err := f.GetRows(sheetName)
 	if err != nil {
 		return nil, err
 	}
 	logger.Sugar.Debugw("Column names",
-		"sheet name", sheet_name,
+		"sheet name", sheetName,
 		"columns", rows[0])
 	table := make([][]string, len(rows))
 
@@ -31,28 +31,28 @@ func getTable(f *excelize.File, sheet_name string) ([][]string, error) {
 
 // getStandardData reads a table of PLC objects and returns the columns defined in the default per object.
 // Returns the column names and values as seperate values.
-func getStandardData(table [][]string, nr_standard_columns int) ([]string, [][]string) {
-	column_names := table[0][:nr_standard_columns]
-	standard_data := make([][]string, len(table)-1)
-	for i := range standard_data {
-		standard_data[i] = table[i+1][:nr_standard_columns]
+func getStandardData(table [][]string, nrStandardColumns int) ([]string, [][]string) {
+	columnNames := table[0][:nrStandardColumns]
+	standardData := make([][]string, len(table)-1)
+	for i := range standardData {
+		standardData[i] = table[i+1][:nrStandardColumns]
 	}
-	return column_names, standard_data
+	return columnNames, standardData
 }
 
 // getCustomData reads a table of PLC objects and returns the columns not defined in the default per object.
 // These columns should appear after the default columns.
 // Returns the column names and values as seperate values.
-func getCustomData(table [][]string, nr_standard_columns int) ([]string, [][]string) {
-	column_names := table[0][nr_standard_columns:]
-	if len(table[0]) == nr_standard_columns {
-		return column_names, [][]string{}
+func getCustomData(table [][]string, nrStandardColumns int) ([]string, [][]string) {
+	columnNames := table[0][nrStandardColumns:]
+	if len(table[0]) == nrStandardColumns {
+		return columnNames, [][]string{}
 	}
-	custom_data := make([][]string, len(table)-1)
-	for i := range custom_data {
-		custom_data[i] = table[i+1][nr_standard_columns:]
+	customData := make([][]string, len(table)-1)
+	for i := range customData {
+		customData[i] = table[i+1][nrStandardColumns:]
 	}
-	return column_names, custom_data
+	return columnNames, customData
 }
 
 // makeCustomDataMap takes in a 2D list of strings with columns names
@@ -75,30 +75,31 @@ func getCustomData(table [][]string, nr_standard_columns int) ([]string, [][]str
 //	{"Col 1": "12", "Col 2": 22, "Col 3": 32},
 //
 // ]
-func makeCustomDataMap(column_names []string, data [][]string, data_map *[]map[string]string) {
-	for i := range *data_map {
-		(*data_map)[i] = make(map[string]string, len(column_names))
-		for j, column := range column_names {
+func makeCustomDataMap(columnNames []string, data [][]string, dataMap *[]map[string]string) {
+	for i := range *dataMap {
+		(*dataMap)[i] = make(map[string]string, len(columnNames))
+		for j, column := range columnNames {
 			// fmt.Printf("Row %d column %d-%s: %s", i, j, column, data[i][j])
-			(*data_map)[i][column] = data[i][j]
+			(*dataMap)[i][column] = data[i][j]
 		}
 	}
 	// fmt.Println(*data_map)
 }
 
+// ReadMeasmons reads the "Measmon" sheet and returns a slice of PLC objects containing the created measmons
 func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
 	table, err := getTable(f, sheetMeasmons)
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	_, standard_data := getStandardData(table, len(measmonCols))
-	if len(standard_data) == 0 {
+	_, standardData := getStandardData(table, len(measmonCols))
+	if len(standardData) == 0 {
 		return
 	}
-	custom_columns, custom_data := getCustomData(table, len(measmonCols))
-	custom_maps := make([]map[string]string, len(standard_data))
-	makeCustomDataMap(custom_columns, custom_data, &custom_maps)
-	for n, row := range standard_data {
+	customColumns, customData := getCustomData(table, len(measmonCols))
+	customMaps := make([]map[string]string, len(standardData))
+	makeCustomDataMap(customColumns, customData, &customMaps)
+	for n, row := range standardData {
 		m, err := plc.NewMeasmon(
 			row[measmonTag],
 			row[measmonDescription],
@@ -107,7 +108,7 @@ func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
 			row[measmonDirect],
 			row[measmonMin],
 			row[measmonMax],
-			custom_maps[n],
+			customMaps[n],
 		)
 		if err != nil {
 			logger.Sugar.Errorw(err.Error(),
@@ -122,19 +123,20 @@ func ReadMeasmons(f *excelize.File) (o []plc.PlcObject) {
 	return
 }
 
+// ReadDigmons reads the "Measmon" sheet and returns a slice of PLC objects containing the created digmons
 func ReadDigmons(f *excelize.File) (o []plc.PlcObject) {
 	table, err := getTable(f, sheetDigmons)
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	_, standard_data := getStandardData(table, len(digmonCols))
-	if len(standard_data) == 0 {
+	_, standardData := getStandardData(table, len(digmonCols))
+	if len(standardData) == 0 {
 		return
 	}
-	custom_columns, custom_data := getCustomData(table, len(digmonCols))
-	custom_maps := make([]map[string]string, len(standard_data))
-	makeCustomDataMap(custom_columns, custom_data, &custom_maps)
-	for n, row := range standard_data {
+	customColumns, customData := getCustomData(table, len(digmonCols))
+	customMaps := make([]map[string]string, len(standardData))
+	makeCustomDataMap(customColumns, customData, &customMaps)
+	for n, row := range standardData {
 		d, err := plc.NewDigmon(
 			row[digmonTag],
 			row[digmonDescription],
@@ -142,7 +144,7 @@ func ReadDigmons(f *excelize.File) (o []plc.PlcObject) {
 			row[digmonInvert],
 			row[digmonAlarm],
 			row[digmonInvertAlarm],
-			custom_maps[n],
+			customMaps[n],
 		)
 		if err != nil {
 			logger.Sugar.Errorw(err.Error(),
@@ -157,19 +159,20 @@ func ReadDigmons(f *excelize.File) (o []plc.PlcObject) {
 	return
 }
 
+// ReadValves reads the "Measmon" sheet and returns a slice of PLC objects containing the created valves
 func ReadValves(f *excelize.File) (o []plc.PlcObject) {
 	table, err := getTable(f, sheetValves)
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	_, standard_data := getStandardData(table, len(valveCols))
-	if len(standard_data) == 0 {
+	_, standardData := getStandardData(table, len(valveCols))
+	if len(standardData) == 0 {
 		return
 	}
-	custom_columns, custom_data := getCustomData(table, len(valveCols))
-	custom_maps := make([]map[string]string, len(standard_data))
-	makeCustomDataMap(custom_columns, custom_data, &custom_maps)
-	for n, row := range standard_data {
+	customColumns, customData := getCustomData(table, len(valveCols))
+	customMaps := make([]map[string]string, len(standardData))
+	makeCustomDataMap(customColumns, customData, &customMaps)
+	for n, row := range standardData {
 		v, err := plc.NewValve(
 			row[valveTag],
 			row[valveDescription],
@@ -180,7 +183,7 @@ func ReadValves(f *excelize.File) (o []plc.PlcObject) {
 			row[valveFeedbackClosedAddress],
 			row[valveMonitoringTimeOpen],
 			row[valveMonitoringTimeClose],
-			custom_maps[n],
+			customMaps[n],
 		)
 		if err != nil {
 			logger.Sugar.Errorw(err.Error(),
@@ -195,19 +198,20 @@ func ReadValves(f *excelize.File) (o []plc.PlcObject) {
 	return
 }
 
+// ReadControlValves reads the "Measmon" sheet and returns a slice of PLC objects containing the created control valves
 func ReadControlValves(f *excelize.File) (o []plc.PlcObject) {
 	table, err := getTable(f, sheetControlValves)
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	_, standard_data := getStandardData(table, len(controlValveCols))
-	if len(standard_data) == 0 {
+	_, standardData := getStandardData(table, len(controlValveCols))
+	if len(standardData) == 0 {
 		return
 	}
-	custom_columns_names, custom_data := getCustomData(table, len(controlValveCols))
-	custom_maps := make([]map[string]string, len(standard_data))
-	makeCustomDataMap(custom_columns_names, custom_data, &custom_maps)
-	for n, row := range standard_data {
+	customColumns, customData := getCustomData(table, len(controlValveCols))
+	customMaps := make([]map[string]string, len(standardData))
+	makeCustomDataMap(customColumns, customData, &customMaps)
+	for n, row := range standardData {
 		c, err := plc.NewControlValve(
 			row[controlValveTag],
 			row[controlValveDescription],
@@ -216,7 +220,7 @@ func ReadControlValves(f *excelize.File) (o []plc.PlcObject) {
 			row[controlValveFeedbackTag],
 			row[controlValveFeedbackAddress],
 			row[controlValveMonitoringTime],
-			custom_maps[n],
+			customMaps[n],
 		)
 		if err != nil {
 			logger.Sugar.Errorw(err.Error(),
@@ -231,19 +235,20 @@ func ReadControlValves(f *excelize.File) (o []plc.PlcObject) {
 	return
 }
 
+// ReadMotors reads the "Measmon" sheet and returns a slice of PLC objects containing the created motors
 func ReadMotors(f *excelize.File) (o []plc.PlcObject) {
 	table, err := getTable(f, sheetMotors)
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	_, standard_data := getStandardData(table, len(motorCols))
-	if len(standard_data) == 0 {
+	_, standardData := getStandardData(table, len(motorCols))
+	if len(standardData) == 0 {
 		return
 	}
-	custom_columns_names, custom_data := getCustomData(table, len(motorCols))
-	custom_maps := make([]map[string]string, len(standard_data))
-	makeCustomDataMap(custom_columns_names, custom_data, &custom_maps)
-	for n, row := range standard_data {
+	customColumns, customData := getCustomData(table, len(motorCols))
+	customMaps := make([]map[string]string, len(standardData))
+	makeCustomDataMap(customColumns, customData, &customMaps)
+	for n, row := range standardData {
 		m, err := plc.NewMotor(
 			row[motorTag],
 			row[motorDescription],
@@ -254,7 +259,7 @@ func ReadMotors(f *excelize.File) (o []plc.PlcObject) {
 			row[motorBreakerAddress],
 			row[motorSwitchTag],
 			row[motorSwitchAddress],
-			custom_maps[n],
+			customMaps[n],
 		)
 		if err != nil {
 			logger.Sugar.Errorw(err.Error(),
@@ -268,19 +273,20 @@ func ReadMotors(f *excelize.File) (o []plc.PlcObject) {
 	return
 }
 
+// ReadFreqMotors reads the "Measmon" sheet and returns a slice of PLC objects containing the created frequency motors
 func ReadFreqMotors(f *excelize.File) (o []plc.PlcObject) {
 	table, err := getTable(f, sheetFreqMotors)
 	if err != nil {
 		logger.Sugar.Fatalln(err)
 	}
-	_, standard_data := getStandardData(table, len(freqMotorCols))
-	if len(standard_data) == 0 {
+	_, standardData := getStandardData(table, len(freqMotorCols))
+	if len(standardData) == 0 {
 		return
 	}
-	custom_columns_names, custom_data := getCustomData(table, len(freqMotorCols))
-	custom_maps := make([]map[string]string, len(standard_data))
-	makeCustomDataMap(custom_columns_names, custom_data, &custom_maps)
-	for n, row := range standard_data {
+	customColumns, customData := getCustomData(table, len(freqMotorCols))
+	customMaps := make([]map[string]string, len(standardData))
+	makeCustomDataMap(customColumns, customData, &customMaps)
+	for n, row := range standardData {
 		fm, err := plc.NewFreqMotor(
 			row[freqMotorTag],
 			row[freqMotorDescription],
@@ -295,7 +301,7 @@ func ReadFreqMotors(f *excelize.File) (o []plc.PlcObject) {
 			row[freqMotorAlarmTag],
 			row[freqMotorAlarmAddress],
 			row[freqMotorDanfoss],
-			custom_maps[n],
+			customMaps[n],
 		)
 		if err != nil {
 			logger.Sugar.Errorw(err.Error(),
