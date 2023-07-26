@@ -31,9 +31,15 @@ type freqMotor struct {
 }
 
 func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, feedbackAddress, breakerTag, breakerAddress, switchTag, switchAddress, alarmTag, alarmAddress, danfossDrive string, data map[string]string) (*freqMotor, error) {
-	danfossDriveBool, err := strconv.ParseBool(danfossDrive)
-	if err != nil {
-		return nil, err
+	var danfossDriveBool bool
+	if danfossDrive == "" {
+		danfossDriveBool = false
+	} else {
+		var err error
+		danfossDriveBool, err = strconv.ParseBool(danfossDrive)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	f := &freqMotor{

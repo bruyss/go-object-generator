@@ -96,14 +96,14 @@ func readObjects(objectName, sheetName string, columns []string, makeFunc func([
 		_, standardData := getStandardData(table, len(columns))
 		logger.Sugar.Debugf("Standard data length %d", len(standardData))
 
+		objects := make([]plc.PlcObject, 0)
+
 		if len(standardData) == 0 {
-			return []plc.PlcObject{}
+			return objects
 		}
 		if standardData[0][0] == "" { // Predefined formulas can cause reader to think there is an object in the first row without a tag name
-			return []plc.PlcObject{}
+			return objects
 		}
-
-		objects := make([]plc.PlcObject, len(standardData))
 
 		customColumns, customData := getCustomData(table, len(columns))
 		customMaps := make([]map[string]string, len(standardData))
@@ -114,8 +114,7 @@ func readObjects(objectName, sheetName string, columns []string, makeFunc func([
 				logger.Sugar.Errorw(err.Error(),
 					objectName, row[0]) // row 0 should contain the tag name
 			} else {
-				// objects = append(objects, object)
-				objects[n] = object
+				objects = append(objects, object)
 				logger.Sugar.Infow("Object added to generator",
 					objectName, object)
 			}
