@@ -57,8 +57,8 @@ func SetDefaults() {
 
 	viper.SetDefault("gensettings.freqmotor.objectfb", "FB_Motor_Freq")
 	viper.SetDefault("gensettings.freqmotor.callfc", "FreqMotor_Call")
-	viper.SetDefault("gensettings.freqmotor.hmidb", "HMI_Motor_Freq")
-	viper.SetDefault("gensettings.freqmotor.hmitype", "HMI_FreqMotor")
+	viper.SetDefault("gensettings.freqmotor.hmidb", "HMI_FreqMotors")
+	viper.SetDefault("gensettings.freqmotor.hmitype", "HMI_Motor_Freq")
 	viper.SetDefault("gensettings.freqmotor.startindex", 0)
 	viper.SetDefault("gensettings.freqmotor.tagtable", "FreqMotors")
 

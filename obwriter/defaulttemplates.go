@@ -152,7 +152,7 @@ BEGIN
                         NoFeedback := {{$d.NoFeedback}},
                         {{if eq $d.NoFeedback "false" -}}
                             Feedback := {{$d.Feedback}},
-                        {{- end}}
+                        {{- end -}}
                         SP := {{$gs.todoreal}},
                         TimeMon := {{$d.MonitoringTime}},
                         PQW := {{$d.Output}},
