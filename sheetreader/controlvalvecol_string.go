@@ -10,15 +10,16 @@ func _() {
 	var x [1]struct{}
 	_ = x[controlValveTag-0]
 	_ = x[controlValveDescription-1]
-	_ = x[controlValveAddress-2]
-	_ = x[controlValveFeedbackTag-3]
-	_ = x[controlValveFeedbackAddress-4]
-	_ = x[controlValveMonitoringTime-5]
+	_ = x[controlValveOutput-2]
+	_ = x[controlValveOutputAddress-3]
+	_ = x[controlValveFeedbackTag-4]
+	_ = x[controlValveFeedbackAddress-5]
+	_ = x[controlValveMonitoringTime-6]
 }
 
-const _controlValveCol_name = "TagDescriptionAddressFeedbackTagFeedbackAddressMonitoringTime"
+const _controlValveCol_name = "TagDescriptionOutputOutputAddressFeedbackTagFeedbackAddressMonitoringTime"
 
-var _controlValveCol_index = [...]uint8{0, 3, 14, 21, 32, 47, 61}
+var _controlValveCol_index = [...]uint8{0, 3, 14, 20, 33, 44, 59, 73}
 
 func (i controlValveCol) String() string {
 	if i < 0 || i >= controlValveCol(len(_controlValveCol_index)-1) {

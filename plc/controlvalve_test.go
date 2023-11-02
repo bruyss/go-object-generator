@@ -3,16 +3,25 @@ package plc
 import (
 	"reflect"
 	"testing"
+
+	"github.com/bruyss/go-object-generator/logger"
 )
 
+func init() {
+	logger.InitializeDevLogger()
+}
+
+/*  */
 func TestNewControlValve(t *testing.T) {
 	type args struct {
 		tag             string
 		description     string
-		address         string
+		outputTag       string
+		outputAddress   string
 		feedbackTag     string
 		feedbackAddress string
 		monitoringTime  string
+		data            map[string]string
 	}
 	tests := []struct {
 		name    string
@@ -22,70 +31,94 @@ func TestNewControlValve(t *testing.T) {
 	}{
 		{
 			"Control valve",
-			args{"WWG-CV001", "Control valve 1", "QW10", "WWG-CV001_FB", "IW32", "14"},
+			args{"WWG-CV001", "Control valve 1", "WWG-CV001", "QW10", "WWG-CV001_FB", "IW32", "14", map[string]string{}},
 			&controlValve{
 				Tag:             "WWG-CV001",
 				Description:     "Control valve 1",
-				Address:         "QW10",
+				OutputTag:       "WWG-CV001",
+				OutputAddress:   "QW10",
 				FeedbackTag:     "WWG-CV001_FB",
 				FeedbackAddress: "IW32",
 				MonitoringTime:  14,
 				hasFeedback:     true,
+				Data:            map[string]string{},
+			},
+			false,
+		},
+		{
+			"Control valve extra data",
+			args{"WWG-CV001", "Control valve 1", "WWG-CV001_AO", "QW10", "WWG-CV001_FB", "IW32", "14", map[string]string{"Custom 1": "allo"}},
+			&controlValve{
+				Tag:             "WWG-CV001",
+				Description:     "Control valve 1",
+				OutputTag:       "WWG-CV001_AO",
+				OutputAddress:   "QW10",
+				FeedbackTag:     "WWG-CV001_FB",
+				FeedbackAddress: "IW32",
+				MonitoringTime:  14,
+				hasFeedback:     true,
+				Data:            map[string]string{"Custom 1": "allo"},
 			},
 			false,
 		},
 		{
 			"Control valve no address",
-			args{"WWG-CV001", "Control valve 1", "", "WWG-CV001_FB", "IW32", "14"},
+			args{"WWG-CV001", "Control valve 1", "WWG-CV001", "", "WWG-CV001_FB", "IW32", "14", map[string]string{}},
 			&controlValve{
 				Tag:             "WWG-CV001",
 				Description:     "Control valve 1",
-				Address:         "MW0",
+				OutputTag:       "WWG-CV001",
+				OutputAddress:   "MW0",
 				FeedbackTag:     "WWG-CV001_FB",
 				FeedbackAddress: "IW32",
 				MonitoringTime:  14,
 				hasFeedback:     true,
+				Data:            map[string]string{},
 			},
 			false,
 		},
 		{
 			"Control valve no feedback",
-			args{"WWG-CV001", "Control valve 1", "QW10", "", "", "14"},
+			args{"WWG-CV001", "Control valve 1", "WWG-CV001", "QW10", "", "", "14", map[string]string{}},
 			&controlValve{
 				Tag:             "WWG-CV001",
 				Description:     "Control valve 1",
-				Address:         "QW10",
+				OutputTag:       "WWG-CV001",
+				OutputAddress:   "QW10",
 				FeedbackTag:     "",
 				FeedbackAddress: "",
 				MonitoringTime:  14,
 				hasFeedback:     false,
+				Data:            map[string]string{},
 			},
 			false,
 		},
 		{
 			"Control valve no feedback address",
-			args{"WWG-CV001", "Control valve 1", "QW10", "WWG-CV001_FB", "", "14"},
+			args{"WWG-CV001", "Control valve 1", "WWG-CV001", "QW10", "WWG-CV001_FB", "", "14", map[string]string{}},
 			&controlValve{
 				Tag:             "WWG-CV001",
 				Description:     "Control valve 1",
-				Address:         "QW10",
+				OutputTag:       "WWG-CV001",
+				OutputAddress:   "QW10",
 				FeedbackTag:     "WWG-CV001_FB",
 				FeedbackAddress: "MW2",
 				MonitoringTime:  14,
 				hasFeedback:     true,
+				Data:            map[string]string{},
 			},
 			false,
 		},
 		{
 			"Control valve bad monitoring time",
-			args{"WWG-CV001", "Control valve 1", "QW10", "WWG-CV001_FB", "IW32", "allo"},
+			args{"WWG-CV001", "Control valve 1", "QW10", "WWG-CV001", "WWG-CV001_FB", "IW32", "allo", map[string]string{}},
 			nil,
 			true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewControlValve(tt.args.tag, tt.args.description, tt.args.address, tt.args.feedbackTag, tt.args.feedbackAddress, tt.args.monitoringTime)
+			got, err := NewControlValve(tt.args.tag, tt.args.description, tt.args.outputTag, tt.args.outputAddress, tt.args.feedbackTag, tt.args.feedbackAddress, tt.args.monitoringTime, tt.args.data)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewControlValve() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -107,7 +140,7 @@ func Test_controlValve_PlcTags(t *testing.T) {
 			&controlValve{
 				Tag:             "WWG-CV001",
 				Description:     "Test control valve 1",
-				Address:         "QW16",
+				OutputAddress:   "QW16",
 				FeedbackTag:     "",
 				FeedbackAddress: "IW32",
 				MonitoringTime:  10,
@@ -123,7 +156,7 @@ func Test_controlValve_PlcTags(t *testing.T) {
 			&controlValve{
 				Tag:             "WWG-CV002",
 				Description:     "Test control valve 2",
-				Address:         "QW18",
+				OutputAddress:   "QW18",
 				FeedbackTag:     "",
 				FeedbackAddress: "IW34",
 				MonitoringTime:  20,
@@ -139,7 +172,7 @@ func Test_controlValve_PlcTags(t *testing.T) {
 			&controlValve{
 				Tag:             "WWG-CV003",
 				Description:     "Test control valve 3",
-				Address:         "QW20",
+				OutputAddress:   "QW20",
 				FeedbackTag:     "",
 				FeedbackAddress: "",
 				MonitoringTime:  10,
@@ -170,7 +203,7 @@ func Test_controlValve_InputMap(t *testing.T) {
 			&controlValve{
 				Tag:             "WWG-CV001",
 				Description:     "Test control valve 1",
-				Address:         "QW16",
+				OutputAddress:   "QW16",
 				FeedbackTag:     "WWG-CV001_FB",
 				FeedbackAddress: "IW32",
 				MonitoringTime:  10,
@@ -187,11 +220,34 @@ func Test_controlValve_InputMap(t *testing.T) {
 			},
 		},
 		{
+			"Case 1 extra data",
+			&controlValve{
+				Tag:             "WWG-CV001",
+				Description:     "Test control valve 1",
+				OutputAddress:   "QW16",
+				FeedbackTag:     "WWG-CV001_FB",
+				FeedbackAddress: "IW32",
+				MonitoringTime:  10,
+				hasFeedback:     true,
+				Data:            map[string]string{"Custom 1": "allo", "Tag": "dont"},
+			},
+			map[string]string{
+				"Tag":            "WWG-CV001",
+				"Description":    "Test control valve 1",
+				"IDB":            "IDB_WWG-CV001",
+				"NoFeedback":     "FALSE",
+				"Feedback":       `"WWG-CV001_FB"`,
+				"MonitoringTime": "10",
+				"Output":         `"WWG-CV001"`,
+				"Custom 1":       "allo",
+			},
+		},
+		{
 			"Case 2",
 			&controlValve{
 				Tag:             "WWG-CV002",
 				Description:     "Test control valve 2",
-				Address:         "QW18",
+				OutputAddress:   "QW18",
 				FeedbackTag:     "WWG-CV002_FB",
 				FeedbackAddress: "IW34",
 				MonitoringTime:  20,
@@ -212,7 +268,7 @@ func Test_controlValve_InputMap(t *testing.T) {
 			&controlValve{
 				Tag:             "WWG-CV003",
 				Description:     "Test control valve 3",
-				Address:         "QW20",
+				OutputAddress:   "QW20",
 				FeedbackTag:     "",
 				FeedbackAddress: "",
 				MonitoringTime:  10,
@@ -249,7 +305,7 @@ func Test_controlValve_outputPlcTag(t *testing.T) {
 			&controlValve{
 				Tag:             "WWG-CV001",
 				Description:     "Test control valve 1",
-				Address:         "QW16",
+				OutputAddress:   "QW16",
 				FeedbackTag:     "WWG-CV001_FB",
 				FeedbackAddress: "IW32",
 				MonitoringTime:  10,
@@ -278,7 +334,7 @@ func Test_controlValve_feedbackPlcTag(t *testing.T) {
 			&controlValve{
 				Tag:             "WWG-CV001",
 				Description:     "Test control valve 1",
-				Address:         "QW16",
+				OutputAddress:   "QW16",
 				FeedbackTag:     "WWG-CV001_FB",
 				FeedbackAddress: "IW32",
 				MonitoringTime:  10,

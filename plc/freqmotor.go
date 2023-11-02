@@ -3,8 +3,11 @@ package plc
 import (
 	"strconv"
 
-	"github.com/bruyss/go-object-generator/utils"
+	"github.com/bruyss/go-object-generator/logger"
 )
+
+// TODO Separate tag name from output address tag name
+// Make sure that double tags are not created in the tag tables
 
 type freqMotor struct {
 	Tag              string
@@ -24,12 +27,19 @@ type freqMotor struct {
 	hasBreaker       bool
 	hasSwitch        bool
 	hasAlarm         bool
+	Data             map[string]string
 }
 
-func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, feedbackAddress, breakerTag, breakerAddress, switchTag, switchAddress, alarmTag, alarmAddress, danfossDrive string) (*freqMotor, error) {
-	danfossDriveBool, err := strconv.ParseBool(danfossDrive)
-	if err != nil {
-		return nil, err
+func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, feedbackAddress, breakerTag, breakerAddress, switchTag, switchAddress, alarmTag, alarmAddress, danfossDrive string, data map[string]string) (*freqMotor, error) {
+	var danfossDriveBool bool
+	if danfossDrive == "" {
+		danfossDriveBool = false
+	} else {
+		var err error
+		danfossDriveBool, err = strconv.ParseBool(danfossDrive)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	f := &freqMotor{
@@ -50,52 +60,53 @@ func NewFreqMotor(tag, description, contactorAddress, pqwAddress, feedbackTag, f
 		hasBreaker:       len(breakerTag) > 0,
 		hasSwitch:        len(switchTag) > 0,
 		hasAlarm:         len(alarmTag) > 0,
+		Data:             data,
 	}
 
 	if len(f.ContactorAddress) == 0 && !f.DanfossDrive {
 		f.ContactorAddress = "M0.0"
-		utils.Sugar.Warnw("No contactor address given",
+		logger.Sugar.Infow("No contactor address given",
 			"frequency motor", f.Tag,
 			"default", f.ContactorAddress,
 		)
 	}
 	if len(f.PqwAddress) == 0 && !f.DanfossDrive {
 		f.PqwAddress = "MW0"
-		utils.Sugar.Warnw("No PQW address given",
+		logger.Sugar.Infow("No PQW address given",
 			"frequency motor", f.Tag,
 			"default", f.PqwAddress,
 		)
 	}
 	if f.hasFeedback && len(f.FeedbackAddress) == 0 && !f.DanfossDrive {
 		f.FeedbackAddress = "M0.1"
-		utils.Sugar.Warnw("No feedback address given",
+		logger.Sugar.Infow("No feedback address given",
 			"frequency motor", f.Tag,
 			"default", f.FeedbackAddress,
 		)
 	}
 	if f.hasBreaker && len(f.BreakerAddress) == 0 {
 		f.BreakerAddress = "M0.2"
-		utils.Sugar.Warnw("No breaker address given",
+		logger.Sugar.Infow("No breaker address given",
 			"frequency motor", f.Tag,
 			"default", f.BreakerAddress,
 		)
 	}
 	if f.hasSwitch && len(f.SwitchAddress) == 0 {
 		f.SwitchAddress = "M0.3"
-		utils.Sugar.Warnw("No switch address given",
+		logger.Sugar.Infow("No switch address given",
 			"frequency motor", f.Tag,
 			"default", f.SwitchAddress,
 		)
 	}
 	if f.hasAlarm && len(f.AlarmAddress) == 0 && !f.DanfossDrive {
 		f.AlarmAddress = "M0.4"
-		utils.Sugar.Warnw("No alarm address given",
+		logger.Sugar.Infow("No alarm address given",
 			"frequency motor", f.Tag,
 			"default", f.AlarmAddress,
 		)
 	}
 
-	utils.Sugar.Debugw("Object created",
+	logger.Sugar.Debugw("Object created",
 		"freq motor", f,
 	)
 
@@ -120,7 +131,7 @@ func (f *freqMotor) InputMap() map[string]string {
 		switchTag = "TRUE"
 	}
 
-	return map[string]string{
+	input := map[string]string{
 		"Tag":          f.Tag,
 		"Description":  f.Description,
 		"IDB":          "IDB_" + f.Tag,
@@ -132,6 +143,17 @@ func (f *freqMotor) InputMap() map[string]string {
 		"AlarmTag":     strconv.Quote(f.Tag + "_AL"),
 		"Danfoss":      strconv.FormatBool(f.DanfossDrive),
 	}
+	for k, v := range f.Data {
+		_, exists := input[k]
+		if !exists {
+			input[k] = v
+			logger.Sugar.Debugw("Additional data added to input map",
+				"freq motor", f.Tag,
+				"name", k,
+				"data", v)
+		}
+	}
+	return input
 }
 
 func (f *freqMotor) PlcTags() (t []*PlcTag) {

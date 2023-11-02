@@ -13,15 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package cmd
+package generate
 
 import (
 	"os"
 	"time"
 
+	"github.com/bruyss/go-object-generator/logger"
 	"github.com/bruyss/go-object-generator/obwriter"
 	"github.com/bruyss/go-object-generator/sheetreader"
-	"github.com/bruyss/go-object-generator/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -49,36 +49,36 @@ var generateDigmonsCmd = &cobra.Command{
 		if genAll || genIdbs {
 			idbTemplate, err := cmd.Flags().GetString("idb-template")
 			if err != nil {
-				utils.Sugar.Error(err)
+				logger.Sugar.Error(err)
 			}
 			idbFileName, err := cmd.Flags().GetString("idb-file")
 			if err != nil {
-				utils.Sugar.Error(err)
+				logger.Sugar.Error(err)
 			}
 			err = digmonGen.Generate(idbFileName, idbTemplate, tmp)
 			if err != nil {
-				utils.Sugar.Error(err)
+				logger.Sugar.Error(err)
 			}
 		}
 
 		if genAll || genSource {
 			sourceFileName, err := cmd.Flags().GetString("source-file")
 			if err != nil {
-				utils.Sugar.Error(err)
+				logger.Sugar.Error(err)
 			}
 			err = digmonGen.Generate(sourceFileName, "digmon.tmpl", tmp)
 			if err != nil {
-				utils.Sugar.Error(err)
+				logger.Sugar.Error(err)
 			}
 		}
 
 		if genAll || genTags {
-			utils.Logger.Info("Gotta do those tag tables...")
+			logger.Sugar.Error("Gotta do those tag tables...")
 		}
 
 	},
 }
 
 func init() {
-	generateCmd.AddCommand(generateDigmonsCmd)
+	GenerateCmd.AddCommand(generateDigmonsCmd)
 }

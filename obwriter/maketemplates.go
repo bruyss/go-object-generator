@@ -3,7 +3,7 @@ package obwriter
 import (
 	"os"
 
-	"github.com/bruyss/go-object-generator/utils"
+	"github.com/bruyss/go-object-generator/logger"
 )
 
 // templateFolderName contains the default name for the folder containing generation templates
@@ -33,7 +33,7 @@ func WriteTemplates(templates map[string]string) error {
 	for k, v := range templates {
 		err := writeTemplate(k, v)
 		if err != nil {
-			utils.Sugar.Error(err)
+			logger.Sugar.Error(err)
 		}
 	}
 	return nil

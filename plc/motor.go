@@ -3,8 +3,11 @@ package plc
 import (
 	"strconv"
 
-	"github.com/bruyss/go-object-generator/utils"
+	"github.com/bruyss/go-object-generator/logger"
 )
+
+// TODO Separate tag name from output address tag name
+// Make sure that double tags are not created in the tag tables
 
 type motor struct {
 	Tag              string
@@ -19,9 +22,10 @@ type motor struct {
 	hasFeedback      bool
 	hasBreaker       bool
 	hasSwitch        bool
+	Data             map[string]string
 }
 
-func NewMotor(tag, description, contactorAddress, feedbackTag, feedbackAddress, breakerTag, breakerAddress, switchTag, switchAddress string) (*motor, error) {
+func NewMotor(tag, description, contactorAddress, feedbackTag, feedbackAddress, breakerTag, breakerAddress, switchTag, switchAddress string, data map[string]string) (*motor, error) {
 	m := &motor{
 		Tag:              tag,
 		Description:      description,
@@ -35,38 +39,39 @@ func NewMotor(tag, description, contactorAddress, feedbackTag, feedbackAddress, 
 		hasFeedback:      len(feedbackTag) > 0,
 		hasBreaker:       len(breakerTag) > 0,
 		hasSwitch:        len(switchTag) > 0,
+		Data:             data,
 	}
 
 	if len(m.ContactorAddress) == 0 {
 		m.ContactorAddress = "M0.0"
-		utils.Sugar.Warnw("No contactor address given",
+		logger.Sugar.Infow("No contactor address given",
 			"motor", m.Tag,
 			"default", m.ContactorAddress,
 		)
 	}
 	if m.hasFeedback && len(m.FeedbackAddress) == 0 {
 		m.FeedbackAddress = "M0.1"
-		utils.Sugar.Warnw("No feedback address given",
+		logger.Sugar.Infow("No feedback address given",
 			"motor", m.Tag,
 			"default", m.FeedbackAddress,
 		)
 	}
 	if m.hasBreaker && len(m.BreakerAddress) == 0 {
 		m.BreakerAddress = "M0.2"
-		utils.Sugar.Warnw("No breaker address given",
+		logger.Sugar.Infow("No breaker address given",
 			"motor", m.Tag,
 			"default", m.BreakerAddress,
 		)
 	}
 	if m.hasSwitch && len(m.SwitchAddress) == 0 {
 		m.SwitchAddress = "M0.3"
-		utils.Sugar.Warnw("No switch address given",
+		logger.Sugar.Infow("No switch address given",
 			"motor", m.Tag,
 			"default", m.SwitchAddress,
 		)
 	}
 
-	utils.Sugar.Debugw("Object created",
+	logger.Sugar.Debugw("Object created",
 		"motor", m,
 	)
 
@@ -93,8 +98,7 @@ func (m *motor) InputMap() map[string]string {
 	}
 
 	// TODO: Add monitoring time
-	// TODO: Add contactor tag
-	return map[string]string{
+	input := map[string]string{
 		"Tag":          m.Tag,
 		"Description":  m.Description,
 		"IDB":          "IDB_" + m.Tag,
@@ -103,6 +107,17 @@ func (m *motor) InputMap() map[string]string {
 		"BreakerTag":   breakerTag,
 		"SwitchTag":    switchTag,
 	}
+	for k, v := range m.Data {
+		_, exists := input[k]
+		if !exists {
+			input[k] = v
+			logger.Sugar.Debugw("Additional data added to input map",
+				"motor", m.Tag,
+				"name", k,
+				"data", v)
+		}
+	}
+	return input
 }
 
 func (m *motor) PlcTags() (t []*PlcTag) {

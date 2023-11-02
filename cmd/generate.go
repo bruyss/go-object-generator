@@ -19,7 +19,7 @@ import (
 	"text/template"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
-	"github.com/bruyss/go-object-generator/utils"
+	"github.com/bruyss/go-object-generator/logger"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -40,47 +40,47 @@ var generateCmd = &cobra.Command{
 	// This application is a tool to generate the needed files
 	// to quickly create a Cobra application.`,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		utils.Sugar.Info("####################################################################################################################################################################################")
-		utils.Sugar.Info("####################################################################################################################################################################################")
-		utils.Sugar.Info("####################################################################################################################################################################################")
-		utils.Sugar.Info("####################################################################################################################################################################################")
-		utils.Sugar.Info("Start generation")
+		logger.Sugar.Info("####################################################################################################################################################################################")
+		logger.Sugar.Info("####################################################################################################################################################################################")
+		logger.Sugar.Info("####################################################################################################################################################################################")
+		logger.Sugar.Info("####################################################################################################################################################################################")
+		logger.Sugar.Info("Start generation")
 
 		var err error
 		fileName := viper.GetString("filenames.general.objectsource")
 		if err != nil {
-			utils.Sugar.Error(err)
+			logger.Sugar.Error(err)
 			return err
 		}
 		excelSource, err = excelize.OpenFile(fileName)
 		if err != nil {
-			utils.Sugar.Error(err)
+			logger.Sugar.Error(err)
 			return err
 		}
 		tmp, err = template.ParseGlob("templates/*.tmpl")
 		if err != nil {
-			utils.Sugar.Error(err)
+			logger.Sugar.Error(err)
 			return err
 		}
 
 		genIdbs, err = cmd.Flags().GetBool("idbs")
 		if err != nil {
-			utils.Sugar.Error(err)
+			logger.Sugar.Error(err)
 			return err
 		}
 		genHmiDbs, err = cmd.Flags().GetBool("hmiDBs")
 		if err != nil {
-			utils.Sugar.Error(err)
+			logger.Sugar.Error(err)
 			return err
 		}
 		genSource, err = cmd.Flags().GetBool("source-files")
 		if err != nil {
-			utils.Sugar.Error(err)
+			logger.Sugar.Error(err)
 			return err
 		}
 		genTags, err = cmd.Flags().GetBool("tag-tables")
 		if err != nil {
-			utils.Sugar.Error(err)
+			logger.Sugar.Error(err)
 			return err
 		}
 
@@ -89,7 +89,7 @@ var generateCmd = &cobra.Command{
 		return nil
 	},
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
-		utils.Sugar.Info("Generation complete")
+		logger.Sugar.Info("Generation complete")
 	},
 	// Run: func(cmd *cobra.Command, args []string) {
 	// 	fmt.Println("generate called")

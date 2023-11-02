@@ -3,7 +3,13 @@ package plc
 import (
 	"reflect"
 	"testing"
+
+	"github.com/bruyss/go-object-generator/logger"
 )
+
+func init() {
+	logger.InitializeDevLogger()
+}
 
 func TestNewDigmon(t *testing.T) {
 	type args struct {
@@ -13,6 +19,7 @@ func TestNewDigmon(t *testing.T) {
 		invert      string
 		alarm       string
 		invertAlarm string
+		data        map[string]string
 	}
 	tests := []struct {
 		name    string
@@ -22,38 +29,44 @@ func TestNewDigmon(t *testing.T) {
 	}{
 		{
 			"Digmon",
-			args{"WWG-FS001", "Test flow switch", "I0.1", "false", "true", "true"},
-			&digmon{"WWG-FS001", "Test flow switch", "I0.1", false, true, true},
+			args{"WWG-FS001", "Test flow switch", "I0.1", "false", "true", "true", map[string]string{}},
+			&digmon{"WWG-FS001", "Test flow switch", "I0.1", false, true, true, map[string]string{}},
+			false,
+		},
+		{
+			"Digmon extra data",
+			args{"WWG-FS001", "Test flow switch", "I0.1", "false", "true", "true", map[string]string{"Custom": "allo"}},
+			&digmon{"WWG-FS001", "Test flow switch", "I0.1", false, true, true, map[string]string{"Custom": "allo"}},
 			false,
 		},
 		{
 			"Digmon no address",
-			args{"WWG-FS001", "Test flow switch", "", "false", "true", "true"},
-			&digmon{"WWG-FS001", "Test flow switch", "M0.0", false, true, true},
+			args{"WWG-FS001", "Test flow switch", "", "false", "true", "true", map[string]string{}},
+			&digmon{"WWG-FS001", "Test flow switch", "M0.0", false, true, true, map[string]string{}},
 			false,
 		},
 		{
 			"Digmon bad invert",
-			args{"WWG-FS001", "Test flow switch", "", "allo", "true", "true"},
+			args{"WWG-FS001", "Test flow switch", "", "allo", "true", "true", map[string]string{}},
 			nil,
 			true,
 		},
 		{
 			"Digmon bad alarm",
-			args{"WWG-FS001", "Test flow switch", "", "false", "allo", "true"},
+			args{"WWG-FS001", "Test flow switch", "", "false", "allo", "true", map[string]string{}},
 			nil,
 			true,
 		},
 		{
 			"Digmon bad invert alarm",
-			args{"WWG-FS001", "Test flow switch", "", "false", "true", "allo"},
+			args{"WWG-FS001", "Test flow switch", "", "false", "true", "allo", map[string]string{}},
 			nil,
 			true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewDigmon(tt.args.tag, tt.args.description, tt.args.address, tt.args.invert, tt.args.alarm, tt.args.invertAlarm)
+			got, err := NewDigmon(tt.args.tag, tt.args.description, tt.args.address, tt.args.invert, tt.args.alarm, tt.args.invertAlarm, tt.args.data)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewDigmon() error = %v, wantErr %v", err, tt.wantErr)
 				return

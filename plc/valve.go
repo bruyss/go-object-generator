@@ -3,8 +3,11 @@ package plc
 import (
 	"strconv"
 
-	"github.com/bruyss/go-object-generator/utils"
+	"github.com/bruyss/go-object-generator/logger"
 )
+
+// TODO Separate tag name from output address tag name
+// Make sure that double tags are not created in the tag tables
 
 type valve struct {
 	Tag          string
@@ -18,9 +21,10 @@ type valve struct {
 	MonTimeClose int
 	hasFbo       bool
 	hasFbc       bool
+	Data         map[string]string
 }
 
-func NewValve(tag, description, actAddress, fboTag, fbcTag, fboAddress, fbcAddress, monTimeOpen, monTimeClose string) (*valve, error) {
+func NewValve(tag, description, actAddress, fboTag, fbcTag, fboAddress, fbcAddress, monTimeOpen, monTimeClose string, data map[string]string) (*valve, error) {
 	monTimeOpenInt, err := strconv.Atoi(monTimeOpen)
 	if err != nil {
 		return nil, err
@@ -41,11 +45,12 @@ func NewValve(tag, description, actAddress, fboTag, fbcTag, fboAddress, fbcAddre
 		MonTimeClose: monTimeCloseInt,
 		hasFbo:       len(fboTag) > 0,
 		hasFbc:       len(fbcTag) > 0,
+		Data:         data,
 	}
 
 	if len(v.ActAddress) == 0 {
 		v.ActAddress = "M0.0"
-		utils.Sugar.Warnw("No output address given",
+		logger.Sugar.Infow("No output address given",
 			"valve", v.Tag,
 			"default", v.ActAddress,
 		)
@@ -53,7 +58,7 @@ func NewValve(tag, description, actAddress, fboTag, fbcTag, fboAddress, fbcAddre
 
 	if v.hasFbo && len(v.FboAddress) == 0 {
 		v.FboAddress = "M0.1"
-		utils.Sugar.Warnw("No feedback open address given",
+		logger.Sugar.Infow("No feedback open address given",
 			"valve", v.Tag,
 			"default", v.FboAddress,
 		)
@@ -61,13 +66,13 @@ func NewValve(tag, description, actAddress, fboTag, fbcTag, fboAddress, fbcAddre
 
 	if v.hasFbc && len(v.FbcAddress) == 0 {
 		v.FbcAddress = "M0.2"
-		utils.Sugar.Warnw("No feedback closed address given",
+		logger.Sugar.Infow("No feedback closed address given",
 			"valve", v.Tag,
 			"default", v.FbcAddress,
 		)
 	}
 
-	utils.Sugar.Debugw("Object created",
+	logger.Sugar.Debugw("Object created",
 		"valve", v,
 	)
 	return v, nil
@@ -86,7 +91,7 @@ func (v *valve) InputMap() map[string]string {
 		fbc = "NOT " + strconv.Quote("IDB_"+v.Tag) + ".Q_On"
 	}
 
-	return map[string]string{
+	input := map[string]string{
 		"Tag":          v.Tag,
 		"Description":  v.Description,
 		"IDB":          "IDB_" + v.Tag,
@@ -96,6 +101,17 @@ func (v *valve) InputMap() map[string]string {
 		"MonTimeOpen":  strconv.Itoa(v.MonTimeOpen),
 		"MonTimeClose": strconv.Itoa(v.MonTimeClose),
 	}
+	for k, val := range v.Data {
+		_, exists := input[k]
+		if !exists {
+			input[k] = val
+			logger.Sugar.Debugw("Additional data added to input map",
+				"valve", v.Tag,
+				"name", k,
+				"data", val)
+		}
+	}
+	return input
 }
 
 func (v *valve) PlcTags() (t []*PlcTag) {

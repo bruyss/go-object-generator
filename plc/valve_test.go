@@ -3,7 +3,13 @@ package plc
 import (
 	"reflect"
 	"testing"
+
+	"github.com/bruyss/go-object-generator/logger"
 )
+
+func init() {
+	logger.InitializeDevLogger()
+}
 
 func TestNewValve(t *testing.T) {
 	type args struct {
@@ -16,6 +22,7 @@ func TestNewValve(t *testing.T) {
 		fbcAddress   string
 		monTimeOpen  string
 		monTimeClose string
+		data         map[string]string
 	}
 	tests := []struct {
 		name    string
@@ -23,11 +30,130 @@ func TestNewValve(t *testing.T) {
 		want    *valve
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "Valve the works",
+			args: args{
+				tag:          "WWG-XV001",
+				description:  "Test valve 1",
+				actAddress:   "Q0.0",
+				fboTag:       "WWG-XV001_FBO",
+				fbcTag:       "WWG-XV001_FBC",
+				fboAddress:   "I0.0",
+				fbcAddress:   "I0.1",
+				monTimeOpen:  "10",
+				monTimeClose: "10",
+				data:         map[string]string{},
+			},
+			want: &valve{
+				Tag:          "WWG-XV001",
+				Description:  "Test valve 1",
+				ActAddress:   "Q0.0",
+				FboTag:       "WWG-XV001_FBO",
+				FbcTag:       "WWG-XV001_FBC",
+				FboAddress:   "I0.0",
+				FbcAddress:   "I0.1",
+				MonTimeOpen:  10,
+				MonTimeClose: 10,
+				hasFbo:       true,
+				hasFbc:       true,
+				Data:         map[string]string{},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Valve extra data",
+			args: args{
+				tag:          "WWG-XV001",
+				description:  "Test valve 1",
+				actAddress:   "Q0.0",
+				fboTag:       "WWG-XV001_FBO",
+				fbcTag:       "WWG-XV001_FBC",
+				fboAddress:   "I0.0",
+				fbcAddress:   "I0.1",
+				monTimeOpen:  "10",
+				monTimeClose: "10",
+				data:         map[string]string{"Custom": "alloallo"},
+			},
+			want: &valve{
+				Tag:          "WWG-XV001",
+				Description:  "Test valve 1",
+				ActAddress:   "Q0.0",
+				FboTag:       "WWG-XV001_FBO",
+				FbcTag:       "WWG-XV001_FBC",
+				FboAddress:   "I0.0",
+				FbcAddress:   "I0.1",
+				MonTimeOpen:  10,
+				MonTimeClose: 10,
+				hasFbo:       true,
+				hasFbc:       true,
+				Data:         map[string]string{"Custom": "alloallo"},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Valve no FB0",
+			args: args{
+				tag:          "WWG-XV001",
+				description:  "Test valve 1",
+				actAddress:   "Q0.0",
+				fboTag:       "",
+				fbcTag:       "WWG-XV001_FBC",
+				fboAddress:   "",
+				fbcAddress:   "I0.1",
+				monTimeOpen:  "10",
+				monTimeClose: "10",
+				data:         map[string]string{},
+			},
+			want: &valve{
+				Tag:          "WWG-XV001",
+				Description:  "Test valve 1",
+				ActAddress:   "Q0.0",
+				FboTag:       "",
+				FbcTag:       "WWG-XV001_FBC",
+				FboAddress:   "",
+				FbcAddress:   "I0.1",
+				MonTimeOpen:  10,
+				MonTimeClose: 10,
+				hasFbo:       false,
+				hasFbc:       true,
+				Data:         map[string]string{},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Valve no FBC",
+			args: args{
+				tag:          "WWG-XV001",
+				description:  "Test valve 1",
+				actAddress:   "Q0.0",
+				fboTag:       "WWG-XV001_FBO",
+				fbcTag:       "",
+				fboAddress:   "I0.0",
+				fbcAddress:   "",
+				monTimeOpen:  "10",
+				monTimeClose: "10",
+				data:         map[string]string{},
+			},
+			want: &valve{
+				Tag:          "WWG-XV001",
+				Description:  "Test valve 1",
+				ActAddress:   "Q0.0",
+				FboTag:       "WWG-XV001_FBO",
+				FbcTag:       "",
+				FboAddress:   "I0.0",
+				FbcAddress:   "",
+				MonTimeOpen:  10,
+				MonTimeClose: 10,
+				hasFbo:       true,
+				hasFbc:       false,
+				Data:         map[string]string{},
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewValve(tt.args.tag, tt.args.description, tt.args.actAddress, tt.args.fboTag, tt.args.fbcTag, tt.args.fboAddress, tt.args.fbcAddress, tt.args.monTimeOpen, tt.args.monTimeClose)
+			got, err := NewValve(tt.args.tag, tt.args.description, tt.args.actAddress, tt.args.fboTag, tt.args.fbcTag, tt.args.fboAddress, tt.args.fbcAddress, tt.args.monTimeOpen, tt.args.monTimeClose, tt.args.data)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewValve() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -69,6 +195,34 @@ func Test_valve_InputMap(t *testing.T) {
 				"FBC":          `"WWG-XV001_FBC"`,
 				"MonTimeOpen":  "10",
 				"MonTimeClose": "15",
+			},
+		},
+		{
+			"Valve extra info",
+			&valve{
+				Tag:          "WWG-XV001",
+				Description:  "Test valve 1",
+				ActAddress:   "Q0.0",
+				FboTag:       "WWG-XV001_FBO",
+				FbcTag:       "WWG-XV001_FBC",
+				FboAddress:   "I0.1",
+				FbcAddress:   "I0.2",
+				MonTimeOpen:  10,
+				MonTimeClose: 15,
+				hasFbo:       true,
+				hasFbc:       true,
+				Data:         map[string]string{"Custom": "hallo daar", "Description": "dont"},
+			},
+			map[string]string{
+				"Tag":          "WWG-XV001",
+				"Description":  "Test valve 1",
+				"IDB":          "IDB_WWG-XV001",
+				"Output":       `"WWG-XV001"`,
+				"FBO":          `"WWG-XV001_FBO"`,
+				"FBC":          `"WWG-XV001_FBC"`,
+				"MonTimeOpen":  "10",
+				"MonTimeClose": "15",
+				"Custom":       "hallo daar",
 			},
 		},
 		{
@@ -234,8 +388,18 @@ func Test_valve_PlcTags(t *testing.T) {
 			},
 			[]*PlcTag{
 				{Name: "WWG-XV001", Dtype: "Bool", Address: "Q0.2", Comment: "Test valve 1"},
-				{Name: "WWG-XV001_FBO", Dtype: "Bool", Address: "I1.0", Comment: "Test valve 1 feedback open"},
-				{Name: "WWG-XV001_FBC", Dtype: "Bool", Address: "I1.1", Comment: "Test valve 1 feedback closed"},
+				{
+					Name:    "WWG-XV001_FBO",
+					Dtype:   "Bool",
+					Address: "I1.0",
+					Comment: "Test valve 1 feedback open",
+				},
+				{
+					Name:    "WWG-XV001_FBC",
+					Dtype:   "Bool",
+					Address: "I1.1",
+					Comment: "Test valve 1 feedback closed",
+				},
 			},
 		},
 		{
@@ -255,7 +419,12 @@ func Test_valve_PlcTags(t *testing.T) {
 			},
 			[]*PlcTag{
 				{Name: "WWG-XV001", Dtype: "Bool", Address: "Q0.2", Comment: "Test valve 1"},
-				{Name: "WWG-XV001_FBC", Dtype: "Bool", Address: "I1.1", Comment: "Test valve 1 feedback closed"},
+				{
+					Name:    "WWG-XV001_FBC",
+					Dtype:   "Bool",
+					Address: "I1.1",
+					Comment: "Test valve 1 feedback closed",
+				},
 			},
 		},
 		{
@@ -275,7 +444,12 @@ func Test_valve_PlcTags(t *testing.T) {
 			},
 			[]*PlcTag{
 				{Name: "WWG-XV001", Dtype: "Bool", Address: "Q0.2", Comment: "Test valve 1"},
-				{Name: "WWG-XV001_FBO", Dtype: "Bool", Address: "I1.0", Comment: "Test valve 1 feedback open"},
+				{
+					Name:    "WWG-XV001_FBO",
+					Dtype:   "Bool",
+					Address: "I1.0",
+					Comment: "Test valve 1 feedback open",
+				},
 			},
 		},
 		{
@@ -361,7 +535,12 @@ func Test_valve_fboPlcTag(t *testing.T) {
 				hasFbo:       true,
 				hasFbc:       true,
 			},
-			&PlcTag{Name: "WWG-XV001_FBO", Dtype: "Bool", Address: "I1.0", Comment: "Test valve 1 feedback open"},
+			&PlcTag{
+				Name:    "WWG-XV001_FBO",
+				Dtype:   "Bool",
+				Address: "I1.0",
+				Comment: "Test valve 1 feedback open",
+			},
 		},
 		{
 			"Valve no feedback open",
@@ -411,7 +590,12 @@ func Test_valve_fbcPlcTag(t *testing.T) {
 				hasFbo:       true,
 				hasFbc:       true,
 			},
-			&PlcTag{Name: "WWG-XV001_FBC", Dtype: "Bool", Address: "I1.1", Comment: "Test valve 1 feedback closed"},
+			&PlcTag{
+				Name:    "WWG-XV001_FBC",
+				Dtype:   "Bool",
+				Address: "I1.1",
+				Comment: "Test valve 1 feedback closed",
+			},
 		},
 		{
 			"Valve no feedback closed",

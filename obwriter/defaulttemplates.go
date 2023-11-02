@@ -1,7 +1,7 @@
 package obwriter
 
-// Templates contains the link between the file name and variable name for the default templates
-var Templates = map[string]string{
+// DefaultTemplates is a map of PLC object types to their default template
+var DefaultTemplates = map[string]string{
 	"idb":          idbTemplate,
 	"hmidb":        hmidb,
 	"controlValve": controlValveTemplate,
@@ -10,6 +10,7 @@ var Templates = map[string]string{
 	"motor":        motorTemplate,
 	"measmon":      measmonTemplate,
 	"valve":        valveTemplate,
+	"digout":       digoutTemplate,
 }
 
 const (
@@ -151,7 +152,7 @@ BEGIN
                         NoFeedback := {{$d.NoFeedback}},
                         {{if eq $d.NoFeedback "false" -}}
                             Feedback := {{$d.Feedback}},
-                        {{- end}}
+                        {{- end -}}
                         SP := {{$gs.todoreal}},
                         TimeMon := {{$d.MonitoringTime}},
                         PQW := {{$d.Output}},
@@ -249,6 +250,38 @@ BEGIN
                             Protectionswitch := {{$d.SwitchTag}},
                             MonitoringTime := 10,
                             Q_On := %M0.0,
+                            {{if $gs.wincc -}}
+                                HMI := "{{$os.hmidb}}"."{{$d.Tag}}"
+                            {{- else -}}
+                                HMI := "{{$os.hmidb}}".o[{{$index}}]
+                            {{- end}});
+    END_REGION
+{{end}}
+END_FUNCTION`
+
+	digoutTemplate string = `FUNCTION {{.ObjectSettings.callfc}} : Void
+{ S7_Optimized_Access := 'TRUE'}
+VERSION : 0.1
+VAR_INPUT
+    {{.GeneralSettings.secondpulse}}   : Bool;
+    {{.GeneralSettings.simulation}} : Bool;
+END_VAR
+{{$gs := .GeneralSettings}}{{$os := .ObjectSettings}}
+BEGIN
+{{range $index, $object := .Objects}}
+    {{- $d := $object.InputMap}}
+    REGION {{$d.Tag}}: {{$d.Description}}
+        "{{$d.IDB}}"(Tagname := '{{$d.Tag}}',
+                            SecPuls := {{$gs.secondpulse}},
+                            Reset := TRUE,
+                            Local := FALSE,
+                            Simulation := {{$gs.simulation}},
+                            Permit := TRUE,
+                            Activate := {{$gs.todobit}},
+                            Feedback := {{$d.FeedbackTag}},
+                            ThermalProt := {{$d.BreakerTag}},
+                            MonitoringTime := 10,
+                            Q_On := {{$d.OutputTag}},
                             {{if $gs.wincc -}}
                                 HMI := "{{$os.hmidb}}"."{{$d.Tag}}"
                             {{- else -}}

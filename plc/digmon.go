@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/bruyss/go-object-generator/utils"
+	"github.com/bruyss/go-object-generator/logger"
 )
 
 type digmon struct {
@@ -14,9 +14,10 @@ type digmon struct {
 	Invert      bool
 	Alarm       bool
 	InvertAlarm bool
+	Data        map[string]string
 }
 
-func NewDigmon(tag, description, address, invert, alarm, invertAlarm string) (*digmon, error) {
+func NewDigmon(tag, description, address, invert, alarm, invertAlarm string, data map[string]string) (*digmon, error) {
 
 	invertBool, err := strconv.ParseBool(invert)
 	if err != nil {
@@ -38,17 +39,18 @@ func NewDigmon(tag, description, address, invert, alarm, invertAlarm string) (*d
 		Invert:      invertBool,
 		Alarm:       alarmBool,
 		InvertAlarm: invertAlarmBool,
+		Data:        data,
 	}
 
 	if len(d.Address) == 0 {
 		d.Address = "M0.0"
-		utils.Sugar.Warnw("No input address given",
+		logger.Sugar.Infow("No input address given",
 			"digmon", d.Tag,
 			"default", d.Address,
 		)
 	}
 
-	utils.Sugar.Debugw("Object created",
+	logger.Sugar.Debugw("Object created",
 		"Digmon", d,
 	)
 
@@ -56,7 +58,7 @@ func NewDigmon(tag, description, address, invert, alarm, invertAlarm string) (*d
 }
 
 func (d *digmon) InputMap() map[string]string {
-	return map[string]string{
+	input := map[string]string{
 		"Tag":         d.Tag,
 		"Description": d.Description,
 		"IDB":         "IDB_" + d.Tag,
@@ -65,6 +67,17 @@ func (d *digmon) InputMap() map[string]string {
 		"Alarm":       strings.ToUpper(strconv.FormatBool(d.Alarm)),
 		"InvertAlarm": strings.ToUpper(strconv.FormatBool(d.InvertAlarm)),
 	}
+	for k, v := range d.Data {
+		_, exists := input[k]
+		if !exists {
+			input[k] = v
+			logger.Sugar.Debugw("Additional data added to input map",
+				"digmon", d.Tag,
+				"name", k,
+				"data", v)
+		}
+	}
+	return input
 }
 
 func (d *digmon) PlcTags() []*PlcTag {

@@ -6,8 +6,8 @@ import (
 	"os"
 	"text/template"
 
+	"github.com/bruyss/go-object-generator/logger"
 	"github.com/bruyss/go-object-generator/plc"
-	"github.com/bruyss/go-object-generator/utils"
 )
 
 // GenFolderRoot is the default root directory for storing the generated files
@@ -30,14 +30,14 @@ type Generator struct {
 
 func (g *Generator) Generate(fileName, templateName string, tmp *template.Template) error {
 	if len(g.Objects) == 0 {
-		utils.Sugar.Debugw("No objects, not generating",
+		logger.Sugar.Debugw("No objects, not generating",
 			"filename", fileName,
 			"template", templateName,
 		)
 		return nil
 	}
 
-	f, err := os.Create(GenFolderName + "/" + fileName)
+	f, err := os.Create(GenFolderRoot + "/" + fileName)
 	if err != nil {
 		return err
 	}
@@ -48,7 +48,7 @@ func (g *Generator) Generate(fileName, templateName string, tmp *template.Templa
 		return err
 	}
 
-	utils.Sugar.Debugw("Generating",
+	logger.Sugar.Debugw("Generating",
 		"filename", fileName,
 		"template", templateName,
 	)
@@ -88,9 +88,9 @@ func (g *Generator) GeneratePlcTagTable(fileName, tagTableName string) error {
 			tagtable.Tags = append(tagtable.Tags, xmlPlcTagLine{
 				Type:          t.Dtype,
 				Tag:           t.Name,
-				HMIVisible:    "True",
-				HMIWriteable:  "True",
-				HMIAccessible: "True",
+				HMIVisible:    "False",
+				HMIWriteable:  "False",
+				HMIAccessible: "False",
 				Retain:        "False",
 				Remark:        t.Comment,
 				Address:       t.Address,
@@ -101,6 +101,8 @@ func (g *Generator) GeneratePlcTagTable(fileName, tagTableName string) error {
 	if err != nil {
 		return err
 	}
-	f.Write(b)
+	if _, err = f.Write(b); err != nil {
+		return err
+	}
 	return nil
 }

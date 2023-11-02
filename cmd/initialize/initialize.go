@@ -13,22 +13,28 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package cmd
+package initialize
 
 import (
 	"fmt"
 	"os"
 	"strings"
 
+	"github.com/bruyss/go-object-generator/logger"
 	"github.com/bruyss/go-object-generator/obwriter"
 	"github.com/bruyss/go-object-generator/sheetreader"
-	"github.com/bruyss/go-object-generator/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-// initCmd represents the init command
-var initCmd = &cobra.Command{
+var (
+	flagExcel     bool
+	flagSettings  bool
+	flagTemplates bool
+)
+
+// InitCmd represents the init command
+var InitCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialize the object generator",
 	Long: `Command will create the following files to initialize object generation:
@@ -53,34 +59,29 @@ var initCmd = &cobra.Command{
 		return os.ErrInvalid
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		flagExcel, _ := cmd.Flags().GetBool("excel")
-		flagSettings, _ := cmd.Flags().GetBool("settings")
-		flagTemplates, _ := cmd.Flags().GetBool("templates")
 		if !(flagExcel || flagSettings || flagTemplates) {
-			utils.Sugar.Info("Initializing all...")
+			logger.Sugar.Info("Initializing all...")
 			sheetreader.InitializeWorkbook(viper.GetString("filenames.general.objectsource"))
 			viper.WriteConfig()
-			obwriter.WriteTemplates(obwriter.Templates)
+			obwriter.WriteTemplates(obwriter.DefaultTemplates)
 		} else {
 			if flagExcel {
-				utils.Sugar.Info("Initializing spreadsheet...")
+				logger.Sugar.Info("Initializing spreadsheet...")
 				sheetreader.InitializeWorkbook(viper.GetString("filenames.general.objectsource"))
 			}
 			if flagSettings {
-				utils.Sugar.Info("Initializing settings...")
+				logger.Sugar.Info("Initializing settings...")
 				viper.WriteConfig()
 			}
 			if flagTemplates {
-				utils.Sugar.Info("Initializing templates...")
-				obwriter.WriteTemplates(obwriter.Templates)
+				logger.Sugar.Info("Initializing templates...")
+				obwriter.WriteTemplates(obwriter.DefaultTemplates)
 			}
 		}
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(initCmd)
-
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
@@ -91,12 +92,11 @@ func init() {
 	// is called directly, e.g.:
 	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	initCmd.Flags().Bool("excel", false, "Initialize spreadsheet")
-	initCmd.Flags().Bool("settings", false, "Initialize settings")
-	initCmd.Flags().Bool("templates", false, "Initialize templates")
+	InitCmd.Flags().BoolVarP(&flagExcel, "excel", "e", false, "Initialize spreadsheet")
+	InitCmd.Flags().BoolVarP(&flagSettings, "settings", "s", false, "Initialize settings")
+	InitCmd.Flags().BoolVarP(&flagTemplates, "templates", "t", false, "Initialize templates")
 
-	initCmd.Flag("excel").NoOptDefVal = "true"
-	initCmd.Flag("settings").NoOptDefVal = "true"
-	initCmd.Flag("templates").NoOptDefVal = "true"
-
+	InitCmd.Flag("excel").NoOptDefVal = "true"
+	InitCmd.Flag("settings").NoOptDefVal = "true"
+	InitCmd.Flag("templates").NoOptDefVal = "true"
 }
