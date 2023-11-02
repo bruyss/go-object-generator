@@ -21,7 +21,7 @@ func NewMeasmon(tag, description, unit, address, direct, lowLimit, highLimit str
 	directBool, err := strconv.ParseBool(direct)
 	if err != nil {
 		directBool = false
-		utils.Sugar.Warnw("Cannot parse Direct to bool",
+		logger.Sugar.Warnw("Cannot parse Direct to bool",
 			"measmon", tag,
 			"value", direct,
 			"default", directBool)
