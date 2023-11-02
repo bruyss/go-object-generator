@@ -80,9 +80,9 @@ func (g *Generator) GeneratePlcTagTable(fileName, tagTableName string) error {
 			tagtable.Tags = append(tagtable.Tags, xmlPlcTagLine{
 				Type:          t.Dtype,
 				Tag:           t.Name,
-				HMIVisible:    "True",
-				HMIWriteable:  "True",
-				HMIAccessible: "True",
+				HMIVisible:    "False",
+				HMIWriteable:  "False",
+				HMIAccessible: "False",
 				Retain:        "False",
 				Remark:        t.Comment,
 				Address:       t.Address,
