@@ -7,19 +7,38 @@ import (
 	"github.com/bruyss/go-object-generator/logger"
 )
 
+// A controlValve contains the information needed to create a control valve in the PLC project
 type controlValve struct {
-	Tag             string
-	Description     string
-	OutputTag       string
-	OutputAddress   string
-	FeedbackTag     string
+	// Tag is the tag name of the object
+	Tag string
+	// Description is a short description of the functionality of the object.
+	Description string
+	// OutputTag is the tag name given to the analog output of the control valve.
+	OutputTag string
+	// OutputAddress is the IO address given to the analog output of the control valve.
+	OutputAddress string
+	// FeedbackTag is the tag name given to the analog input giving position feedback of the control valve.
+	FeedbackTag string
+	// FeedbackAddress is the IO address given to the analog input giving position feedback of the control
+	// valve.
 	FeedbackAddress string
-	MonitoringTime  int
-	hasFeedback     bool
-	Data            map[string]string
+	// MonitoringTime is the delay before a difference in output and feedback will cause an object alarm.
+	MonitoringTime int
+	// hasFeedback is a flag to indicate if a feedback input is present.
+	hasFeedback bool
+	// Data is any additional data that can be used in the object generation.
+	Data map[string]string
 }
 
-func NewControlValve(tag, description, outputTag, outputAddress, feedbackTag, feedbackAddress, monitoringTime string, data map[string]string) (*controlValve, error) {
+// NewControlValve returns a reference to a new control valve. An error is returned if the entered
+// information cannot be used to create a new object.
+//
+// The data used for the new object is a combination of the input data and sensible defaults if data is
+// missing.
+func NewControlValve(
+	tag, description, outputTag, outputAddress, feedbackTag, feedbackAddress, monitoringTime string,
+	data map[string]string,
+) (*controlValve, error) {
 	monitoringTimeInt, err := strconv.Atoi(monitoringTime)
 	if err != nil {
 		return nil, err
