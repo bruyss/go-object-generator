@@ -125,7 +125,7 @@ func (c *controlValve) PlcTags() (t []*PlcTag) {
 func (c *controlValve) outputPlcTag() *PlcTag {
 	return &PlcTag{
 		Name:    c.OutputTag,
-		Dtype:   "Int",
+		Dtype:   "Word",
 		Address: c.OutputAddress,
 		Comment: c.Description + " output",
 	}
