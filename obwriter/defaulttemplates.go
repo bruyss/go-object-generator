@@ -274,7 +274,6 @@ BEGIN
         "{{$d.IDB}}"(Tagname := '{{$d.Tag}}',
                             SecPuls := {{$gs.secondpulse}},
                             Reset := TRUE,
-                            Local := FALSE,
                             Simulation := {{$gs.simulation}},
                             Permit := TRUE,
                             Activate := {{$gs.todobit}},
