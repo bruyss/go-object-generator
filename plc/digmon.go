@@ -7,17 +7,33 @@ import (
 	"github.com/bruyss/go-object-generator/logger"
 )
 
+// A digmon contains the information needed to create a digmon in the PLC project
 type digmon struct {
-	Tag         string
+	// Tag is the tag name of the object
+	Tag string
+	// Description is a short description of the functionality of the object.
 	Description string
-	Address     string
-	Invert      bool
-	Alarm       bool
+	// Address is the IO address of the digital input of the digmon
+	Address string
+	// Invert reports if the input should be inverted for logic
+	Invert bool
+	// Alarm reports if the input in the wrong state should cause an alarm
+	Alarm bool
+	// InvertAlarm inverts the logic of the alarm
 	InvertAlarm bool
-	Data        map[string]string
+	// Data is any additional data that can be used in the object generation.
+	Data map[string]string
 }
 
-func NewDigmon(tag, description, address, invert, alarm, invertAlarm string, data map[string]string) (*digmon, error) {
+// NewDigmon returns a reference to a new digmon. An error is returned if the entered information cannot be
+// used to create a new object.
+//
+// The data used for the new object is a combination of the input data and sensible defaults if data is
+// missing.
+func NewDigmon(
+	tag, description, address, invert, alarm, invertAlarm string,
+	data map[string]string,
+) (*digmon, error) {
 
 	invertBool, err := strconv.ParseBool(invert)
 	if err != nil {
