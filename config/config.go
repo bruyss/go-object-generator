@@ -50,7 +50,7 @@ func SetDefaults() {
 
 	viper.SetDefault("gensettings.digout.objectfb", "FB_DigitalOut")
 	viper.SetDefault("gensettings.digout.callfc", "DigitalOut_Call")
-	viper.SetDefault("gensettings.digout.hmidb", "HMI_DigitalOut")
+	viper.SetDefault("gensettings.digout.hmidb", "HMI_DigitalOuts")
 	viper.SetDefault("gensettings.digout.hmitype", "HMI_DigitalOut")
 	viper.SetDefault("gensettings.digout.startindex", 0)
 	viper.SetDefault("gensettings.digout.tagtable", "DigitalOuts")
