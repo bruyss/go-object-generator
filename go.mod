@@ -3,7 +3,6 @@ module github.com/bruyss/go-object-generator
 go 1.20
 
 require (
-	github.com/360EntSecGroup-Skylar/excelize v1.4.1
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.15.0
 	github.com/xuri/excelize/v2 v2.7.1
