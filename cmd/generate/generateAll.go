@@ -190,6 +190,14 @@ var generateAllCmd = &cobra.Command{
 					"generator", "measmons",
 					"error", err)
 			}
+
+			err = measmonGen.GenerateIoList("MeasmonIOs.xlsx")
+			if err != nil {
+				logger.Sugar.Errorw("Error generating IO list",
+					"generator", "measmons",
+					"error", err)
+			}
+
 			err = digmonGen.GeneratePlcTagTable(viper.GetString("filenames.digmon.tagfile"), "Digmons")
 			if err != nil {
 				logger.Sugar.Errorw("Error generating tag table",

@@ -8,6 +8,7 @@ import (
 
 	"github.com/bruyss/go-object-generator/logger"
 	"github.com/bruyss/go-object-generator/plc"
+	"github.com/xuri/excelize/v2"
 )
 
 // GenFolderRoot is the default root directory for storing the generated files
@@ -105,4 +106,64 @@ func (g *Generator) GeneratePlcTagTable(fileName, tagTableName string) error {
 		return err
 	}
 	return nil
+}
+
+func setCellValue(f *excelize.File, sheet string, colIndex, rowIndex int, value interface{}) error {
+	cellName, err := excelize.CoordinatesToCellName(colIndex, rowIndex)
+
+	if err != nil {
+		return err
+	}
+
+	return f.SetCellValue(sheet, cellName, value)
+}
+
+func (g *Generator) GenerateIoList(fileName string) error {
+	f := excelize.NewFile()
+
+	sheetName := f.GetSheetName(f.GetActiveSheetIndex())
+
+	// Define columns for the IO list
+	columns := []string{
+		"Tag",
+		"Description",
+		"Address",
+		"RIO",
+		"Phase",
+		"Status",
+		"Comment",
+	}
+
+	f.SetSheetRow(sheetName, "A1", &columns)
+
+	bottomRight, err := excelize.CoordinatesToCellName(len(columns), 2)
+	if err != nil {
+		logger.Sugar.Fatal(err)
+	}
+
+	enable := true
+	err = f.AddTable(sheetName, &excelize.Table{
+		Range:             "A1:" + bottomRight,
+		Name:              "IO list",
+		StyleName:         "TableStyleMedium2",
+		ShowColumnStripes: false,
+		ShowFirstColumn:   true,
+		ShowHeaderRow:     &enable,
+		ShowLastColumn:    false,
+		ShowRowStripes:    &enable,
+	})
+
+	for _, object := range g.Objects {
+		for colIndex, tag := range object.PlcTags() {
+			setCellValue(f, sheetName, colIndex, 0, tag.Name)
+			setCellValue(f, sheetName, colIndex, 1, tag.Comment)
+			setCellValue(f, sheetName, colIndex, 2, tag.Address)
+			setCellValue(f, sheetName, colIndex, 3, "")
+			setCellValue(f, sheetName, colIndex, 4, "")
+			setCellValue(f, sheetName, colIndex, 5, "To Test")
+			setCellValue(f, sheetName, colIndex, 6, "")
+		}
+	}
+
+	return f.SaveAs(fileName)
 }

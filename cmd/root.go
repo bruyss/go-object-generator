@@ -17,12 +17,12 @@ import (
 
 var cfgFile string
 
-var Version string = "1.0.0"
+var Version string = "1.1.0"
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:     "go-object-generator",
-	Short:   "PLC object generator",
+	Use:   "go-object-generator",
+	Short: "PLC object generator",
 	Long: `A generator for PLC objects, reads data from a spreadsheet and outputs source files.
 To initialize a new object generator project run: go-object-generator.exe init
 To generate all objects entered in the spreadsheet run: go-object-generator.exe generate all
